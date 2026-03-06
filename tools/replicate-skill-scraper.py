@@ -2,18 +2,15 @@
 """
 Replicate Skill Scraper — Auto-generate SKILL.md files for Replicate models.
 
-Uses Replicate's public API:
-  - Model info: https://api.replicate.com/v1/models/{owner}/{name}
-  - Model versions: https://api.replicate.com/v1/models/{owner}/{name}/versions
-  - Collection list: https://api.replicate.com/v1/collections/{slug}
-  - Search: https://api.replicate.com/v1/models?query={query}
-
-Requires REPLICATE_API_TOKEN env var.
+Uses Replicate's PUBLIC endpoints (no API key required):
+  - Model schema: https://replicate.com/api/models/{owner}/{name}/versions
+  - Collection pages: https://replicate.com/collections/{slug} (HTML)
 
 Usage:
   python tools/replicate-skill-scraper.py --model xai/grok-imagine-video
-  python tools/replicate-skill-scraper.py --search "text to video" --limit 5
   python tools/replicate-skill-scraper.py --collection text-to-video --dry-run
+  python tools/replicate-skill-scraper.py --search "video" --limit 5
+  python tools/replicate-skill-scraper.py --all --limit 3
   python tools/replicate-skill-scraper.py --verbose
 """
 
@@ -35,51 +32,56 @@ except ImportError:
 # Constants
 # ---------------------------------------------------------------------------
 
-API_BASE = "https://api.replicate.com/v1"
+REPLICATE_BASE = "https://replicate.com"
 REPLICATE_PAGE = "https://replicate.com/{owner}/{name}"
 DEFAULT_OUTPUT_DIR = "./skills"
 DEFAULT_DELAY = 0.5
 MAX_RETRIES = 3
+
+# All known Replicate collections
+ALL_COLLECTIONS = [
+    "text-to-image", "image-editing", "super-resolution", "ai-image-restoration",
+    "sketch-to-image", "flux",
+    "text-to-video", "image-to-video", "video-editing", "ai-enhance-videos",
+    "video-to-text", "lipsync", "wan-video",
+    "text-to-speech", "speech-to-text", "speaker-diarization",
+    "ai-music-generation", "sing-with-voices",
+    "language-models", "vision-models", "embedding-models", "control-net",
+    "text-recognition-ocr", "ai-detect-objects", "remove-backgrounds",
+    "detect-nsfw-content", "text-classification",
+    "ai-face-generator", "face-swap", "3d-models", "generate-emoji",
+    "generate-anime",
+    "official", "try-for-free", "utilities",
+]
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
 
-def get_token() -> str:
-    """Get Replicate API token from env."""
-    token = os.environ.get("REPLICATE_API_TOKEN", "")
-    if not token:
-        print("Error: REPLICATE_API_TOKEN environment variable is required.")
-        print("Get your token at: https://replicate.com/account/api-tokens")
-        sys.exit(1)
-    return token
-
-
 def slugify(owner: str, name: str) -> str:
-    """Convert owner/name to directory slug like 'xai-grok-imagine-video'."""
-    return f"{owner}-{name}".replace("/", "-")
+    """Convert owner/name to directory slug like 'replicate-xai-grok-imagine-video'."""
+    return f"replicate-{owner}-{name}".replace("/", "-")
 
 
-def fetch_json(url: str, token: str, params: dict | None = None,
-               retries: int = MAX_RETRIES) -> dict | None:
-    """Fetch JSON with retry + backoff. Returns None on failure."""
-    headers = {"Authorization": f"Bearer {token}"}
+def fetch_url(url: str, retries: int = MAX_RETRIES, expect_json: bool = True):
+    """Fetch a URL with retry + backoff. Returns parsed JSON or raw text."""
     for attempt in range(retries):
         try:
-            resp = requests.get(url, headers=headers, params=params, timeout=30)
+            resp = requests.get(url, timeout=30, headers={
+                "User-Agent": "Mozilla/5.0 (compatible; SkillScraper/1.0)"
+            })
             if resp.status_code == 429:
                 wait = int(resp.headers.get("Retry-After", 2 ** (attempt + 1)))
                 print(f"  Rate limited, waiting {wait}s...")
                 time.sleep(wait)
                 continue
-            if resp.status_code == 401:
-                print("Error: Invalid REPLICATE_API_TOKEN. Check your token.")
-                sys.exit(1)
             if resp.status_code == 404:
                 return None
             resp.raise_for_status()
-            return resp.json()
+            if expect_json:
+                return resp.json()
+            return resp.text
         except requests.RequestException as e:
             if attempt < retries - 1:
                 wait = 2 ** (attempt + 1)
@@ -96,14 +98,14 @@ def fetch_json(url: str, token: str, params: dict | None = None,
 # ---------------------------------------------------------------------------
 
 
-def load_existing_endpoints(output_dir: str) -> set[str]:
+def load_existing_endpoints(output_dir: str) -> set:
     """Parse Endpoint lines from existing SKILL.md files to find replicate models."""
     endpoints = set()
     skills_path = Path(output_dir)
     if not skills_path.exists():
         return endpoints
 
-    for skill_file in skills_path.glob("*/SKILL.md"):
+    for skill_file in skills_path.glob("replicate-*/SKILL.md"):
         try:
             text = skill_file.read_text()
             for match in re.finditer(r'\*\*Model[:\s]*\*\*[:\s]*`([^`]+)`', text):
@@ -120,79 +122,81 @@ def load_existing_endpoints(output_dir: str) -> set[str]:
 
 
 # ---------------------------------------------------------------------------
-# Model fetching
+# Model Discovery (Public Endpoints — No Auth)
 # ---------------------------------------------------------------------------
 
 
-def fetch_model(owner: str, name: str, token: str, verbose: bool = False) -> dict | None:
-    """Fetch a single model's info."""
-    url = f"{API_BASE}/models/{owner}/{name}"
+def fetch_collection_models(slug: str, verbose: bool = False) -> list:
+    """Scrape models from a Replicate collection HTML page.
+
+    Fetches https://replicate.com/collections/{slug} and parses the HTML
+    to extract model owner/name pairs from links.
+    """
+    url = f"{REPLICATE_BASE}/collections/{slug}"
     if verbose:
-        print(f"Fetching model: {owner}/{name}")
-    return fetch_json(url, token)
+        print(f"Fetching collection page: {url}")
 
+    html = fetch_url(url, expect_json=False)
+    if not html:
+        return []
 
-def fetch_latest_version(owner: str, name: str, token: str,
-                         verbose: bool = False) -> dict | None:
-    """Fetch the latest version of a model (contains the schema)."""
-    url = f"{API_BASE}/models/{owner}/{name}/versions"
+    # Extract model links from the collection page HTML.
+    # Model links follow the pattern: href="/{owner}/{name}" where owner and name
+    # are alphanumeric with hyphens/underscores, and are NOT system paths.
+    # We look for links that appear in model card contexts.
+    system_paths = {
+        "collections", "docs", "about", "pricing", "blog", "changelog",
+        "explore", "deployments", "api", "account", "signin", "signup",
+        "search", "topics", "terms", "privacy", "security", "contact",
+        "models", "predictions", "hardware", "billing", "teams",
+    }
+
+    # Find all /{owner}/{name} patterns in href attributes
+    pattern = re.compile(r'href="/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_.-]+)"')
+    found = {}
+    for match in pattern.finditer(html):
+        owner = match.group(1)
+        name = match.group(2)
+        # Skip system paths and static assets
+        if owner.lower() in system_paths:
+            continue
+        if name.lower() in ("settings", "tokens", "api-tokens"):
+            continue
+        model_id = f"{owner}/{name}"
+        if model_id not in found:
+            found[model_id] = {"owner": owner, "name": name}
+
+    models = list(found.values())
     if verbose:
-        print(f"Fetching versions for: {owner}/{name}")
-    data = fetch_json(url, token)
-    if not data:
-        return None
-
-    results = data.get("results", [])
-    if not results:
-        return None
-
-    # First result is the latest version
-    return results[0]
-
-
-def search_models(query: str, token: str, limit: int | None = None,
-                  delay: float = DEFAULT_DELAY, verbose: bool = False) -> list[dict]:
-    """Search for models using the Replicate API."""
-    models = []
-    url = f"{API_BASE}/models"
-    params = {"query": query}
-
-    while url:
-        if verbose:
-            print(f"Fetching models page...")
-        data = fetch_json(url, token, params=params)
-        if not data:
-            break
-
-        results = data.get("results", [])
-        models.extend(results)
-
-        if limit and len(models) >= limit:
-            models = models[:limit]
-            break
-
-        next_url = data.get("next")
-        if next_url:
-            url = next_url
-            params = None  # next URL already has params
-            time.sleep(delay * 0.5)
-        else:
-            break
-
-    if verbose:
-        print(f"Found {len(models)} models.")
+        print(f"  Found {len(models)} models in collection '{slug}'")
     return models
 
 
-def fetch_collection(slug: str, token: str, verbose: bool = False) -> list[dict]:
-    """Fetch models from a Replicate collection."""
-    url = f"{API_BASE}/collections/{slug}"
+def fetch_model_versions(owner: str, name: str, verbose: bool = False) -> dict | None:
+    """Fetch model version data from the public API endpoint.
+
+    Uses: https://replicate.com/api/models/{owner}/{name}/versions
+    Returns the full JSON response or None on failure.
+    """
+    url = f"{REPLICATE_BASE}/api/models/{owner}/{name}/versions"
     if verbose:
-        print(f"Fetching collection: {slug}")
-    data = fetch_json(url, token)
-    if not data:
-        return []
-    return data.get("models", [])
+        print(f"  Fetching versions: {url}")
+    return fetch_url(url, expect_json=True)
+
+
+def search_collections(keyword: str) -> list:
+    """Search across collection names for a keyword match.
+
+    Returns a list of matching collection slugs.
+    """
+    keyword_lower = keyword.lower()
+    matches = []
+    for slug in ALL_COLLECTIONS:
+        # Match against the slug (hyphens act as word separators)
+        slug_words = slug.replace("-", " ").lower()
+        if keyword_lower in slug_words or keyword_lower in slug:
+            matches.append(slug)
+    return matches
 
 
 # ---------------------------------------------------------------------------
@@ -200,29 +204,80 @@ def fetch_collection(slug: str, token: str, verbose: bool = False) -> list[dict]
 # ---------------------------------------------------------------------------
 
 
-def extract_schemas_from_version(version: dict) -> tuple[dict | None, dict | None]:
-    """Extract input and output schemas from a model version."""
-    openapi_schema = version.get("openapi_schema")
+def extract_schemas_from_versions_data(data: dict) -> tuple:
+    """Extract input and output schemas from the versions API response.
 
-    if openapi_schema:
-        return _extract_from_openapi(openapi_schema)
+    The schema is at:
+      data['data'][0]['_extras']['dereferenced_openapi_schema']
+        ['paths']['/predictions']['post']['requestBody']
+        ['content']['application/json']['schema']['properties']['input']
+    """
+    versions = data.get("data", [])
+    if not versions:
+        # Fallback: try 'results' key (older format)
+        versions = data.get("results", [])
+    if not versions:
+        return None, None
 
-    # Fallback: use top-level input/output schema fields
+    version = versions[0]
+
+    # Try the public endpoint structure first
+    extras = version.get("_extras", {})
+    openapi = extras.get("dereferenced_openapi_schema")
+    if openapi:
+        return _extract_from_dereferenced_openapi(openapi)
+
+    # Fallback: try openapi_schema at version level
+    openapi = version.get("openapi_schema")
+    if openapi:
+        return _extract_from_openapi(openapi)
+
+    # Fallback: direct schema fields
     input_schema = version.get("input_schema") or version.get("schema", {}).get("input")
     output_schema = version.get("output_schema") or version.get("schema", {}).get("output")
     return input_schema, output_schema
 
 
-def _extract_from_openapi(spec: dict) -> tuple[dict | None, dict | None]:
-    """Extract input/output schemas from Replicate's OpenAPI spec."""
+def _extract_from_dereferenced_openapi(spec: dict) -> tuple:
+    """Extract input/output from the dereferenced OpenAPI schema (public endpoint)."""
+    input_schema = None
+    output_schema = None
+
+    try:
+        predictions_post = spec["paths"]["/predictions"]["post"]
+        req_body = predictions_post["requestBody"]["content"]["application/json"]["schema"]
+        props = req_body.get("properties", {})
+        input_schema = props.get("input")
+    except (KeyError, TypeError):
+        pass
+
+    # Try output from the same path
+    try:
+        predictions_post = spec["paths"]["/predictions"]["post"]
+        req_body = predictions_post["requestBody"]["content"]["application/json"]["schema"]
+        props = req_body.get("properties", {})
+        output_schema = props.get("output")
+    except (KeyError, TypeError):
+        pass
+
+    # Fallback: output from components.schemas.Output
+    if not output_schema:
+        try:
+            output_schema = spec["components"]["schemas"]["Output"]
+        except (KeyError, TypeError):
+            pass
+
+    return input_schema, output_schema
+
+
+def _extract_from_openapi(spec: dict) -> tuple:
+    """Extract input/output schemas from Replicate's OpenAPI spec (components style)."""
     components = spec.get("components", {}).get("schemas", {})
 
-    # Input is typically under "Input" schema
     input_schema = components.get("Input")
     if input_schema:
         input_schema = _resolve_refs(input_schema, spec)
 
-    # Output is typically under "Output" schema
     output_schema = components.get("Output")
     if output_schema:
         output_schema = _resolve_refs(output_schema, spec)
@@ -230,7 +285,7 @@ def _extract_from_openapi(spec: dict) -> tuple[dict | None, dict | None]:
     return input_schema, output_schema
 
 
-def _resolve_ref(ref: str, spec: dict) -> dict | None:
+def _resolve_ref(ref: str, spec: dict):
     """Resolve a $ref pointer."""
     if not ref.startswith("#/"):
         return None
@@ -325,14 +380,20 @@ def type_to_str(schema: dict) -> str:
     return str(t)
 
 
-def schema_to_table_rows(schema: dict, required_fields: list | None = None) -> list[dict]:
+def schema_to_table_rows(schema: dict, required_fields: list | None = None) -> list:
     """Convert schema properties to table row dicts."""
     props = schema.get("properties", {})
     if required_fields is None:
         required_fields = schema.get("required", [])
 
+    # Sort by x-order if available, otherwise preserve insertion order
+    ordered_props = sorted(
+        props.items(),
+        key=lambda kv: kv[1].get("x-order", 9999)
+    )
+
     rows = []
-    for name, prop in props.items():
+    for name, prop in ordered_props:
         row = {
             "name": name,
             "type": type_to_str(prop),
@@ -364,17 +425,6 @@ def schema_to_table_rows(schema: dict, required_fields: list | None = None) -> l
 # ---------------------------------------------------------------------------
 # SKILL.md Generation
 # ---------------------------------------------------------------------------
-
-
-def get_model_name(model: dict) -> str:
-    """Get a display name for the model."""
-    name = model.get("name", "")
-    owner = model.get("owner", "")
-    # Use the 'description' field's first sentence or construct from name
-    display = name.replace("-", " ").replace("_", " ").title()
-    if owner:
-        display = f"{owner}/{name}"
-    return display
 
 
 def get_model_description(model: dict) -> str:
@@ -416,8 +466,9 @@ def generate_skill_md(owner: str, name: str, model: dict,
 
     lines.append(f"**Model:** `{model_id}`")
     lines.append(f"**Source:** {source_url}")
-    if model.get("latest_version", {}).get("id"):
-        lines.append(f"**Version:** `{model['latest_version']['id']}`")
+    version_id = model.get("version_id", "")
+    if version_id:
+        lines.append(f"**Version:** `{version_id}`")
     lines.append("")
     lines.append("---")
     lines.append("")
@@ -632,11 +683,11 @@ def _build_example_input(schema: dict | None) -> dict | None:
 
 
 # ---------------------------------------------------------------------------
-# Main
+# Main Processing
 # ---------------------------------------------------------------------------
 
 
-def parse_model_id(model_id: str) -> tuple[str, str]:
+def parse_model_id(model_id: str) -> tuple:
     """Parse 'owner/name' into (owner, name)."""
     parts = model_id.strip().split("/")
     if len(parts) != 2:
@@ -645,30 +696,41 @@ def parse_model_id(model_id: str) -> tuple[str, str]:
     return parts[0], parts[1]
 
 
-def process_model(owner: str, name: str, token: str, output_dir: str,
+def process_model(owner: str, name: str, output_dir: str,
                   dry_run: bool = False, verbose: bool = False) -> bool:
-    """Process a single model: fetch info + schema, generate SKILL.md."""
+    """Process a single model: fetch schema from public endpoint, generate SKILL.md."""
     model_id = f"{owner}/{name}"
     print(f"  Processing: {model_id}")
 
-    model = fetch_model(owner, name, token, verbose)
-    if not model:
-        print(f"  SKIP: Could not fetch model info for {model_id}")
+    # Fetch version data from public endpoint
+    data = fetch_model_versions(owner, name, verbose)
+    if not data:
+        print(f"  SKIP: Could not fetch version data for {model_id}")
         return False
 
-    # Get schema from latest version
-    version = fetch_latest_version(owner, name, token, verbose)
-    input_schema, output_schema = None, None
-    if version:
-        input_schema, output_schema = extract_schemas_from_version(version)
-
-    # Also try model-level latest_version
-    if not input_schema and model.get("latest_version"):
-        input_schema, output_schema = extract_schemas_from_version(model["latest_version"])
+    input_schema, output_schema = extract_schemas_from_versions_data(data)
 
     if not input_schema and not output_schema:
         print(f"  SKIP: No schemas found for {model_id}")
         return False
+
+    # Build a minimal model dict for generate_skill_md
+    # Extract description and version_id from the versions data
+    versions = data.get("data", []) or data.get("results", [])
+    version_id = ""
+    description = ""
+    if versions:
+        version_id = versions[0].get("id", "")
+        # Try to get description from model-level data
+        model_info = data.get("model", {})
+        description = model_info.get("description", "") if model_info else ""
+
+    model = {
+        "owner": owner,
+        "name": name,
+        "description": description,
+        "version_id": version_id,
+    }
 
     content = generate_skill_md(owner, name, model, input_schema, output_schema)
 
@@ -692,9 +754,39 @@ def process_model(owner: str, name: str, token: str, output_dir: str,
     return True
 
 
+def process_model_list(models: list, output_dir: str, existing: set,
+                       skip_existing: bool, dry_run: bool, verbose: bool,
+                       delay: float, limit: int | None = None) -> tuple:
+    """Process a list of model dicts. Returns (success_count, skipped_count)."""
+    if limit:
+        models = models[:limit]
+
+    success, skipped = 0, 0
+    for i, m in enumerate(models, 1):
+        owner = m.get("owner", "")
+        name = m.get("name", "")
+        if not owner or not name:
+            skipped += 1
+            continue
+        model_id = f"{owner}/{name}"
+        if model_id in existing and skip_existing:
+            if verbose:
+                print(f"  Already have: {model_id}")
+            skipped += 1
+            continue
+        print(f"[{i}/{len(models)}]", end="")
+        if process_model(owner, name, output_dir, dry_run, verbose):
+            success += 1
+        else:
+            skipped += 1
+        time.sleep(delay)
+
+    return success, skipped
+
+
 def main():
     parser = argparse.ArgumentParser(
-        description="Auto-generate SKILL.md files for Replicate models"
+        description="Auto-generate SKILL.md files for Replicate models (no API key required)"
     )
     parser.add_argument("--dry-run", action="store_true",
                         help="Preview without writing files")
@@ -703,9 +795,11 @@ def main():
     parser.add_argument("--models-file", type=str, default=None,
                         help="File with one model ID per line (owner/name)")
     parser.add_argument("--search", type=str, default=None,
-                        help="Search for models by keyword")
+                        help="Search for models by keyword across collection names")
     parser.add_argument("--collection", type=str, default=None,
                         help="Fetch models from a Replicate collection slug")
+    parser.add_argument("--all", action="store_true",
+                        help="Scrape ALL known Replicate collections")
     parser.add_argument("--limit", type=int, default=None,
                         help="Max number of models to process")
     parser.add_argument("--delay", type=float, default=DEFAULT_DELAY,
@@ -721,8 +815,6 @@ def main():
 
     args = parser.parse_args()
 
-    token = get_token()
-
     # Load existing endpoints
     existing = load_existing_endpoints(args.output_dir) if args.skip_existing else set()
     if args.verbose:
@@ -735,7 +827,7 @@ def main():
         if model_id in existing and args.skip_existing:
             print(f"Skill already exists for {model_id}, skipping. Use --no-skip-existing to override.")
             return
-        process_model(owner, name, token, args.output_dir, args.dry_run, args.verbose)
+        process_model(owner, name, args.output_dir, args.dry_run, args.verbose)
         return
 
     # --- Models file mode ---
@@ -760,7 +852,7 @@ def main():
                 skipped += 1
                 continue
             print(f"[{i}/{len(model_ids)}]", end="")
-            if process_model(owner, name, token, args.output_dir, args.dry_run, args.verbose):
+            if process_model(owner, name, args.output_dir, args.dry_run, args.verbose):
                 success += 1
             else:
                 skipped += 1
@@ -770,86 +862,107 @@ def main():
 
     # --- Search mode ---
     if args.search:
-        models = search_models(args.search, token, args.limit, args.delay, args.verbose)
+        matching_collections = search_collections(args.search)
+        if not matching_collections:
+            print(f"No collections matching '{args.search}'.")
+            print(f"\nAvailable collections:")
+            for slug in ALL_COLLECTIONS:
+                print(f"  {slug}")
+            return
+
+        print(f"Found {len(matching_collections)} collections matching '{args.search}':")
+        for slug in matching_collections:
+            print(f"  - {slug}")
+        print()
+
+        # Gather models from all matching collections
+        all_models = {}
+        for slug in matching_collections:
+            models = fetch_collection_models(slug, args.verbose)
+            for m in models:
+                mid = f"{m['owner']}/{m['name']}"
+                if mid not in all_models:
+                    all_models[mid] = m
+            time.sleep(args.delay)
+
+        models = list(all_models.values())
         if not models:
-            print("No models found.")
+            print("No models found in matching collections.")
             return
 
         if args.dry_run:
-            print(f"\nFound {len(models)} models matching '{args.search}':\n")
+            if args.limit:
+                models = models[:args.limit]
+            print(f"\nFound {len(models)} models:\n")
             for m in models:
-                owner = m.get("owner", "?")
-                name = m.get("name", "?")
-                desc = (m.get("description") or "")[:80]
-                print(f"  {owner}/{name}  —  {desc}")
+                print(f"  {m['owner']}/{m['name']}")
             print(f"\nDry run complete. Use without --dry-run to generate files.")
             return
 
-        success, skipped = 0, 0
-        for i, m in enumerate(models, 1):
-            owner = m.get("owner", "")
-            name = m.get("name", "")
-            if not owner or not name:
-                continue
-            model_id = f"{owner}/{name}"
-            if model_id in existing and args.skip_existing:
-                if args.verbose:
-                    print(f"  Already have: {model_id}")
-                skipped += 1
-                continue
-            print(f"[{i}/{len(models)}]", end="")
-            if process_model(owner, name, token, args.output_dir, args.dry_run, args.verbose):
-                success += 1
-            else:
-                skipped += 1
-            time.sleep(args.delay)
+        success, skipped = process_model_list(
+            models, args.output_dir, existing, args.skip_existing,
+            args.dry_run, args.verbose, args.delay, args.limit
+        )
         print(f"\nDone! Generated {success} skills, skipped {skipped}.")
         return
 
     # --- Collection mode ---
     if args.collection:
-        models = fetch_collection(args.collection, token, args.verbose)
+        models = fetch_collection_models(args.collection, args.verbose)
         if not models:
             print(f"No models found in collection '{args.collection}'.")
             return
 
-        if args.limit:
-            models = models[:args.limit]
-
         if args.dry_run:
+            if args.limit:
+                models = models[:args.limit]
             print(f"\nFound {len(models)} models in collection '{args.collection}':\n")
             for m in models:
-                owner = m.get("owner", "?")
-                name = m.get("name", "?")
-                desc = (m.get("description") or "")[:80]
-                print(f"  {owner}/{name}  —  {desc}")
+                print(f"  {m['owner']}/{m['name']}")
             print(f"\nDry run complete. Use without --dry-run to generate files.")
             return
 
-        success, skipped = 0, 0
-        for i, m in enumerate(models, 1):
-            owner = m.get("owner", "")
-            name = m.get("name", "")
-            if not owner or not name:
-                continue
-            model_id = f"{owner}/{name}"
-            if model_id in existing and args.skip_existing:
-                if args.verbose:
-                    print(f"  Already have: {model_id}")
-                skipped += 1
-                continue
-            print(f"[{i}/{len(models)}]", end="")
-            if process_model(owner, name, token, args.output_dir, args.dry_run, args.verbose):
-                success += 1
-            else:
-                skipped += 1
+        success, skipped = process_model_list(
+            models, args.output_dir, existing, args.skip_existing,
+            args.dry_run, args.verbose, args.delay, args.limit
+        )
+        print(f"\nDone! Generated {success} skills, skipped {skipped}.")
+        return
+
+    # --- All collections mode ---
+    if args.all:
+        print(f"Scraping ALL {len(ALL_COLLECTIONS)} collections...")
+        all_models = {}
+        for slug in ALL_COLLECTIONS:
+            models = fetch_collection_models(slug, args.verbose)
+            for m in models:
+                mid = f"{m['owner']}/{m['name']}"
+                if mid not in all_models:
+                    all_models[mid] = m
             time.sleep(args.delay)
+
+        models = list(all_models.values())
+        print(f"\nDiscovered {len(models)} unique models across all collections.")
+
+        if args.dry_run:
+            if args.limit:
+                models = models[:args.limit]
+            print(f"\nModels:\n")
+            for m in models:
+                print(f"  {m['owner']}/{m['name']}")
+            print(f"\nDry run complete. Use without --dry-run to generate files.")
+            return
+
+        success, skipped = process_model_list(
+            models, args.output_dir, existing, args.skip_existing,
+            args.dry_run, args.verbose, args.delay, args.limit
+        )
         print(f"\nDone! Generated {success} skills, skipped {skipped}.")
         return
 
     # No mode specified
     parser.print_help()
-    print("\nError: Specify one of --model, --models-file, --search, or --collection.")
+    print("\nError: Specify one of --model, --models-file, --search, --collection, or --all.")
     sys.exit(1)
 
 

@@ -2,15 +2,17 @@
 """
 WaveSpeed AI Skill Scraper — Auto-generate SKILL.md files for WaveSpeed AI models.
 
-Uses WaveSpeed AI's API:
-  - List models: GET https://api.wavespeed.ai/api/v3/models
-  - Submit task:  POST https://api.wavespeed.ai/api/v3/{model_id}
-  - Get result:   GET https://api.wavespeed.ai/api/v3/predictions/{task_id}
+Scrapes WaveSpeed's public website (no API key required):
+  - Model list:    https://wavespeed.ai/models
+  - Model details: https://wavespeed.ai/models/{provider}/{model}/{variant}
 
-Requires WAVESPEED_API_KEY env var.
+API pattern (for generated skills):
+  - Submit task:  POST https://api.wavespeed.ai/api/v3/{model_path}
+  - Get result:   GET  https://api.wavespeed.ai/api/v3/predictions/{task_id}
 
 Usage:
   python tools/wavespeed-skill-scraper.py --dry-run
+  python tools/wavespeed-skill-scraper.py --all
   python tools/wavespeed-skill-scraper.py --filter "text-to-video" --limit 5
   python tools/wavespeed-skill-scraper.py --model wavespeed-ai/flux-dev
   python tools/wavespeed-skill-scraper.py --verbose
@@ -35,58 +37,154 @@ except ImportError:
 # ---------------------------------------------------------------------------
 
 API_BASE = "https://api.wavespeed.ai/api/v3"
-MODELS_URL = f"{API_BASE}/models"
-WAVESPEED_PAGE = "https://wavespeed.ai/models/{model_id}"
+MODELS_PAGE_URL = "https://wavespeed.ai/models"
+MODEL_PAGE_URL = "https://wavespeed.ai/models/{model_path}"
+DOCS_PAGE_URL = "https://wavespeed.ai/docs/docs-api/{provider}/{model_variant}"
 DEFAULT_OUTPUT_DIR = "./skills"
 DEFAULT_DELAY = 0.5
 MAX_RETRIES = 3
+
+# Regex to extract model paths from the HTML — matches /models/{provider}/{model}
+# and optionally /{variant}. Filters out media/static file URLs.
+MODEL_PATH_RE = re.compile(
+    r'/models/([\w-]+/[\w.-]+(?:/[\w.-]+)?)'
+    r'(?=["\s\'<>\?#])'
+)
+MEDIA_EXT_RE = re.compile(r'\.(jpg|jpeg|png|gif|svg|webp|mp4|webm|mov|js|css|ico|woff|woff2|ttf)(\?|$)', re.IGNORECASE)
+
+# Known model paths from WaveSpeed (fallback if scraping fails)
+KNOWN_MODEL_PATHS = [
+    "alibaba/wan-2.5/image-edit",
+    "alibaba/wan-2.5/video-extend",
+    "alibaba/wan-2.5/video-extend-fast",
+    "alibaba/wan-2.6/image-to-video-spicy",
+    "bria/fibo/video-background-remover",
+    "bria/fibo/video-upscaler",
+    "bytedance/dreamactor-v2",
+    "bytedance/seedance-v1-pro-i2v-480p",
+    "bytedance/seedream-v3.1",
+    "elevenlabs/dubbing",
+    "elevenlabs/music",
+    "google/gemini-2.5-flash/text-to-speech",
+    "google/gemini-2.5-pro/text-to-speech",
+    "google/nano-banana-2/edit",
+    "google/nano-banana-2/edit-fast",
+    "google/nano-banana-2/text-to-image",
+    "google/nano-banana-2/text-to-image-fast",
+    "google/nano-banana-pro/edit",
+    "google/nano-banana-pro/edit-multi",
+    "google/nano-banana-pro/edit-ultra",
+    "google/nano-banana-pro/text-to-image-ultra",
+    "google/nano-banana/edit",
+    "google/veo3.1-fast/image-to-video",
+    "inworld/inworld-1.5-mini/text-to-speech",
+    "kwaivgi/kling-v2.5-turbo-pro/image-to-video",
+    "kwaivgi/kling-v3.0-std/motion-control",
+    "kwaivgi/kling-video-to-audio",
+    "minimax/hailuo-02/i2v-standard",
+    "minimax/music-02",
+    "wavespeed-ai/ace-step-1.5",
+    "wavespeed-ai/flashvsr",
+    "wavespeed-ai/flux-dev",
+    "wavespeed-ai/flux-dev-lora",
+    "wavespeed-ai/flux-dev-lora-ultra-fast",
+    "wavespeed-ai/flux-dev-ultra-fast",
+    "wavespeed-ai/flux-fill-dev",
+    "wavespeed-ai/flux-redux-dev",
+    "wavespeed-ai/flux-redux-pro",
+    "wavespeed-ai/flux-schnell",
+    "wavespeed-ai/flux-schnell-lora",
+    "wavespeed-ai/hunyuan-3d-v3.1/text-to-3d-rapid",
+    "wavespeed-ai/hunyuan-video-foley",
+    "wavespeed-ai/hunyuan-video/i2v",
+    "wavespeed-ai/hunyuan-video/t2v",
+    "wavespeed-ai/longcat-avatar",
+    "wavespeed-ai/ltx-2-19b/control",
+    "wavespeed-ai/ltx-2-19b/video-upscaler",
+    "wavespeed-ai/meshy6/image-to-3d",
+    "wavespeed-ai/meshy6/text-to-3d",
+    "wavespeed-ai/molmo2/image-content-moderator",
+    "wavespeed-ai/molmo2/text-content-moderator",
+    "wavespeed-ai/molmo2/video-content-moderator",
+    "wavespeed-ai/qwen-image-2.0-pro/text-to-image",
+    "wavespeed-ai/qwen-image-2.0/edit",
+    "wavespeed-ai/qwen-image/edit-multiple-angles",
+    "wavespeed-ai/qwen-image/edit-plus-lora",
+    "wavespeed-ai/qwen-image/layered",
+    "wavespeed-ai/qwen-image/text-to-image",
+    "wavespeed-ai/sam3-image",
+    "wavespeed-ai/sam3-image-rle",
+    "wavespeed-ai/sam3-video-rle",
+    "wavespeed-ai/seedvr2/image",
+    "wavespeed-ai/skyreels-v3/talking-avatar",
+    "wavespeed-ai/soulx-flashhead",
+    "wavespeed-ai/ultimate-image-upscaler",
+    "wavespeed-ai/ultimate-video-upscaler",
+    "wavespeed-ai/video-background-remover",
+    "wavespeed-ai/video-upscaler-pro",
+    "wavespeed-ai/wan-2.1/i2v-480p",
+    "wavespeed-ai/wan-2.1/i2v-480p-lora",
+    "wavespeed-ai/wan-2.1/i2v-480p-lora-ultra-fast",
+    "wavespeed-ai/wan-2.1/i2v-480p-ultra-fast",
+    "wavespeed-ai/wan-2.1/i2v-720p",
+    "wavespeed-ai/wan-2.1/i2v-720p-lora",
+    "wavespeed-ai/wan-2.1/i2v-720p-lora-ultra-fast",
+    "wavespeed-ai/wan-2.1/i2v-720p-ultra-fast",
+    "wavespeed-ai/wan-2.1/t2v-480p",
+    "wavespeed-ai/wan-2.1/t2v-480p-lora",
+    "wavespeed-ai/wan-2.1/t2v-480p-lora-ultra-fast",
+    "wavespeed-ai/wan-2.1/t2v-480p-ultra-fast",
+    "wavespeed-ai/wan-2.1/t2v-720p",
+    "wavespeed-ai/wan-2.1/t2v-720p-lora",
+    "wavespeed-ai/wan-2.1/t2v-720p-lora-ultra-fast",
+    "wavespeed-ai/wan-2.1/t2v-720p-ultra-fast",
+    "wavespeed-ai/wan-2.2-image-lora-trainer",
+    "wavespeed-ai/wan-2.2/animate",
+    "wavespeed-ai/wan-2.2/i2v-720p",
+    "wavespeed-ai/wan-flf2v",
+    "wavespeed-ai/wan-flf2v/end_image",
+    "wavespeed-ai/z-image-lora-trainer",
+    "wavespeed-ai/z-image/base-lora-trainer",
+    "wavespeed-ai/z-image/turbo",
+    "wavespeed-ai/z-image/turbo-lora",
+]
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
 
-def get_token() -> str:
-    """Get WaveSpeed API key from env."""
-    token = os.environ.get("WAVESPEED_API_KEY", "")
-    if not token:
-        print("Error: WAVESPEED_API_KEY environment variable is required.")
-        print("Get your key at: https://wavespeed.ai/accesskey")
-        sys.exit(1)
-    return token
+def slugify(model_path: str) -> str:
+    """Convert model path like 'google/nano-banana-2/text-to-image' to 'wavespeed-google-nano-banana-2-text-to-image'."""
+    return "wavespeed-" + model_path.replace("/", "-")
 
 
-def slugify(model_id: str) -> str:
-    """Convert model_id like 'wavespeed-ai/flux-dev' to dir name 'wavespeed-ai-flux-dev'."""
-    return model_id.replace("/", "-")
-
-
-def fetch_json(url: str, token: str, params: dict | None = None,
-               retries: int = MAX_RETRIES) -> dict | None:
-    """Fetch JSON with retry + backoff. Returns None on failure."""
+def fetch_page(url: str, retries: int = MAX_RETRIES, verbose: bool = False) -> str | None:
+    """Fetch an HTML page with retry + backoff. Returns None on failure."""
     headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (compatible; WaveSpeedSkillScraper/1.0)",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     }
     for attempt in range(retries):
         try:
-            resp = requests.get(url, headers=headers, params=params, timeout=30)
+            resp = requests.get(url, headers=headers, timeout=30)
             if resp.status_code == 429:
                 wait = int(resp.headers.get("Retry-After", 2 ** (attempt + 1)))
-                print(f"  Rate limited, waiting {wait}s...")
+                if verbose:
+                    print(f"  Rate limited, waiting {wait}s...")
                 time.sleep(wait)
                 continue
-            if resp.status_code == 401:
-                print("Error: Invalid WAVESPEED_API_KEY. Check your token.")
-                sys.exit(1)
             if resp.status_code == 404:
+                if verbose:
+                    print(f"  404 Not Found: {url}")
                 return None
             resp.raise_for_status()
-            return resp.json()
+            return resp.text
         except requests.RequestException as e:
             if attempt < retries - 1:
                 wait = 2 ** (attempt + 1)
-                print(f"  Retry {attempt + 1}/{retries} after error: {e} (waiting {wait}s)")
+                if verbose:
+                    print(f"  Retry {attempt + 1}/{retries} after error: {e} (waiting {wait}s)")
                 time.sleep(wait)
             else:
                 print(f"  Failed after {retries} attempts: {e}")
@@ -121,174 +219,286 @@ def load_existing_endpoints(output_dir: str) -> set[str]:
 
 
 # ---------------------------------------------------------------------------
-# Model fetching
+# Model Discovery (scrape public website)
 # ---------------------------------------------------------------------------
 
 
-def fetch_all_models(token: str, verbose: bool = False) -> list[dict]:
-    """Fetch all models from the WaveSpeed API."""
+def scrape_model_paths(verbose: bool = False) -> list[str]:
+    """Scrape model paths from https://wavespeed.ai/models HTML page."""
     if verbose:
-        print("Fetching models list...")
+        print("Fetching model list from https://wavespeed.ai/models ...")
 
-    data = fetch_json(MODELS_URL, token)
-    if not data:
-        print("Failed to fetch models.")
-        return []
+    html = fetch_page(MODELS_PAGE_URL, verbose=verbose)
+    if not html:
+        print("Warning: Could not fetch models page, falling back to known model list.")
+        return list(KNOWN_MODEL_PATHS)
 
-    # Handle response structure: { code, message, data: [...] }
-    models = data.get("data", data) if isinstance(data, dict) else data
-    if isinstance(models, dict):
-        # Maybe the response is { models: [...] } or similar
-        models = models.get("models", models.get("items", models.get("results", [])))
+    # Extract all /models/{path} links from HTML
+    raw_matches = MODEL_PATH_RE.findall(html)
 
-    if not isinstance(models, list):
-        if verbose:
-            print(f"Unexpected response structure: {type(models)}")
-            print(f"Keys: {data.keys() if isinstance(data, dict) else 'N/A'}")
-        return []
+    # Deduplicate and filter out media file URLs
+    seen = set()
+    paths = []
+    for path in raw_matches:
+        path = path.strip("/")
+        if path in seen:
+            continue
+        # Skip media/static file URLs
+        if MEDIA_EXT_RE.search(path):
+            continue
+        # Must have at least provider/model (2 segments)
+        parts = path.split("/")
+        if len(parts) < 2:
+            continue
+        seen.add(path)
+        paths.append(path)
 
     if verbose:
-        print(f"Fetched {len(models)} models.")
+        print(f"  Found {len(paths)} model paths from HTML.")
 
-    return models
+    if not paths:
+        print("Warning: No model paths extracted from HTML, falling back to known model list.")
+        return list(KNOWN_MODEL_PATHS)
+
+    return sorted(paths)
 
 
-def filter_models(models: list[dict], filter_text: str | None = None,
-                  limit: int | None = None, verbose: bool = False) -> list[dict]:
-    """Filter and limit models."""
+def scrape_model_details(model_path: str, verbose: bool = False) -> dict:
+    """Scrape details from an individual model page. Returns a dict with available info."""
+    url = MODEL_PAGE_URL.format(model_path=model_path)
+    details = {
+        "model_path": model_path,
+        "name": "",
+        "description": "",
+        "parameters": [],
+        "pricing": "",
+    }
+
+    if verbose:
+        print(f"  Fetching model page: {url}")
+
+    html = fetch_page(url, verbose=verbose)
+    if not html:
+        return details
+
+    # Try to extract the page title — often the model name
+    title_match = re.search(r'<title[^>]*>([^<]+)</title>', html, re.IGNORECASE)
+    if title_match:
+        title = title_match.group(1).strip()
+        # Clean up common suffixes like " - WaveSpeed" or " | WaveSpeed"
+        title = re.sub(r'\s*[-|]\s*WaveSpeed.*$', '', title, flags=re.IGNORECASE).strip()
+        if title:
+            details["name"] = title
+
+    # Try to extract description from meta tags
+    desc_match = re.search(
+        r'<meta\s+(?:name|property)=["\'](?:description|og:description)["\']\s+content=["\']([^"\']+)["\']',
+        html, re.IGNORECASE
+    )
+    if not desc_match:
+        desc_match = re.search(
+            r'content=["\']([^"\']+)["\']\s+(?:name|property)=["\'](?:description|og:description)["\']',
+            html, re.IGNORECASE
+        )
+    if desc_match:
+        details["description"] = desc_match.group(1).strip()
+
+    # Try to extract parameter names from HTML text
+    # Look for common patterns: parameter names in code blocks, tables, etc.
+    param_matches = re.findall(
+        r'(?:parameter|param|field|input)[s]?\s*.*?[`"\'](\w+)[`"\'].*?(?:string|integer|boolean|number|float|array|enum)',
+        html, re.IGNORECASE
+    )
+    if param_matches:
+        details["parameters"] = list(dict.fromkeys(param_matches))  # dedupe, keep order
+
+    # Try to extract pricing info
+    price_match = re.search(r'\$[\d.]+\s*(?:/|per)', html)
+    if price_match:
+        details["pricing"] = price_match.group(0).strip()
+
+    return details
+
+
+# ---------------------------------------------------------------------------
+# Model info helpers
+# ---------------------------------------------------------------------------
+
+
+def model_path_to_name(model_path: str) -> str:
+    """Convert a model path to a human-readable display name.
+
+    E.g. 'google/nano-banana-2/text-to-image' -> 'Google Nano Banana 2 Text To Image'
+    """
+    parts = model_path.split("/")
+    # Capitalize each segment, replace hyphens with spaces
+    name_parts = []
+    for part in parts:
+        name_parts.append(part.replace("-", " ").replace("_", " ").title())
+    return " ".join(name_parts)
+
+
+def guess_model_type(model_path: str) -> str:
+    """Guess the model type/category from the path."""
+    path_lower = model_path.lower()
+    if "text-to-image" in path_lower or "t2i" in path_lower:
+        return "Text to Image"
+    if "image-to-video" in path_lower or "i2v" in path_lower:
+        return "Image to Video"
+    if "text-to-video" in path_lower or "t2v" in path_lower:
+        return "Text to Video"
+    if "text-to-speech" in path_lower or "tts" in path_lower:
+        return "Text to Speech"
+    if "text-to-3d" in path_lower:
+        return "Text to 3D"
+    if "image-to-3d" in path_lower:
+        return "Image to 3D"
+    if "upscal" in path_lower:
+        return "Upscaler"
+    if "background-remov" in path_lower:
+        return "Background Removal"
+    if "edit" in path_lower:
+        return "Image Editing"
+    if "lora" in path_lower and "trainer" in path_lower:
+        return "LoRA Training"
+    if "avatar" in path_lower:
+        return "Avatar"
+    if "music" in path_lower:
+        return "Music Generation"
+    if "audio" in path_lower:
+        return "Audio"
+    if "dubbing" in path_lower:
+        return "Dubbing"
+    if "moderat" in path_lower:
+        return "Content Moderation"
+    if "video-extend" in path_lower:
+        return "Video Extension"
+    if "animate" in path_lower:
+        return "Animation"
+    if "redux" in path_lower or "fill" in path_lower:
+        return "Image Generation"
+    if "flux" in path_lower or "image" in path_lower:
+        return "Image Generation"
+    if "video" in path_lower or "wan" in path_lower:
+        return "Video Generation"
+    if "sam" in path_lower:
+        return "Segmentation"
+    return ""
+
+
+def guess_example_input(model_path: str) -> dict:
+    """Build a reasonable example input based on the model path."""
+    path_lower = model_path.lower()
+
+    # Image generation models
+    if any(k in path_lower for k in ("text-to-image", "flux", "seedream", "nano-banana")):
+        if "edit" in path_lower:
+            return {"prompt": "your edit prompt here", "image": "https://example.com/input.png"}
+        if "lora" in path_lower and "trainer" not in path_lower:
+            return {"prompt": "your prompt here", "lora_url": "https://example.com/lora.safetensors"}
+        if "redux" in path_lower:
+            return {"image": "https://example.com/input.png"}
+        if "fill" in path_lower:
+            return {"prompt": "your prompt here", "image": "https://example.com/input.png", "mask": "https://example.com/mask.png"}
+        return {"prompt": "your prompt here"}
+
+    # Video generation models
+    if any(k in path_lower for k in ("i2v", "image-to-video")):
+        return {"prompt": "your prompt here", "image": "https://example.com/input.png"}
+    if any(k in path_lower for k in ("t2v", "text-to-video")):
+        return {"prompt": "your prompt here"}
+    if "video-extend" in path_lower:
+        return {"video": "https://example.com/input.mp4"}
+    if "flf2v" in path_lower:
+        return {"prompt": "your prompt here", "first_frame": "https://example.com/first.png", "last_frame": "https://example.com/last.png"}
+    if "animate" in path_lower:
+        return {"image": "https://example.com/input.png"}
+
+    # Text to speech
+    if "text-to-speech" in path_lower or "tts" in path_lower:
+        return {"text": "Hello, this is a test.", "voice": "default"}
+
+    # Text to 3D
+    if "text-to-3d" in path_lower:
+        return {"prompt": "a 3D model of a cat"}
+
+    # Image to 3D
+    if "image-to-3d" in path_lower:
+        return {"image": "https://example.com/input.png"}
+
+    # Upscalers
+    if "upscal" in path_lower:
+        if "video" in path_lower:
+            return {"video": "https://example.com/input.mp4"}
+        return {"image": "https://example.com/input.png"}
+
+    # Background removal
+    if "background-remov" in path_lower:
+        if "video" in path_lower:
+            return {"video": "https://example.com/input.mp4"}
+        return {"image": "https://example.com/input.png"}
+
+    # Avatar
+    if "avatar" in path_lower:
+        return {"image": "https://example.com/portrait.png", "audio": "https://example.com/audio.wav"}
+
+    # Content moderation
+    if "moderat" in path_lower:
+        if "video" in path_lower:
+            return {"video": "https://example.com/input.mp4"}
+        if "image" in path_lower:
+            return {"image": "https://example.com/input.png"}
+        return {"text": "content to moderate"}
+
+    # Music
+    if "music" in path_lower:
+        return {"prompt": "upbeat jazz melody"}
+    if "audio" in path_lower:
+        return {"video": "https://example.com/input.mp4"}
+
+    # Dubbing
+    if "dubbing" in path_lower:
+        return {"video": "https://example.com/input.mp4", "target_language": "es"}
+
+    # LoRA trainers
+    if "trainer" in path_lower:
+        return {"images": ["https://example.com/img1.png", "https://example.com/img2.png"], "trigger_word": "my_style"}
+
+    # Segmentation
+    if "sam" in path_lower:
+        return {"image": "https://example.com/input.png"}
+
+    # Edit models
+    if "edit" in path_lower:
+        return {"prompt": "your edit prompt here", "image": "https://example.com/input.png"}
+
+    # Layered
+    if "layered" in path_lower:
+        return {"prompt": "your prompt here"}
+
+    # Default fallback
+    return {"prompt": "your prompt here"}
+
+
+# ---------------------------------------------------------------------------
+# Filter helpers
+# ---------------------------------------------------------------------------
+
+
+def filter_models(model_paths: list[str], filter_text: str | None = None,
+                  limit: int | None = None, verbose: bool = False) -> list[str]:
+    """Filter and limit model paths."""
     if filter_text:
         filter_lower = filter_text.lower()
-        filtered = []
-        for m in models:
-            searchable = json.dumps(m).lower()
-            if filter_lower in searchable:
-                filtered.append(m)
+        filtered = [p for p in model_paths if filter_lower in p.lower()]
         if verbose:
             print(f"Filtered to {len(filtered)} models matching '{filter_text}'.")
-        models = filtered
+        model_paths = filtered
 
-    if limit and len(models) > limit:
-        models = models[:limit]
+    if limit and len(model_paths) > limit:
+        model_paths = model_paths[:limit]
 
-    return models
-
-
-# ---------------------------------------------------------------------------
-# Schema Extraction
-# ---------------------------------------------------------------------------
-
-
-def extract_input_schema(model: dict) -> dict | None:
-    """Extract input schema from a model's api_schema or api_schemas field."""
-    # Try api_schemas array (from docs)
-    schemas = model.get("api_schemas") or model.get("api_schema")
-    if isinstance(schemas, list):
-        for s in schemas:
-            req_schema = s.get("request_schema")
-            if req_schema and isinstance(req_schema, dict):
-                return req_schema
-    elif isinstance(schemas, dict):
-        # Single schema object
-        req_schema = schemas.get("request_schema")
-        if req_schema and isinstance(req_schema, dict):
-            return req_schema
-        # Maybe the schema itself has properties
-        if schemas.get("properties"):
-            return schemas
-
-    # Try direct input_schema field
-    input_schema = model.get("input_schema")
-    if input_schema and isinstance(input_schema, dict):
-        return input_schema
-
-    # Try parameters field
-    params = model.get("parameters")
-    if params and isinstance(params, dict) and params.get("properties"):
-        return params
-
-    return None
-
-
-def type_to_str(schema: dict) -> str:
-    """Convert a JSON Schema type to a readable string."""
-    if "enum" in schema:
-        vals = schema["enum"]
-        if len(vals) <= 6:
-            return "enum: " + ", ".join(f'`{v}`' for v in vals)
-        return f"enum ({len(vals)} values)"
-
-    if "allOf" in schema:
-        types = [type_to_str(s) for s in schema["allOf"]]
-        return " & ".join(types)
-    if "oneOf" in schema or "anyOf" in schema:
-        variants = schema.get("oneOf") or schema.get("anyOf", [])
-        types = [type_to_str(s) for s in variants]
-        unique = list(dict.fromkeys(types))
-        if len(unique) <= 3:
-            return " | ".join(unique)
-        return f"union ({len(unique)} types)"
-
-    t = schema.get("type", "any")
-    fmt = schema.get("format", "")
-
-    if t == "array":
-        items = schema.get("items", {})
-        inner = type_to_str(items)
-        return f"list<{inner}>"
-    if t == "integer":
-        return "integer"
-    if t == "number":
-        return "float"
-    if t == "boolean":
-        return "boolean"
-    if t == "string":
-        if fmt in ("uri", "url", "binary"):
-            return f"string ({fmt})"
-        return "string"
-    if t == "object":
-        title = schema.get("title", "")
-        return title if title else "object"
-
-    if "title" in schema:
-        return schema["title"]
-
-    return str(t)
-
-
-def schema_to_table_rows(schema: dict, required_fields: list | None = None) -> list[dict]:
-    """Convert schema properties to table row dicts."""
-    props = schema.get("properties", {})
-    if required_fields is None:
-        required_fields = schema.get("required", [])
-
-    rows = []
-    for name, prop in props.items():
-        row = {
-            "name": name,
-            "type": type_to_str(prop),
-            "required": "**Yes**" if name in required_fields else "No",
-            "default": "",
-            "description": prop.get("description", ""),
-        }
-        if "default" in prop:
-            val = prop["default"]
-            if isinstance(val, str):
-                row["default"] = f'`"{val}"`'
-            elif isinstance(val, bool):
-                row["default"] = f"`{str(val).lower()}`"
-            elif val is None:
-                row["default"] = ""
-            else:
-                row["default"] = f"`{val}`"
-
-        # Clean description
-        row["description"] = row["description"].replace("\n", " ").replace("|", "\\|").strip()
-        if len(row["description"]) > 120:
-            row["description"] = row["description"][:117] + "..."
-
-        rows.append(row)
-
-    return rows
+    return model_paths
 
 
 # ---------------------------------------------------------------------------
@@ -296,45 +506,27 @@ def schema_to_table_rows(schema: dict, required_fields: list | None = None) -> l
 # ---------------------------------------------------------------------------
 
 
-def get_model_id(model: dict) -> str | None:
-    """Extract model_id from a model dict."""
-    for key in ("model_id", "id", "slug", "endpoint"):
-        val = model.get(key)
-        if val and isinstance(val, str) and "/" in val:
-            return val
-    return None
-
-
-def get_model_name(model: dict, model_id: str) -> str:
-    """Get a display name for the model."""
-    name = model.get("name") or model.get("title") or ""
-    if name:
-        return name
-    return model_id.split("/")[-1].replace("-", " ").title()
-
-
-def get_model_description(model: dict) -> str:
-    """Get model description."""
-    return (model.get("description") or model.get("summary") or "").strip()
-
-
-def get_model_type(model: dict) -> str:
-    """Get model type/category."""
-    return (model.get("type") or model.get("category") or "").strip()
-
-
-def generate_skill_md(model_id: str, model: dict, input_schema: dict | None) -> str:
+def generate_skill_md(model_path: str, details: dict) -> str:
     """Generate a SKILL.md file for a WaveSpeed AI model."""
-    name = get_model_name(model, model_id)
-    description = get_model_description(model)
-    model_type = get_model_type(model)
-    slug = slugify(model_id)
-    source_url = WAVESPEED_PAGE.format(model_id=model_id)
+    name = details.get("name") or model_path_to_name(model_path)
+    description = details.get("description", "")
+    model_type = guess_model_type(model_path)
+    slug = slugify(model_path)
+    source_url = MODEL_PAGE_URL.format(model_path=model_path)
+
+    # Build docs URL: provider/model-variant
+    parts = model_path.split("/")
+    provider = parts[0]
+    model_variant = "-".join(parts[1:])
+    docs_url = DOCS_PAGE_URL.format(provider=provider, model_variant=model_variant)
 
     short_desc = description[:200] if description else f"Use the {name} model via WaveSpeed AI API."
     frontmatter_desc = (
-        f"Use this skill for the WaveSpeed AI {name} model ({model_id}). {short_desc}"
+        f"Use this skill for the WaveSpeed AI {name} model ({model_path}). {short_desc}"
     )
+
+    example_input = guess_example_input(model_path)
+    example_input_str = json.dumps(example_input, indent=4)
 
     lines = []
 
@@ -355,11 +547,8 @@ def generate_skill_md(model_id: str, model: dict, input_schema: dict | None) -> 
     if model_type:
         lines.append(f"**Type:** {model_type}")
 
-    lines.append(f"**Model:** `{model_id}`")
+    lines.append(f"**Model:** `{model_path}`")
     lines.append(f"**Source:** {source_url}")
-    price = model.get("base_price")
-    if price is not None:
-        lines.append(f"**Price:** ${price}")
     lines.append("")
     lines.append("---")
     lines.append("")
@@ -376,15 +565,12 @@ def generate_skill_md(model_id: str, model: dict, input_schema: dict | None) -> 
     lines.append("### 2. Submit a Task")
     lines.append("")
 
-    example_input = _build_example_input(input_schema)
-    example_input_str = json.dumps(example_input, indent=4) if example_input else '{\n    "prompt": "your prompt here"\n}'
-
     # cURL example
     lines.append("```bash")
-    lines.append(f'curl -X POST "{API_BASE}/{model_id}" \\')
+    lines.append(f'curl -X POST "{API_BASE}/{model_path}" \\')
     lines.append('  -H "Authorization: Bearer $WAVESPEED_API_KEY" \\')
     lines.append('  -H "Content-Type: application/json" \\')
-    curl_body = json.dumps(example_input or {"prompt": "your prompt here"})
+    curl_body = json.dumps(example_input)
     lines.append(f"  -d '{curl_body}'")
     lines.append("```")
     lines.append("")
@@ -394,7 +580,7 @@ def generate_skill_md(model_id: str, model: dict, input_schema: dict | None) -> 
     lines.append("### JavaScript Example")
     lines.append("")
     lines.append("```javascript")
-    lines.append(f'const response = await fetch("{API_BASE}/{model_id}", {{')
+    lines.append(f'const response = await fetch("{API_BASE}/{model_path}", {{')
     lines.append('  method: "POST",')
     lines.append("  headers: {")
     lines.append('    "Authorization": `Bearer ${process.env.WAVESPEED_API_KEY}`,')
@@ -421,7 +607,7 @@ def generate_skill_md(model_id: str, model: dict, input_schema: dict | None) -> 
     # Python example
     lines.append("### Python Example")
     lines.append("")
-    py_input = json.dumps(example_input or {"prompt": "your prompt here"}, indent=4)
+    py_input = json.dumps(example_input, indent=4)
     py_indented = py_input.replace("\n", "\n    ")
     lines.append("```python")
     lines.append("import os, time, requests")
@@ -430,7 +616,7 @@ def generate_skill_md(model_id: str, model: dict, input_schema: dict | None) -> 
     lines.append('HEADERS = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}')
     lines.append("")
     lines.append("# Submit task")
-    lines.append(f'resp = requests.post("{API_BASE}/{model_id}",')
+    lines.append(f'resp = requests.post("{API_BASE}/{model_path}",')
     lines.append(f"    headers=HEADERS,")
     lines.append(f"    json={py_indented},")
     lines.append(")")
@@ -469,22 +655,49 @@ def generate_skill_md(model_id: str, model: dict, input_schema: dict | None) -> 
     lines.append("---")
     lines.append("")
 
-    # --- Input Schema ---
-    if input_schema and input_schema.get("properties"):
-        input_rows = schema_to_table_rows(input_schema)
-        if input_rows:
-            lines.append("## Input Schema")
-            lines.append("")
-            lines.append("| Parameter | Type | Required | Default | Description |")
-            lines.append("| --- | --- | --- | --- | --- |")
-            for row in input_rows:
-                lines.append(
-                    f"| `{row['name']}` | {row['type']} | {row['required']} "
-                    f"| {row['default']} | {row['description']} |"
-                )
-            lines.append("")
-            lines.append("---")
-            lines.append("")
+    # --- Input Parameters ---
+    lines.append("## Input Parameters")
+    lines.append("")
+    lines.append(f"> For the full list of parameters, defaults, and accepted values, check the model's API docs:")
+    lines.append(f"> - Model page: {source_url}")
+    lines.append(f"> - API docs: {docs_url}")
+    lines.append("")
+
+    # Show what we know from the example
+    lines.append("**Common parameters** (based on model type):")
+    lines.append("")
+    lines.append("| Parameter | Type | Description |")
+    lines.append("| --- | --- | --- |")
+    for key, val in example_input.items():
+        if isinstance(val, str):
+            ptype = "string"
+        elif isinstance(val, bool):
+            ptype = "boolean"
+        elif isinstance(val, int):
+            ptype = "integer"
+        elif isinstance(val, float):
+            ptype = "float"
+        elif isinstance(val, list):
+            ptype = "array"
+        else:
+            ptype = "any"
+        pdesc = _param_description(key, model_path)
+        lines.append(f"| `{key}` | {ptype} | {pdesc} |")
+
+    # Add common optional params
+    lines.append(f"| `enable_sync_mode` | boolean | Wait for result in the initial response |")
+    lines.append(f"| `enable_base64_output` | boolean | Return base64-encoded output instead of URL |")
+    lines.append(f"| `webhook_url` | string | URL to receive async notification when task completes |")
+    lines.append("")
+
+    # Show scraped params if we got any
+    scraped_params = details.get("parameters", [])
+    if scraped_params:
+        lines.append("**Additional parameters found on model page:** " + ", ".join(f"`{p}`" for p in scraped_params))
+        lines.append("")
+
+    lines.append("---")
+    lines.append("")
 
     # --- Output ---
     lines.append("## Output")
@@ -509,7 +722,7 @@ def generate_skill_md(model_id: str, model: dict, input_schema: dict | None) -> 
     lines.append("")
     lines.append("### 1. Submit Task")
     lines.append("")
-    lines.append(f"**POST** `{API_BASE}/{model_id}`")
+    lines.append(f"**POST** `{API_BASE}/{model_path}`")
     lines.append("")
     lines.append("### 2. Poll for Result")
     lines.append("")
@@ -542,7 +755,8 @@ def generate_skill_md(model_id: str, model: dict, input_schema: dict | None) -> 
     lines.append("## References")
     lines.append("")
     lines.append(f"- Model page: {source_url}")
-    lines.append("- API docs: https://wavespeed.ai/docs/api-reference")
+    lines.append(f"- API docs: {docs_url}")
+    lines.append("- API reference: https://wavespeed.ai/docs/api-reference")
     lines.append("- Authentication: https://wavespeed.ai/docs/api-authentication")
     lines.append("- Submit task: https://wavespeed.ai/docs/submit-task")
     lines.append("- Get result: https://wavespeed.ai/docs/get-result")
@@ -551,41 +765,24 @@ def generate_skill_md(model_id: str, model: dict, input_schema: dict | None) -> 
     return "\n".join(lines)
 
 
-def _build_example_input(schema: dict | None) -> dict | None:
-    """Build a minimal example input from schema, using only required fields."""
-    if not schema or not schema.get("properties"):
-        return None
-
-    required = set(schema.get("required", []))
-    example = {}
-
-    for name, prop in schema.get("properties", {}).items():
-        if name not in required:
-            continue
-
-        if "default" in prop:
-            example[name] = prop["default"]
-        elif "enum" in prop:
-            example[name] = prop["enum"][0]
-        elif prop.get("type") == "string":
-            if any(k in name.lower() for k in ("url", "image", "video", "audio")):
-                example[name] = "https://example.com/input.png"
-            elif "prompt" in name.lower():
-                example[name] = "your prompt here"
-            else:
-                example[name] = "your value here"
-        elif prop.get("type") == "integer":
-            example[name] = prop.get("minimum", 1)
-        elif prop.get("type") == "number":
-            example[name] = prop.get("default", 1.0)
-        elif prop.get("type") == "boolean":
-            example[name] = True
-        elif prop.get("type") == "array":
-            example[name] = []
-        else:
-            example[name] = "..."
-
-    return example if example else None
+def _param_description(param_name: str, model_path: str) -> str:
+    """Generate a reasonable description for a common parameter name."""
+    descs = {
+        "prompt": "Text prompt describing what to generate",
+        "image": "Input image URL",
+        "video": "Input video URL",
+        "audio": "Input audio URL",
+        "mask": "Mask image URL for inpainting",
+        "text": "Input text",
+        "voice": "Voice identifier for speech synthesis",
+        "target_language": "Target language code for translation/dubbing",
+        "first_frame": "URL of the first frame image",
+        "last_frame": "URL of the last frame image",
+        "lora_url": "URL to LoRA weights file (.safetensors)",
+        "images": "Array of training image URLs",
+        "trigger_word": "Trigger word for LoRA activation",
+    }
+    return descs.get(param_name, f"See model docs for details")
 
 
 # ---------------------------------------------------------------------------
@@ -593,28 +790,32 @@ def _build_example_input(schema: dict | None) -> dict | None:
 # ---------------------------------------------------------------------------
 
 
-def process_model(model_id: str, model: dict, output_dir: str,
-                  dry_run: bool = False, verbose: bool = False) -> bool:
-    """Process a single model: extract schema, generate SKILL.md."""
-    print(f"  Processing: {model_id}")
+def process_model(model_path: str, output_dir: str, delay: float = DEFAULT_DELAY,
+                  dry_run: bool = False, verbose: bool = False,
+                  fetch_details: bool = True) -> bool:
+    """Process a single model: scrape details, generate SKILL.md."""
+    print(f"  Processing: {model_path}")
 
-    input_schema = extract_input_schema(model)
+    details = {}
+    if fetch_details:
+        details = scrape_model_details(model_path, verbose=verbose)
+        time.sleep(delay)  # Be polite to the website
 
-    content = generate_skill_md(model_id, model, input_schema)
+    content = generate_skill_md(model_path, details)
 
     if dry_run:
         print(content)
         return True
 
-    slug = slugify(model_id)
+    slug = slugify(model_path)
     out_dir = Path(output_dir) / slug
     out_dir.mkdir(parents=True, exist_ok=True)
     out_file = out_dir / "SKILL.md"
     out_file.write_text(content)
 
     if verbose:
-        props = len((input_schema or {}).get("properties", {}))
-        print(f"  Wrote: {out_file} ({props} input params)")
+        name = details.get("name") or model_path_to_name(model_path)
+        print(f"  Wrote: {out_file} (name: {name})")
     else:
         print(f"  -> {out_file}")
 
@@ -623,12 +824,14 @@ def process_model(model_id: str, model: dict, output_dir: str,
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Auto-generate SKILL.md files for WaveSpeed AI models"
+        description="Auto-generate SKILL.md files for WaveSpeed AI models (no API key required)"
     )
     parser.add_argument("--dry-run", action="store_true",
                         help="Preview without writing files")
     parser.add_argument("--model", type=str, default=None,
-                        help="Process a single model (e.g. 'wavespeed-ai/flux-dev')")
+                        help="Process a single model path (e.g. 'wavespeed-ai/flux-dev')")
+    parser.add_argument("--all", action="store_true",
+                        help="Scrape all models from the WaveSpeed models page")
     parser.add_argument("--filter", type=str, default=None,
                         help="Filter models by keyword (e.g. 'text-to-video')")
     parser.add_argument("--limit", type=int, default=None,
@@ -646,8 +849,6 @@ def main():
 
     args = parser.parse_args()
 
-    token = get_token()
-
     # Load existing
     existing = load_existing_endpoints(args.output_dir) if args.skip_existing else set()
     if args.verbose:
@@ -655,76 +856,63 @@ def main():
 
     # --- Single model mode ---
     if args.model:
-        model_id = args.model.strip()
-        if model_id in existing and args.skip_existing:
-            print(f"Skill already exists for {model_id}, skipping. Use --no-skip-existing to override.")
+        model_path = args.model.strip().strip("/")
+        # Remove leading "models/" if someone passes the full URL path
+        if model_path.startswith("models/"):
+            model_path = model_path[len("models/"):]
+
+        if model_path in existing and args.skip_existing:
+            print(f"Skill already exists for {model_path}, skipping. Use --no-skip-existing to override.")
             return
 
-        # Fetch all models to find this one's schema
-        models = fetch_all_models(token, args.verbose)
-        model_data = None
-        for m in models:
-            mid = get_model_id(m)
-            if mid == model_id:
-                model_data = m
-                break
-
-        if not model_data:
-            # Create a minimal model dict
-            print(f"  Model '{model_id}' not found in API listing, creating with minimal info.")
-            model_data = {
-                "model_id": model_id,
-                "name": model_id.split("/")[-1].replace("-", " ").title(),
-            }
-
-        process_model(model_id, model_data, args.output_dir, args.dry_run, args.verbose)
+        process_model(model_path, args.output_dir, args.delay, args.dry_run, args.verbose)
         return
 
     # --- List/filter all models ---
-    models = fetch_all_models(token, args.verbose)
-    if not models:
+    if not args.all and not args.filter:
+        print("Specify --all to scrape all models, --model for a single model, or --filter to search.")
+        print("Use --dry-run to preview without writing files.")
+        parser.print_help()
+        sys.exit(1)
+
+    model_paths = scrape_model_paths(verbose=args.verbose)
+    if not model_paths:
         print("No models found.")
         sys.exit(1)
 
-    models = filter_models(models, args.filter, args.limit, args.verbose)
+    model_paths = filter_models(model_paths, args.filter, args.limit, args.verbose)
 
-    # Pair up model_id -> model dict, skip existing
-    new_models = []
-    for m in models:
-        model_id = get_model_id(m)
-        if not model_id:
+    # Skip existing
+    new_paths = []
+    for path in model_paths:
+        if path in existing and args.skip_existing:
             if args.verbose:
-                print(f"  Skipping model with no ID: {m.get('name', '?')}")
+                print(f"  Already have: {path}")
             continue
-        if model_id in existing and args.skip_existing:
-            if args.verbose:
-                print(f"  Already have: {model_id}")
-            continue
-        new_models.append((model_id, m))
+        new_paths.append(path)
 
-    print(f"\n{len(new_models)} new models to process (out of {len(models)} total, {len(existing)} existing).\n")
+    print(f"\n{len(new_paths)} new models to process (out of {len(model_paths)} total, {len(existing)} existing).\n")
 
     if args.dry_run and not args.model:
-        for model_id, m in new_models:
-            name = get_model_name(m, model_id)
-            mtype = get_model_type(m)
+        for path in new_paths:
+            name = model_path_to_name(path)
+            mtype = guess_model_type(path)
             type_str = f"  [{mtype}]" if mtype else ""
-            print(f"  {model_id}  —  {name}{type_str}")
+            print(f"  {path}  --  {name}{type_str}")
         print(f"\nDry run complete. Use without --dry-run to generate files.")
         return
 
     # Process each
     success = 0
     skipped = 0
-    for i, (model_id, model) in enumerate(new_models, 1):
-        name = get_model_name(model, model_id)
-        print(f"[{i}/{len(new_models)}] {model_id} ({name})")
+    for i, path in enumerate(new_paths, 1):
+        name = model_path_to_name(path)
+        print(f"[{i}/{len(new_paths)}] {path} ({name})")
 
-        if process_model(model_id, model, args.output_dir, args.dry_run, args.verbose):
+        if process_model(path, args.output_dir, args.delay, args.dry_run, args.verbose):
             success += 1
         else:
             skipped += 1
-        time.sleep(args.delay)
 
     print(f"\nDone! Generated {success} skills, skipped {skipped}.")
 
