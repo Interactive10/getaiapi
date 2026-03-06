@@ -1,0 +1,18 @@
+{
+  "remove-background": 24,
+  "text-to-image": 828,
+  "text-to-audio": 76,
+  "image-edit": 213,
+  "audio-to-text": 25,
+  "text-to-3d": 19,
+  "image-to-video": 178,
+  "upscale-image": 59,
+  "text-to-video": 308,
+  "video-to-audio": 18,
+  "upscale-video": 15,
+  "image-to-3d": 31,
+  "segmentation": 34,
+  "moderation": 8,
+  "image-to-image": 43,
+  "training": 50
+}

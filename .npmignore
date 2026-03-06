@@ -1,0 +1,30 @@
+# Source
+src/
+
+# Development
+skills/
+scripts/
+tests/
+docs/
+agents/
+tasks/
+tools/
+
+# Config
+tsup.config.ts
+tsconfig.json
+vitest.config.*
+.eslintrc*
+.prettierrc*
+CLAUDE.md
+AGENTS.md
+
+# Git & CI
+.git/
+.github/
+.gitignore
+
+# Environment
+.env*
+*.log
+node_modules/

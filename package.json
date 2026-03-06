@@ -1,0 +1,59 @@
+{
+  "name": "getaiapi",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Unified AI API Gateway - one function to call any AI model",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "bin": {
+    "getaiapi": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "registry",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Interactive10/getaiapi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Interactive10/getaiapi/issues"
+  },
+  "homepage": "https://github.com/Interactive10/getaiapi#readme",
+  "keywords": [
+    "ai",
+    "api",
+    "gateway",
+    "fal-ai",
+    "replicate",
+    "wavespeed",
+    "image-generation",
+    "text-to-image",
+    "unified-api"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "catalog": "tsx scripts/catalog.ts",
+    "generate-registry": "tsx scripts/generate-registry.ts"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "images": [
+    {
+      "url": "https://fal.media/files/example/flux-schnell-output.png",
+      "width": 1024,
+      "height": 768,
+      "content_type": "image/png"
+    }
+  ],
+  "timings": { "inference": 0.5 },
+  "seed": 42,
+  "has_nsfw_concepts": [false],
+  "prompt": "a cat wearing sunglasses"
+}

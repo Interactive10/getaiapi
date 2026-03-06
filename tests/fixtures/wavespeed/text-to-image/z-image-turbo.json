@@ -1,0 +1,9 @@
+{
+  "data": {
+    "id": "task-xyz",
+    "status": "completed",
+    "outputs": [
+      "https://cdn.wavespeed.ai/outputs/example/z-image-output.png"
+    ]
+  }
+}

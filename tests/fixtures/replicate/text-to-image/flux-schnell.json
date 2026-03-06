@@ -1,0 +1,10 @@
+{
+  "id": "abc123",
+  "status": "succeeded",
+  "output": [
+    "https://replicate.delivery/example/flux-schnell-output.png"
+  ],
+  "metrics": {
+    "predict_time": 1.234
+  }
+}
