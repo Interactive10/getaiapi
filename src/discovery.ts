@@ -7,15 +7,21 @@ export interface ListModelsFilters {
   category?: ModelCategory;
   provider?: ProviderName;
   query?: string; // search canonical name and aliases
+  accessible?: boolean; // if true, only return models the caller has API keys for
 }
 
 /**
- * Lists all models the caller can access (has API keys for).
+ * Lists all models in the registry.
+ * Set `accessible: true` to filter to only models the caller has API keys for.
  * Optionally filters by category, provider, or text query.
  */
 export function listModels(filters?: ListModelsFilters): ModelEntry[] {
-  const auth = new AuthManager();
-  let models = auth.listAvailableModels(loadRegistry());
+  let models = loadRegistry();
+
+  if (filters?.accessible) {
+    const auth = new AuthManager();
+    models = auth.listAvailableModels(models);
+  }
 
   if (filters?.category) {
     models = models.filter((m) => m.category === filters.category);

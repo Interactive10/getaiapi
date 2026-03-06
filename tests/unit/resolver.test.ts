@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { ModelEntry } from "../../src/types.js";
 import { ModelNotFoundError } from "../../src/errors.js";
+import { readFileSync } from "fs";
 
 // Mock the fs module so we don't read the full 1.2MB registry file
 vi.mock("fs", () => ({
@@ -118,6 +119,22 @@ describe("loadRegistry", () => {
     expect(entries).toHaveLength(4);
     expect(entries[0].canonical_name).toBe("flux-schnell");
   });
+
+  it("throws when registry.json cannot be found", () => {
+    const mockedReadFileSync = vi.mocked(readFileSync);
+    mockedReadFileSync.mockImplementation(() => {
+      throw new Error("ENOENT");
+    });
+
+    clearRegistryCache();
+
+    expect(() => loadRegistry()).toThrow(
+      /Could not find registry\/registry\.json/,
+    );
+
+    // Restore normal behavior
+    mockedReadFileSync.mockImplementation(() => JSON.stringify(mockRegistry));
+  });
 });
 
 describe("resolveModel", () => {
@@ -204,6 +221,18 @@ describe("resolveModel", () => {
       // Both flux-dev and flux-schnell should appear as suggestions
       expect(mnfErr.suggestions).toContain("flux-dev");
       expect(mnfErr.suggestions).toContain("flux-schnell");
+    }
+  });
+
+  it("returns empty suggestions when query normalizes to empty string", () => {
+    // "---" normalizes to "" (all non-alphanumeric stripped)
+    try {
+      resolveModel("---");
+      expect.fail("Should have thrown");
+    } catch (err) {
+      expect(err).toBeInstanceOf(ModelNotFoundError);
+      const mnfErr = err as ModelNotFoundError;
+      expect(mnfErr.suggestions).toEqual([]);
     }
   });
 });

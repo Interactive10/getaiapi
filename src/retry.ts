@@ -113,6 +113,7 @@ export async function withRetry<T>(
     }
   }
 
-  // Should not reach here, but just in case
-  throw lastError
+  /* v8 ignore next 3 */
+  // Unreachable: the for loop always returns or throws
+  throw lastError as Error
 }
