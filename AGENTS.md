@@ -20,6 +20,7 @@ This project uses specialized agent personas. Each agent has deep expertise in t
 | CEO | `/agents/ceo.md` | "Think like a CEO" |
 | CFO | `/agents/cfo.md` | "Think like a CFO" |
 | Product Manager | `/agents/product-manager.md` | "Think like a product manager" |
+| Product Owner | `/agents/product-owner.md` | "Think like a product owner" |
 | DevOps Engineer | `/agents/devops.md` | "Think like a DevOps engineer" |
 | Security Engineer | `/agents/security.md` | "Think like a security engineer" |
 | QA Engineer | `/agents/qa.md` | "Think like a QA engineer" |
