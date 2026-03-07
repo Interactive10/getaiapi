@@ -40,7 +40,7 @@ function toAmzDate(date: Date): { amzDate: string; dateStamp: string } {
 }
 
 export function signS3Request(
-  method: "PUT" | "DELETE",
+  method: "PUT" | "DELETE" | "GET",
   url: string,
   headers: Record<string, string>,
   body: Buffer | null,
@@ -105,4 +105,63 @@ export function signS3Request(
       authorization,
     },
   };
+}
+
+export interface PresignOptions {
+  expiresIn?: number; // seconds, default 3600
+}
+
+export function presignS3Url(
+  url: string,
+  credentials: S3Credentials,
+  options?: PresignOptions,
+): string {
+  const region = credentials.region ?? "auto";
+  const service = "s3";
+  const parsedUrl = new URL(url);
+  const now = new Date();
+  const { amzDate, dateStamp } = toAmzDate(now);
+  const expiresIn = options?.expiresIn ?? 3600;
+
+  const host = parsedUrl.host;
+  const signedHeaders = "host";
+  const scope = `${dateStamp}/${region}/${service}/aws4_request`;
+  const credential = `${credentials.accessKeyId}/${scope}`;
+
+  // Set query parameters for presigned URL
+  const queryParams = new URLSearchParams({
+    "X-Amz-Algorithm": "AWS4-HMAC-SHA256",
+    "X-Amz-Credential": credential,
+    "X-Amz-Date": amzDate,
+    "X-Amz-Expires": String(expiresIn),
+    "X-Amz-SignedHeaders": signedHeaders,
+  });
+
+  // Canonical request with UNSIGNED-PAYLOAD
+  const canonicalRequest = [
+    "GET",
+    parsedUrl.pathname,
+    queryParams.toString(),
+    `host:${host}\n`,
+    signedHeaders,
+    "UNSIGNED-PAYLOAD",
+  ].join("\n");
+
+  // String to sign
+  const stringToSign = [
+    "AWS4-HMAC-SHA256",
+    amzDate,
+    scope,
+    sha256(canonicalRequest),
+  ].join("\n");
+
+  // Signing key and signature
+  const signingKey = getSigningKey(credentials.secretAccessKey, dateStamp, region, service);
+  const signature = createHmac("sha256", signingKey)
+    .update(stringToSign)
+    .digest("hex");
+
+  queryParams.set("X-Amz-Signature", signature);
+
+  return `${parsedUrl.origin}${parsedUrl.pathname}?${queryParams.toString()}`;
 }

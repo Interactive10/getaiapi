@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { signS3Request } from "./s3-signer.js";
+import { signS3Request, presignS3Url } from "./s3-signer.js";
 import { StorageError } from "./errors.js";
 import type { StorageConfig, UploadResult, UploadOptions } from "./types.js";
 
@@ -31,6 +31,10 @@ export function configureStorage(config?: StorageConfig): void {
     secretAccessKey,
     publicUrlBase: process.env.R2_PUBLIC_URL,
     autoUpload: false,
+    mode: (process.env.R2_STORAGE_MODE as 'public' | 'presigned' | undefined) ?? undefined,
+    presignExpiresIn: process.env.R2_PRESIGN_EXPIRES_IN
+      ? parseInt(process.env.R2_PRESIGN_EXPIRES_IN, 10)
+      : undefined,
   };
 }
 
@@ -117,12 +121,31 @@ export async function uploadAsset(
     throw new StorageError("upload", `R2 returned ${response.status}: ${body}`, response.status);
   }
 
+  const url = config.mode === 'presigned'
+    ? presignS3Url(buildR2Url(config, key), {
+        accessKeyId: config.accessKeyId,
+        secretAccessKey: config.secretAccessKey,
+      }, { expiresIn: config.presignExpiresIn })
+    : buildPublicUrl(config, key);
+
   return {
-    url: buildPublicUrl(config, key),
+    url,
     key,
     size_bytes: buffer.length,
     content_type: contentType,
   };
+}
+
+export function presignAsset(
+  key: string,
+  options?: { expiresIn?: number },
+): string {
+  const config = getConfig();
+  const r2Url = buildR2Url(config, key);
+  return presignS3Url(r2Url, {
+    accessKeyId: config.accessKeyId,
+    secretAccessKey: config.secretAccessKey,
+  }, { expiresIn: options?.expiresIn ?? config.presignExpiresIn });
 }
 
 export async function deleteAsset(key: string): Promise<void> {

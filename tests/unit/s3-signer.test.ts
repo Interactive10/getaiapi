@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { signS3Request } from "../../src/s3-signer.js";
+import { signS3Request, presignS3Url } from "../../src/s3-signer.js";
 
 const TEST_CREDS = {
   accessKeyId: "AKIAIOSFODNN7EXAMPLE",
@@ -100,5 +100,75 @@ describe("signS3Request", () => {
     for (const key of Object.keys(result.headers)) {
       expect(key).toBe(key.toLowerCase());
     }
+  });
+});
+
+describe("presignS3Url", () => {
+  it("returns a URL with all required SigV4 query params", () => {
+    const url = presignS3Url(
+      "https://test-account.r2.cloudflarestorage.com/test-bucket/test-key.png",
+      TEST_CREDS,
+    );
+
+    const parsed = new URL(url);
+    expect(parsed.searchParams.get("X-Amz-Algorithm")).toBe("AWS4-HMAC-SHA256");
+    expect(parsed.searchParams.get("X-Amz-Credential")).toContain(TEST_CREDS.accessKeyId);
+    expect(parsed.searchParams.get("X-Amz-Credential")).toContain("auto/s3/aws4_request");
+    expect(parsed.searchParams.get("X-Amz-Date")).toMatch(/^\d{8}T\d{6}Z$/);
+    expect(parsed.searchParams.get("X-Amz-Expires")).toBe("3600");
+    expect(parsed.searchParams.get("X-Amz-SignedHeaders")).toBe("host");
+    expect(parsed.searchParams.get("X-Amz-Signature")).toMatch(/^[0-9a-f]{64}$/);
+  });
+
+  it("uses default expiry of 3600 seconds", () => {
+    const url = presignS3Url(
+      "https://test.r2.cloudflarestorage.com/bucket/key",
+      TEST_CREDS,
+    );
+
+    const parsed = new URL(url);
+    expect(parsed.searchParams.get("X-Amz-Expires")).toBe("3600");
+  });
+
+  it("uses custom expiry when provided", () => {
+    const url = presignS3Url(
+      "https://test.r2.cloudflarestorage.com/bucket/key",
+      TEST_CREDS,
+      { expiresIn: 900 },
+    );
+
+    const parsed = new URL(url);
+    expect(parsed.searchParams.get("X-Amz-Expires")).toBe("900");
+  });
+
+  it("preserves the correct origin and pathname", () => {
+    const url = presignS3Url(
+      "https://test-account.r2.cloudflarestorage.com/my-bucket/path/to/file.jpg",
+      TEST_CREDS,
+    );
+
+    const parsed = new URL(url);
+    expect(parsed.origin).toBe("https://test-account.r2.cloudflarestorage.com");
+    expect(parsed.pathname).toBe("/my-bucket/path/to/file.jpg");
+  });
+
+  it("produces consistent signatures for the same input", () => {
+    const testUrl = "https://acct.r2.cloudflarestorage.com/bucket/key";
+    const url1 = presignS3Url(testUrl, TEST_CREDS);
+    const url2 = presignS3Url(testUrl, TEST_CREDS);
+
+    const sig1 = new URL(url1).searchParams.get("X-Amz-Signature");
+    const sig2 = new URL(url2).searchParams.get("X-Amz-Signature");
+    expect(sig1).toBe(sig2);
+  });
+
+  it("does not include authorization headers in the URL", () => {
+    const url = presignS3Url(
+      "https://test.r2.cloudflarestorage.com/bucket/key",
+      TEST_CREDS,
+    );
+
+    expect(url).not.toContain("authorization");
+    expect(url).not.toContain("Authorization");
   });
 });

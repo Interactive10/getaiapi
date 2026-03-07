@@ -173,6 +173,8 @@ export interface StorageConfig {
   secretAccessKey: string;
   publicUrlBase?: string;
   autoUpload?: boolean;
+  mode?: 'public' | 'presigned';
+  presignExpiresIn?: number;
 }
 
 export interface UploadResult {

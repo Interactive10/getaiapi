@@ -6,6 +6,7 @@ import {
   resetStorage,
   processParamsForUpload,
   getStorageConfig,
+  presignAsset,
 } from "../../src/storage.js";
 import { StorageError } from "../../src/errors.js";
 
@@ -28,6 +29,8 @@ describe("configureStorage", () => {
       "R2_ACCESS_KEY_ID",
       "R2_SECRET_ACCESS_KEY",
       "R2_PUBLIC_URL",
+      "R2_STORAGE_MODE",
+      "R2_PRESIGN_EXPIRES_IN",
     ]) {
       savedEnv[key] = process.env[key];
       delete process.env[key];
@@ -386,5 +389,84 @@ describe("processParamsForUpload", () => {
         { reupload: true, maxBytes: 50 },
       ),
     ).rejects.toThrow(StorageError);
+  });
+});
+
+describe("presignAsset", () => {
+  beforeEach(() => {
+    resetStorage();
+  });
+
+  afterEach(() => {
+    resetStorage();
+  });
+
+  it("returns a presigned URL with SigV4 query params", () => {
+    configureStorage(TEST_CONFIG);
+    const url = presignAsset("my/file.png");
+    const parsed = new URL(url);
+    expect(parsed.searchParams.get("X-Amz-Algorithm")).toBe("AWS4-HMAC-SHA256");
+    expect(parsed.searchParams.get("X-Amz-Signature")).toMatch(/^[0-9a-f]{64}$/);
+    expect(parsed.pathname).toBe("/test-bucket/my/file.png");
+  });
+
+  it("uses custom expiresIn", () => {
+    configureStorage(TEST_CONFIG);
+    const url = presignAsset("key.png", { expiresIn: 600 });
+    const parsed = new URL(url);
+    expect(parsed.searchParams.get("X-Amz-Expires")).toBe("600");
+  });
+
+  it("uses presignExpiresIn from config when no override", () => {
+    configureStorage({ ...TEST_CONFIG, presignExpiresIn: 1800 });
+    const url = presignAsset("key.png");
+    const parsed = new URL(url);
+    expect(parsed.searchParams.get("X-Amz-Expires")).toBe("1800");
+  });
+
+  it("throws StorageError when storage not configured", () => {
+    expect(() => presignAsset("key.png")).toThrow(StorageError);
+  });
+});
+
+describe("uploadAsset with presigned mode", () => {
+  beforeEach(() => {
+    resetStorage();
+  });
+
+  afterEach(() => {
+    resetStorage();
+    vi.restoreAllMocks();
+  });
+
+  it("returns presigned URL when mode is presigned", async () => {
+    configureStorage({ ...TEST_CONFIG, mode: "presigned" });
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, text: () => Promise.resolve("") }));
+
+    const result = await uploadAsset(Buffer.from("test data"), {
+      key: "my/file.png",
+      contentType: "image/png",
+    });
+
+    const parsed = new URL(result.url);
+    expect(parsed.searchParams.get("X-Amz-Algorithm")).toBe("AWS4-HMAC-SHA256");
+    expect(parsed.searchParams.get("X-Amz-Signature")).toMatch(/^[0-9a-f]{64}$/);
+    expect(parsed.pathname).toBe("/test-bucket/my/file.png");
+  });
+
+  it("returns public URL when mode is public", async () => {
+    configureStorage({ ...TEST_CONFIG, mode: "public" });
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, text: () => Promise.resolve("") }));
+
+    const result = await uploadAsset(Buffer.from("test data"), { key: "file.png" });
+    expect(result.url).toBe("https://cdn.example.com/file.png");
+  });
+
+  it("returns public URL when mode is undefined (default)", async () => {
+    configureStorage(TEST_CONFIG);
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, text: () => Promise.resolve("") }));
+
+    const result = await uploadAsset(Buffer.from("test data"), { key: "file.png" });
+    expect(result.url).toBe("https://cdn.example.com/file.png");
   });
 });
