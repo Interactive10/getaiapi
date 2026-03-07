@@ -4,6 +4,32 @@ All notable changes to the getaiapi registry and library will be documented in t
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.1] - 2026-03-08
+
+### Fixed
+
+- **nano-banana**: Recategorized from `image-edit` to `text-to-image` (no image input required)
+- **nano-banana-2**: Recategorized from `image-edit` to `text-to-image` (no image input required)
+- **nano-banana-pro**: Recategorized from `image-edit` to `text-to-image` (no image input required)
+- **ideogram-v2-turbo**: Recategorized from `upscale-image` to `text-to-image` (prompt-only generation model, not an upscaler)
+- **ideogram-v2a-turbo**: Recategorized from `upscale-image` to `text-to-image` (prompt-only generation model, not an upscaler)
+- **argil-avatars-text-to-video**, **veed-avatars-text-to-video**, **ltx-2.3-text-to-video**, **ltx-2.3-text-to-video-fast**, **luma-dream-machine-ray-2-image-to-video**, **luma-dream-machine-ray-2-flash-image-to-video**: Recategorized from `image-to-video` to `text-to-video` (no required image input)
+- **14 lipsync/dubbing models**: Recategorized from `image-to-video` to new `video-to-video` category (dubbing, chenxwh-video-retalking, kling-video-lipsync-*, sync-lipsync-*, pixverse-lipsync, veed-lipsync, tmappdev-lipsync, infinitalk-video-to-video)
+- **argil-avatars-audio-to-video**, **longcat-single-avatar-audio-to-video**, **veed-avatars-audio-to-video**, **ltx-2.3-audio-to-video**: Recategorized from `image-to-video` to new `audio-to-video` category
+
+- **elevenlabs-sfx-v2**: Recategorized from `video-to-audio` to `text-to-audio` (generates SFX from text, not video)
+- **elevenlabs-flash-v2.5**, **elevenlabs-turbo-v2.5**, **elevenlabs-v2-multilingual**, **elevenlabs-v3**: Recategorized from `text-to-image` to `text-to-audio` (TTS models, not image generators); fixed output_map from `image/png` to `audio/mpeg`
+- **elevenlabs-audio-isolation**, **elevenlabs-voice-changer**: Recategorized from `text-to-image` to new `audio-edit` category; fixed output_map from `image/png` to `audio/mpeg`
+- **elevenlabs-dubbing**: Recategorized from `text-to-video` to `video-to-video` (dubs existing video, not text-to-video generation)
+- **fal-elevenlabs-text-to-dialogue**: Moved from `video-to-audio` to `text-to-audio` catalog section (registry was already correct)
+- **google-veo-2**, **google-veo-3**, **google-veo-3-fast**, **google-veo-3.1**, **google-veo-3.1-fast**, **veo3-fast**, **veo3.1-fast**: Recategorized from `text-to-image` to `text-to-video` (video generation models, not image); fixed output_map from `image/png` to `video/mp4`
+
+### Added
+
+- New category: `video-to-video` (16 models — lipsync, dubbing, video modification)
+- New category: `audio-to-video` (4 models — avatar/video generation from audio)
+- New category: `audio-edit` (2 models — audio isolation, voice changing)
+
 ## [0.3.0] - 2026-03-07
 
 ### Added

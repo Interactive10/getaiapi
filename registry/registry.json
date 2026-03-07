@@ -1651,11 +1651,10 @@
     "aliases": [
       "argil-avatars-audio-to-video"
     ],
-    "category": "image-to-video",
+    "category": "audio-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "audio"
       ],
       "outputs": [
         "video"
@@ -1682,10 +1681,9 @@
       "argil-avatars-text-to-video",
       "argil-avatars"
     ],
-    "category": "image-to-video",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
-        "image",
         "text"
       ],
       "outputs": [
@@ -6830,11 +6828,11 @@
     "aliases": [
       "chenxwh-video-retalking"
     ],
-    "category": "image-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "video",
+        "audio"
       ],
       "outputs": [
         "video"
@@ -9634,11 +9632,10 @@
     "aliases": [
       "dubbing"
     ],
-    "category": "image-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "video"
       ],
       "outputs": [
         "video"
@@ -9812,13 +9809,13 @@
     "aliases": [
       "elevenlabs-audio-isolation"
     ],
-    "category": "text-to-image",
+    "category": "audio-edit",
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
-        "image"
+        "audio"
       ]
     },
     "providers": [
@@ -9829,9 +9826,9 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
-          "content_type": "image/png"
+          "type": "audio",
+          "extract_path": "audio.url",
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -9841,10 +9838,10 @@
     "aliases": [
       "elevenlabs-dubbing"
     ],
-    "category": "text-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "text"
+        "video"
       ],
       "outputs": [
         "video"
@@ -9883,13 +9880,13 @@
       "elevenlabs-flash-v2.5",
       "elevenlabs-flash-2.5"
     ],
-    "category": "text-to-image",
+    "category": "text-to-audio",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "audio"
       ]
     },
     "providers": [
@@ -9900,9 +9897,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "image",
+          "type": "audio",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -9965,10 +9962,10 @@
     "aliases": [
       "elevenlabs-sfx-v2"
     ],
-    "category": "video-to-audio",
+    "category": "text-to-audio",
     "modality": {
       "inputs": [
-        "video"
+        "text"
       ],
       "outputs": [
         "audio"
@@ -10172,13 +10169,13 @@
       "elevenlabs-turbo-v2.5",
       "elevenlabs-turbo-2.5"
     ],
-    "category": "text-to-image",
+    "category": "text-to-audio",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "audio"
       ]
     },
     "providers": [
@@ -10189,9 +10186,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "image",
+          "type": "audio",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -10201,13 +10198,13 @@
     "aliases": [
       "elevenlabs-v2-multilingual"
     ],
-    "category": "text-to-image",
+    "category": "text-to-audio",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "audio"
       ]
     },
     "providers": [
@@ -10218,9 +10215,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "image",
+          "type": "audio",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -10230,13 +10227,13 @@
     "aliases": [
       "elevenlabs-v3"
     ],
-    "category": "text-to-image",
+    "category": "text-to-audio",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "audio"
       ]
     },
     "providers": [
@@ -10247,9 +10244,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "image",
+          "type": "audio",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -10259,13 +10256,13 @@
     "aliases": [
       "elevenlabs-voice-changer"
     ],
-    "category": "text-to-image",
+    "category": "audio-edit",
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
-        "image"
+        "audio"
       ]
     },
     "providers": [
@@ -10276,9 +10273,9 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
-          "content_type": "image/png"
+          "type": "audio",
+          "extract_path": "audio.url",
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -18142,13 +18139,13 @@
       "google-veo-2",
       "veo-2"
     ],
-    "category": "text-to-image",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -18159,9 +18156,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -18172,13 +18169,13 @@
       "google-veo-3",
       "veo-3"
     ],
-    "category": "text-to-image",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -18189,9 +18186,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -18202,13 +18199,13 @@
       "google-veo-3-fast",
       "veo-3-fast"
     ],
-    "category": "text-to-image",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -18219,9 +18216,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -18232,13 +18229,13 @@
       "google-veo-3.1",
       "veo-3.1"
     ],
-    "category": "text-to-image",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -18249,9 +18246,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -18262,13 +18259,13 @@
       "google-veo-3.1-fast",
       "veo-3.1-fast"
     ],
-    "category": "text-to-image",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -18279,9 +18276,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -21088,10 +21085,10 @@
     "aliases": [
       "ideogram-v2-turbo"
     ],
-    "category": "upscale-image",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "image"
@@ -21234,10 +21231,10 @@
     "aliases": [
       "ideogram-v2a-turbo"
     ],
-    "category": "upscale-image",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "image"
@@ -23438,10 +23435,11 @@
     "aliases": [
       "infinitalk-video-to-video"
     ],
-    "category": "image-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "image",
+        "video",
+        "audio",
         "text"
       ],
       "outputs": [
@@ -24554,11 +24552,11 @@
     "aliases": [
       "kling-video-lipsync-audio-to-video"
     ],
-    "category": "image-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "video",
+        "audio"
       ],
       "outputs": [
         "video"
@@ -24585,10 +24583,10 @@
       "kling-video-lipsync-text-to-video",
       "kling-video-lipsync"
     ],
-    "category": "image-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "image",
+        "video",
         "text"
       ],
       "outputs": [
@@ -28095,11 +28093,10 @@
     "aliases": [
       "longcat-single-avatar-audio-to-video"
     ],
-    "category": "image-to-video",
+    "category": "audio-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "audio"
       ],
       "outputs": [
         "video"
@@ -29272,11 +29269,10 @@
     "aliases": [
       "ltx-2.3-audio-to-video"
     ],
-    "category": "image-to-video",
+    "category": "audio-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "audio"
       ],
       "outputs": [
         "video"
@@ -29423,10 +29419,9 @@
     "aliases": [
       "ltx-2.3-text-to-video"
     ],
-    "category": "image-to-video",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
-        "image",
         "text"
       ],
       "outputs": [
@@ -29453,10 +29448,9 @@
     "aliases": [
       "ltx-2.3-text-to-video-fast"
     ],
-    "category": "image-to-video",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
-        "image",
         "text"
       ],
       "outputs": [
@@ -31984,10 +31978,9 @@
     "aliases": [
       "luma-dream-machine-ray-2-flash-image-to-video"
     ],
-    "category": "image-to-video",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
-        "image",
         "text"
       ],
       "outputs": [
@@ -32073,10 +32066,9 @@
     "aliases": [
       "luma-dream-machine-ray-2-image-to-video"
     ],
-    "category": "image-to-video",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
-        "image",
         "text"
       ],
       "outputs": [
@@ -36494,10 +36486,9 @@
     "aliases": [
       "nano-banana"
     ],
-    "category": "image-edit",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
-        "image",
         "text"
       ],
       "outputs": [
@@ -36524,10 +36515,9 @@
     "aliases": [
       "nano-banana-2"
     ],
-    "category": "image-edit",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
-        "image",
         "text"
       ],
       "outputs": [
@@ -36614,10 +36604,9 @@
     "aliases": [
       "nano-banana-pro"
     ],
-    "category": "image-edit",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
-        "image",
         "text"
       ],
       "outputs": [
@@ -39410,11 +39399,10 @@
     "aliases": [
       "pixverse-lipsync"
     ],
-    "category": "image-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "video"
       ],
       "outputs": [
         "video"
@@ -48571,11 +48559,11 @@
     "aliases": [
       "sync-lipsync"
     ],
-    "category": "image-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "video",
+        "audio"
       ],
       "outputs": [
         "video"
@@ -48601,11 +48589,11 @@
     "aliases": [
       "sync-lipsync-2"
     ],
-    "category": "image-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "video",
+        "audio"
       ],
       "outputs": [
         "video"
@@ -48631,11 +48619,11 @@
     "aliases": [
       "sync-lipsync-2-pro"
     ],
-    "category": "image-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "video",
+        "audio"
       ],
       "outputs": [
         "video"
@@ -48661,11 +48649,11 @@
     "aliases": [
       "sync-lipsync-react-1"
     ],
-    "category": "image-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "video",
+        "audio"
       ],
       "outputs": [
         "video"
@@ -48691,11 +48679,11 @@
     "aliases": [
       "sync-lipsync-v2"
     ],
-    "category": "image-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "video",
+        "audio"
       ],
       "outputs": [
         "video"
@@ -48721,11 +48709,11 @@
     "aliases": [
       "sync-lipsync-v2-pro"
     ],
-    "category": "image-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "video",
+        "audio"
       ],
       "outputs": [
         "video"
@@ -49247,11 +49235,11 @@
     "aliases": [
       "tmappdev-lipsync"
     ],
-    "category": "image-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "video",
+        "audio"
       ],
       "outputs": [
         "video"
@@ -49920,11 +49908,10 @@
     "aliases": [
       "veed-avatars-audio-to-video"
     ],
-    "category": "image-to-video",
+    "category": "audio-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "audio"
       ],
       "outputs": [
         "video"
@@ -49951,10 +49938,9 @@
       "veed-avatars-text-to-video",
       "veed-avatars"
     ],
-    "category": "image-to-video",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
-        "image",
         "text"
       ],
       "outputs": [
@@ -50082,11 +50068,11 @@
     "aliases": [
       "veed-lipsync"
     ],
-    "category": "image-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "text"
+        "video",
+        "audio"
       ],
       "outputs": [
         "video"
@@ -50287,13 +50273,13 @@
     "aliases": [
       "veo3-fast"
     ],
-    "category": "text-to-image",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -50304,9 +50290,9 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -50434,13 +50420,13 @@
     "aliases": [
       "veo3.1-fast"
     ],
-    "category": "text-to-image",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -50451,9 +50437,9 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
