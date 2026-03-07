@@ -80,6 +80,15 @@ export async function uploadAsset(
 ): Promise<UploadResult> {
   const config = getConfig();
   const buffer = await toBuffer(input);
+
+  const maxBytes = options?.maxBytes ?? DEFAULT_MAX_BYTES;
+  if (buffer.length > maxBytes) {
+    throw new StorageError(
+      "upload",
+      `Asset too large (${buffer.length} bytes, max ${maxBytes})`,
+    );
+  }
+
   const contentType = options?.contentType ?? detectContentType(input);
   const prefix = options?.prefix ? `${options.prefix.replace(/\/$/, "")}/` : "";
   const key = options?.key ?? `${prefix}${randomUUID()}`;
@@ -142,45 +151,105 @@ export async function deleteAsset(key: string): Promise<void> {
   }
 }
 
+const DEFAULT_PREFIX = "getaiapi-tmp";
+const DEFAULT_MAX_BYTES = 500 * 1024 * 1024; // 500 MB
+
 function isBinaryValue(value: unknown): value is Buffer | Blob | File | ArrayBuffer {
   return (
     Buffer.isBuffer(value) ||
+    value instanceof File ||
     value instanceof Blob ||
     value instanceof ArrayBuffer
   );
 }
 
+function isUrl(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    (value.startsWith("http://") || value.startsWith("https://"))
+  );
+}
+
+async function fetchAndReupload(url: string, maxBytes: number): Promise<string> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new StorageError("upload", `Failed to fetch URL for re-upload: ${url}`);
+  }
+
+  const contentLength = response.headers.get("content-length");
+  if (contentLength && parseInt(contentLength, 10) > maxBytes) {
+    throw new StorageError(
+      "upload",
+      `URL content too large (${contentLength} bytes, max ${maxBytes}): ${url}`,
+    );
+  }
+
+  const buffer = Buffer.from(await response.arrayBuffer());
+  if (buffer.length > maxBytes) {
+    throw new StorageError(
+      "upload",
+      `URL content too large (${buffer.length} bytes, max ${maxBytes}): ${url}`,
+    );
+  }
+
+  const contentType = response.headers.get("content-type") ?? "application/octet-stream";
+  const uploaded = await uploadAsset(buffer, { contentType, prefix: DEFAULT_PREFIX });
+  return uploaded.url;
+}
+
+async function processValue(
+  value: unknown,
+  shouldReupload: boolean,
+  maxBytes: number,
+): Promise<unknown> {
+  if (isBinaryValue(value)) {
+    const uploaded = await uploadAsset(value, { prefix: DEFAULT_PREFIX });
+    return uploaded.url;
+  }
+
+  if (isUrl(value) && shouldReupload) {
+    return fetchAndReupload(value, maxBytes);
+  }
+
+  if (Array.isArray(value)) {
+    const results = await Promise.all(
+      value.map((item) => processValue(item, shouldReupload, maxBytes)),
+    );
+    return results;
+  }
+
+  if (value !== null && typeof value === "object" && !(value instanceof Date)) {
+    return processRecord(
+      value as Record<string, unknown>,
+      shouldReupload,
+      maxBytes,
+    );
+  }
+
+  return value;
+}
+
+async function processRecord(
+  obj: Record<string, unknown>,
+  shouldReupload: boolean,
+  maxBytes: number,
+): Promise<Record<string, unknown>> {
+  const result: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    result[key] = await processValue(value, shouldReupload, maxBytes);
+  }
+  return result;
+}
+
 export async function processParamsForUpload(
   params: Record<string, unknown>,
-  options?: { reupload?: boolean },
+  options?: { reupload?: boolean; maxBytes?: number },
 ): Promise<Record<string, unknown>> {
   const config = getStorageConfig();
   if (!config) return params;
 
-  const result: Record<string, unknown> = {};
+  const shouldReupload = options?.reupload || config.autoUpload || false;
+  const maxBytes = options?.maxBytes ?? DEFAULT_MAX_BYTES;
 
-  for (const [key, value] of Object.entries(params)) {
-    if (isBinaryValue(value)) {
-      const uploaded = await uploadAsset(value);
-      result[key] = uploaded.url;
-    } else if (
-      typeof value === "string" &&
-      (value.startsWith("http://") || value.startsWith("https://")) &&
-      (options?.reupload || config.autoUpload)
-    ) {
-      // Re-upload URL content to R2
-      const response = await fetch(value);
-      if (!response.ok) {
-        throw new StorageError("upload", `Failed to fetch URL for re-upload: ${value}`);
-      }
-      const buffer = Buffer.from(await response.arrayBuffer());
-      const contentType = response.headers.get("content-type") ?? "application/octet-stream";
-      const uploaded = await uploadAsset(buffer, { contentType });
-      result[key] = uploaded.url;
-    } else {
-      result[key] = value;
-    }
-  }
-
-  return result;
+  return processRecord(params, shouldReupload, maxBytes);
 }

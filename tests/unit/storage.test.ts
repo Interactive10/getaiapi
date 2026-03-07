@@ -152,6 +152,14 @@ describe("uploadAsset", () => {
     expect(result.size_bytes).toBe(4);
   });
 
+  it("rejects upload when buffer exceeds maxBytes", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, text: () => Promise.resolve("") }));
+
+    await expect(
+      uploadAsset(Buffer.from("a".repeat(100)), { maxBytes: 50 }),
+    ).rejects.toThrow(StorageError);
+  });
+
   it("falls back to R2 URL when no publicUrlBase", async () => {
     resetStorage();
     configureStorage({
@@ -290,5 +298,93 @@ describe("processParamsForUpload", () => {
     const params = { prompt: "a cat", seed: 42 };
     const result = await processParamsForUpload(params);
     expect(result).toEqual(params);
+  });
+
+  it("recursively uploads Buffer values in nested objects", async () => {
+    configureStorage(TEST_CONFIG);
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, text: () => Promise.resolve("") }));
+
+    const params = {
+      prompt: "hello",
+      elements: [
+        {
+          frontal_image: Buffer.from("face data"),
+          reference_images: [Buffer.from("ref1"), Buffer.from("ref2")],
+        },
+      ],
+    };
+
+    const result = await processParamsForUpload(params);
+    expect(result.prompt).toBe("hello");
+    const elements = result.elements as Record<string, unknown>[];
+    expect(typeof elements[0].frontal_image).toBe("string");
+    expect((elements[0].frontal_image as string)).toMatch(/^https:\/\/cdn\.example\.com\//);
+    const refs = elements[0].reference_images as string[];
+    expect(refs).toHaveLength(2);
+    expect(refs[0]).toMatch(/^https:\/\/cdn\.example\.com\//);
+    expect(refs[1]).toMatch(/^https:\/\/cdn\.example\.com\//);
+  });
+
+  it("recursively re-uploads nested URLs when reupload is true", async () => {
+    configureStorage(TEST_CONFIG);
+
+    const mockFetch = vi.fn()
+      // fetch URL 1 + PUT to R2
+      .mockResolvedValueOnce({
+        ok: true,
+        arrayBuffer: () => Promise.resolve(new ArrayBuffer(4)),
+        headers: new Headers({ "content-type": "image/png" }),
+      })
+      .mockResolvedValueOnce({ ok: true, text: () => Promise.resolve("") })
+      // fetch URL 2 + PUT to R2
+      .mockResolvedValueOnce({
+        ok: true,
+        arrayBuffer: () => Promise.resolve(new ArrayBuffer(4)),
+        headers: new Headers({ "content-type": "image/png" }),
+      })
+      .mockResolvedValueOnce({ ok: true, text: () => Promise.resolve("") });
+    vi.stubGlobal("fetch", mockFetch);
+
+    const params = {
+      elements: [
+        {
+          frontal_image_url: "https://example.com/face.png",
+          reference_image_urls: ["https://example.com/ref1.png"],
+        },
+      ],
+    };
+
+    const result = await processParamsForUpload(params, { reupload: true });
+    const elements = result.elements as Record<string, unknown>[];
+    expect((elements[0].frontal_image_url as string)).toMatch(/^https:\/\/cdn\.example\.com\//);
+    const refs = elements[0].reference_image_urls as string[];
+    expect(refs[0]).toMatch(/^https:\/\/cdn\.example\.com\//);
+    expect(mockFetch).toHaveBeenCalledTimes(4);
+  });
+
+  it("uses getaiapi-tmp/ prefix for auto-uploaded assets", async () => {
+    configureStorage(TEST_CONFIG);
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, text: () => Promise.resolve("") }));
+
+    const params = { image: Buffer.from("data") };
+    const result = await processParamsForUpload(params);
+    expect((result.image as string)).toMatch(/^https:\/\/cdn\.example\.com\/getaiapi-tmp\//);
+  });
+
+  it("rejects re-upload when Content-Length exceeds maxBytes", async () => {
+    configureStorage(TEST_CONFIG);
+
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({
+      ok: true,
+      arrayBuffer: () => Promise.resolve(new ArrayBuffer(100)),
+      headers: new Headers({ "content-length": "100", "content-type": "image/png" }),
+    }));
+
+    await expect(
+      processParamsForUpload(
+        { image_url: "https://example.com/huge.bin" },
+        { reupload: true, maxBytes: 50 },
+      ),
+    ).rejects.toThrow(StorageError);
   });
 });

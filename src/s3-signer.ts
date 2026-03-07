@@ -61,12 +61,13 @@ export function signS3Request(
     "x-amz-content-sha256": payloadHash,
   };
 
-  // Build canonical headers (sorted, lowercased)
-  const sortedKeys = Object.keys(allHeaders)
-    .map((k) => k.toLowerCase())
-    .sort();
+  // Build lowercased header map once
+  const lcHeaders: Record<string, string> = Object.fromEntries(
+    Object.entries(allHeaders).map(([k, v]) => [k.toLowerCase(), v.trim()]),
+  );
+  const sortedKeys = Object.keys(lcHeaders).sort();
   const canonicalHeaders = sortedKeys
-    .map((k) => `${k}:${allHeaders[Object.keys(allHeaders).find((h) => h.toLowerCase() === k)!]!.trim()}`)
+    .map((k) => `${k}:${lcHeaders[k]}`)
     .join("\n") + "\n";
   const signedHeaders = sortedKeys.join(";");
 

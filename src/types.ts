@@ -186,4 +186,5 @@ export interface UploadOptions {
   key?: string;
   contentType?: string;
   prefix?: string;
+  maxBytes?: number;
 }
