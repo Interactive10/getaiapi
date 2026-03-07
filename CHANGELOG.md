@@ -4,6 +4,16 @@ All notable changes to the getaiapi registry and library will be documented in t
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.0] - 2026-03-07
+
+### Added
+
+- **Presigned URLs**: New `presignAsset()` function generates presigned GET URLs using S3 Signature V4 query-string signing, enabling private R2 buckets
+- **Storage mode**: `StorageConfig.mode` option (`'public'` | `'presigned'`) controls whether `uploadAsset` returns public or presigned URLs
+- **Presign expiry**: `StorageConfig.presignExpiresIn` sets default TTL (seconds) for presigned URLs, defaults to 3600
+- **S3 Signer**: New `presignS3Url()` function for query-string SigV4 signing with `UNSIGNED-PAYLOAD`
+- **Env vars**: `R2_STORAGE_MODE` and `R2_PRESIGN_EXPIRES_IN` environment variable support
+
 ## [0.2.0] - 2026-03-07
 
 ### Added

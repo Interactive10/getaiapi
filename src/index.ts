@@ -10,7 +10,7 @@ export { listModels, getModel } from "./discovery.js";
 export type { ListModelsFilters } from "./discovery.js";
 
 // Storage functions
-export { configureStorage, uploadAsset, deleteAsset } from "./storage.js";
+export { configureStorage, uploadAsset, deleteAsset, presignAsset } from "./storage.js";
 
 // Re-export types
 export type {

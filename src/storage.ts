@@ -1,9 +1,20 @@
 import { randomUUID } from "node:crypto";
-import { signS3Request } from "./s3-signer.js";
+import { signS3Request, presignS3Url } from "./s3-signer.js";
 import { StorageError } from "./errors.js";
 import type { StorageConfig, UploadResult, UploadOptions } from "./types.js";
 
+const MAX_PRESIGN_EXPIRES = 604800; // 7 days in seconds (S3/R2 limit)
+
 let storageConfig: StorageConfig | null = null;
+
+function parseExpiresIn(value: string | undefined): number | undefined {
+  if (!value) return undefined;
+  const parsed = parseInt(value, 10);
+  if (Number.isNaN(parsed) || parsed <= 0) {
+    throw new StorageError("config", `Invalid R2_PRESIGN_EXPIRES_IN: "${value}". Must be a positive integer.`);
+  }
+  return parsed;
+}
 
 export function configureStorage(config?: StorageConfig): void {
   if (config) {
@@ -31,6 +42,8 @@ export function configureStorage(config?: StorageConfig): void {
     secretAccessKey,
     publicUrlBase: process.env.R2_PUBLIC_URL,
     autoUpload: false,
+    mode: process.env.R2_STORAGE_MODE === 'presigned' ? 'presigned' : undefined,
+    presignExpiresIn: parseExpiresIn(process.env.R2_PRESIGN_EXPIRES_IN),
   };
 }
 
@@ -117,12 +130,38 @@ export async function uploadAsset(
     throw new StorageError("upload", `R2 returned ${response.status}: ${body}`, response.status);
   }
 
+  const url = config.mode === 'presigned'
+    ? validatedPresign(config, key)
+    : buildPublicUrl(config, key);
+
   return {
-    url: buildPublicUrl(config, key),
+    url,
     key,
     size_bytes: buffer.length,
     content_type: contentType,
   };
+}
+
+function validatedPresign(config: StorageConfig, key: string, expiresIn?: number): string {
+  const ttl = expiresIn ?? config.presignExpiresIn ?? 3600;
+  if (ttl > MAX_PRESIGN_EXPIRES) {
+    throw new StorageError(
+      "config",
+      `Presign expiry ${ttl}s exceeds maximum of ${MAX_PRESIGN_EXPIRES}s (7 days).`,
+    );
+  }
+  return presignS3Url(buildR2Url(config, key), {
+    accessKeyId: config.accessKeyId,
+    secretAccessKey: config.secretAccessKey,
+  }, { expiresIn: ttl });
+}
+
+export function presignAsset(
+  key: string,
+  options?: { expiresIn?: number },
+): string {
+  const config = getConfig();
+  return validatedPresign(config, key, options?.expiresIn);
 }
 
 export async function deleteAsset(key: string): Promise<void> {

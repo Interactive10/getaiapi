@@ -262,7 +262,10 @@ Resolves a model by name. Accepts canonical names, aliases, and normalized varia
 
 ## R2 Storage (Asset Uploads)
 
-Some providers can't fetch from private or presigned URLs. getaiapi includes built-in Cloudflare R2 storage support that automatically uploads binary assets to a public bucket before sending them to providers.
+getaiapi includes built-in Cloudflare R2 storage support that automatically uploads binary assets before sending them to providers. Two modes are supported:
+
+- **`public`** (default) — requires a publicly readable bucket; returns public URLs (via `publicUrlBase` or the R2 endpoint)
+- **`presigned`** — works with private buckets; returns time-limited presigned GET URLs signed with S3 Signature V4 (no public access needed, `publicUrlBase` is not required)
 
 ### Setup
 
@@ -275,9 +278,25 @@ export R2_BUCKET_NAME="your-bucket-name"
 export R2_ACCESS_KEY_ID="your-r2-access-key"
 export R2_SECRET_ACCESS_KEY="your-r2-secret-key"
 
-# Optional - custom public URL (e.g. CDN domain mapped to your bucket)
+# Optional - custom public URL (only needed for mode: 'public')
 export R2_PUBLIC_URL="https://cdn.example.com"
+
+# Optional - use presigned URLs for private buckets (default: 'public')
+export R2_STORAGE_MODE="presigned"
+export R2_PRESIGN_EXPIRES_IN="3600"  # seconds, default: 3600, max: 604800 (7 days)
 ```
+
+#### How to get your R2 Public URL (public mode only)
+
+If using `mode: 'presigned'`, you can skip this — no public bucket access is needed.
+
+1. Log in to the [Cloudflare dashboard](https://dash.cloudflare.com)
+2. Go to **R2 Object Storage** in the left sidebar
+3. Click on your bucket
+4. Go to the **Settings** tab
+5. Under **Public access**, click **Allow Access**
+6. Cloudflare will provide a public URL like `https://<bucket>.<account-id>.r2.dev` — use this as your `R2_PUBLIC_URL`
+7. (Optional) You can also connect a **Custom Domain** under the same section for a cleaner URL like `https://cdn.yourdomain.com`
 
 Then call `configureStorage()` once at startup:
 
@@ -295,6 +314,8 @@ configureStorage({
   secretAccessKey: 'your-secret',
   publicUrlBase: 'https://cdn.example.com', // optional
   autoUpload: false,                         // optional
+  mode: 'public',                            // 'public' | 'presigned' (default: 'public')
+  presignExpiresIn: 3600,                    // presigned URL TTL in seconds (default: 3600)
 })
 ```
 
@@ -350,6 +371,38 @@ console.log(url) // https://cdn.example.com/uploads/a1b2c3d4-...
 
 // Delete by key
 await deleteAsset(key)
+```
+
+### Presigned URLs (Private Buckets)
+
+If your R2 bucket doesn't have public read access, use presigned mode. Instead of returning a public URL, `uploadAsset` will return a time-limited presigned GET URL signed with S3 Signature V4.
+
+```typescript
+configureStorage({
+  accountId: 'your-account-id',
+  bucketName: 'private-bucket',
+  accessKeyId: 'your-key',
+  secretAccessKey: 'your-secret',
+  mode: 'presigned',          // uploadAsset returns presigned URLs
+  presignExpiresIn: 1800,     // URLs expire after 30 minutes
+})
+
+const { url } = await uploadAsset(Buffer.from('secret data'), {
+  contentType: 'application/octet-stream',
+})
+// url is a presigned GET URL, valid for 30 minutes
+```
+
+You can also generate presigned URLs for existing objects:
+
+```typescript
+import { presignAsset } from 'getaiapi'
+
+const url = presignAsset('uploads/my-file.png')
+// => https://<account>.r2.cloudflarestorage.com/<bucket>/uploads/my-file.png?X-Amz-Algorithm=...
+
+// Custom expiry per-call (overrides config default)
+const shortUrl = presignAsset('uploads/my-file.png', { expiresIn: 300 }) // 5 minutes
 ```
 
 **UploadOptions**
