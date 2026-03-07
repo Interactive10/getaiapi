@@ -9978,7 +9978,7 @@
       {
         "provider": "fal-ai",
         "skill_id": "fal-elevenlabs-sfx-v2",
-        "endpoint": "",
+        "endpoint": "fal-ai/elevenlabs/sound-effects/v2",
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
@@ -10066,6 +10066,37 @@
         "provider": "fal-ai",
         "skill_id": "fal-ai-elevenlabs-tts-eleven-v3",
         "endpoint": "fal-ai/elevenlabs/tts/eleven-v3",
+        "auth_env": "FAL_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "audio",
+          "extract_path": "audio.url",
+          "content_type": "audio/mpeg"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "elevenlabs-text-to-dialogue-eleven-v3",
+    "aliases": [
+      "elevenlabs-text-to-dialogue-eleven-v3",
+      "elevenlabs-dialogue-v3",
+      "elevenlabs-multi-speaker"
+    ],
+    "category": "text-to-audio",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "audio"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "fal-ai",
+        "skill_id": "fal-elevenlabs-text-to-dialogue",
+        "endpoint": "fal-ai/elevenlabs/text-to-dialogue/eleven-v3",
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
@@ -17929,6 +17960,18 @@
     },
     "providers": [
       {
+        "provider": "fal-ai",
+        "skill_id": "fal-ai-nano-banana-pro-edit",
+        "endpoint": "fal-ai/nano-banana-pro/edit",
+        "auth_env": "FAL_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "images[].url",
+          "content_type": "image/png"
+        }
+      },
+      {
         "provider": "wavespeed",
         "skill_id": "wavespeed-google-nano-banana-pro-edit",
         "endpoint": "google/nano-banana-pro/edit",
@@ -24482,13 +24525,13 @@
     "aliases": [
       "kling-video-create-voice"
     ],
-    "category": "text-to-video",
+    "category": "voice-clone",
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
-        "video"
+        "text"
       ]
     },
     "providers": [
@@ -24499,9 +24542,9 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
-          "content_type": "video/mp4"
+          "type": "text",
+          "extract_path": "voice_id",
+          "content_type": "text/plain"
         }
       }
     ]
@@ -25074,13 +25117,16 @@
     ]
   },
   {
-    "canonical_name": "kling-video-pro",
+    "canonical_name": "kling-video-v3-pro-image-to-video",
     "aliases": [
+      "kling-video-v3-pro-image-to-video",
+      "kling-video-pro-image-to-video",
       "kling-video-pro"
     ],
-    "category": "text-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
