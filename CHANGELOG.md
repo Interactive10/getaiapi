@@ -4,6 +4,12 @@ All notable changes to the getaiapi registry and library will be documented in t
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.3] - 2026-03-08
+
+### Fixed
+
+- **fal-ai polling URLs**: Fixed queue polling URL construction for endpoints with sub-paths (e.g., `fal-ai/nano-banana-pro/edit`). The fal.ai queue API expects only `owner/alias` in status and result URLs, but getaiapi was including the full path. This caused 405 errors when polling models like `nano-banana-pro/edit`, `nano-banana-2/edit`, and other sub-path endpoints.
+
 ## [0.3.2] - 2026-03-08
 
 ### Added

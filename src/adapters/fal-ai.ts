@@ -3,6 +3,18 @@ import { AuthError, RateLimitError, ProviderError, TimeoutError } from "../error
 
 const BASE_URL = "https://queue.fal.run";
 
+/**
+ * Extract base endpoint (owner/alias) for polling URLs.
+ * The fal.ai queue API uses the full path for submit but only
+ * owner/alias for status and result requests.
+ * e.g. "fal-ai/nano-banana-pro/edit" → "fal-ai/nano-banana-pro"
+ */
+function getBaseEndpoint(endpoint: string): string {
+  const parts = endpoint.split("/");
+  if (parts.length <= 2) return endpoint;
+  return `${parts[0]}/${parts[1]}`;
+}
+
 async function handleHttpErrors(
   response: Response,
   endpoint: string,
@@ -72,8 +84,9 @@ export const falAiAdapter: ProviderAdapter = {
       throw new ProviderError("fal-ai", "unknown", 400, "endpoint is required for polling");
     }
 
-    // Check status
-    const statusUrl = `${BASE_URL}/${endpoint}/requests/${taskId}/status`;
+    // Check status — use base endpoint (owner/alias) for polling
+    const baseEndpoint = getBaseEndpoint(endpoint);
+    const statusUrl = `${BASE_URL}/${baseEndpoint}/requests/${taskId}/status`;
     const statusResponse = await fetch(statusUrl, {
       headers: { Authorization: `Key ${auth}` },
     });
@@ -101,7 +114,7 @@ export const falAiAdapter: ProviderAdapter = {
     }
 
     // Fetch result
-    const resultUrl = `${BASE_URL}/${endpoint}/requests/${taskId}`;
+    const resultUrl = `${BASE_URL}/${baseEndpoint}/requests/${taskId}`;
     const resultResponse = await fetch(resultUrl, {
       headers: { Authorization: `Key ${auth}` },
     });

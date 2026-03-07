@@ -94,6 +94,37 @@ describe("falAiAdapter", () => {
       expect(result).toEqual({ id: "req-789", status: "processing" });
       expect(fetchMock).toHaveBeenCalledOnce();
     });
+
+    it("should strip sub-path from polling URLs for endpoints with sub-paths", async () => {
+      const subPathEndpoint = "fal-ai/nano-banana-pro/edit";
+      const fetchMock = mockFetch([
+        { status: 200, body: { status: "COMPLETED" } },
+        { status: 200, body: { images: [] } },
+      ]);
+      globalThis.fetch = fetchMock;
+
+      await falAiAdapter.poll("req-sub", AUTH, subPathEndpoint);
+
+      const [statusUrl] = fetchMock.mock.calls[0] as [string, RequestInit];
+      const [resultUrl] = fetchMock.mock.calls[1] as [string, RequestInit];
+      // Polling uses base endpoint (owner/alias), not the full path
+      expect(statusUrl).toBe("https://queue.fal.run/fal-ai/nano-banana-pro/requests/req-sub/status");
+      expect(resultUrl).toBe("https://queue.fal.run/fal-ai/nano-banana-pro/requests/req-sub");
+    });
+
+    it("should use base endpoint for polling even with 3-part endpoints like flux/schnell", async () => {
+      const fetchMock = mockFetch([
+        { status: 200, body: { status: "COMPLETED" } },
+        { status: 200, body: fluxSchnellFixture },
+      ]);
+      globalThis.fetch = fetchMock;
+
+      await falAiAdapter.poll("req-flux", AUTH, ENDPOINT);
+
+      const [statusUrl] = fetchMock.mock.calls[0] as [string, RequestInit];
+      // fal-ai/flux/schnell → polls at fal-ai/flux
+      expect(statusUrl).toBe("https://queue.fal.run/fal-ai/flux/requests/req-flux/status");
+    });
   });
 
   describe("parseOutput", () => {
