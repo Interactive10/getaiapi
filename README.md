@@ -300,7 +300,7 @@ configureStorage({
 
 ### Automatic Uploads in `generate()`
 
-Once storage is configured, any `Buffer`, `Blob`, `File`, or `ArrayBuffer` values in provider params are automatically uploaded to R2 and replaced with public URLs before the request is sent to the provider. No code changes needed -- it just works.
+Once storage is configured, any `Buffer`, `Blob`, `File`, or `ArrayBuffer` values in provider params are automatically uploaded to R2 and replaced with public URLs before the request is sent to the provider. This works recursively -- nested objects and arrays are traversed, so params like Kling's `elements[].frontal_image_url` are handled automatically. No code changes needed -- it just works.
 
 ```typescript
 import { generate, configureStorage } from 'getaiapi'
@@ -327,6 +327,10 @@ const result = await generate({
 ```
 
 Or enable it globally with `autoUpload: true` in the storage config.
+
+### Cleanup / Lifecycle
+
+Assets uploaded automatically via `generate()` use the `getaiapi-tmp/` key prefix. You can set a [Cloudflare R2 lifecycle rule](https://developers.cloudflare.com/r2/buckets/object-lifecycles/) to auto-expire objects under that prefix (e.g. delete after 24 hours) so ephemeral generation assets don't accumulate.
 
 ### Standalone Upload / Delete
 
@@ -355,6 +359,7 @@ await deleteAsset(key)
 | `key` | `string` | Custom object key (default: auto-generated UUID) |
 | `contentType` | `string` | MIME type (default: detected from input or `application/octet-stream`) |
 | `prefix` | `string` | Key prefix / folder (e.g. `"uploads"`) |
+| `maxBytes` | `number` | Max upload size in bytes (default: 500 MB) |
 
 ### Storage Errors
 
