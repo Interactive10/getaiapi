@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue.svg)](https://www.typescriptlang.org/)
 
-A unified TypeScript library that wraps 1,929 AI models across 3 providers into a single `generate()` function. One input shape. One output shape. Any model.
+A unified TypeScript library that wraps 1,930 AI models across 3 providers into a single `generate()` function. One input shape. One output shape. Any model.
 
 ## Install
 
@@ -48,6 +48,20 @@ const edited = await generate({
 })
 ```
 
+**Multi-image references** (e.g., character + location consistency)
+
+```typescript
+const scene = await generate({
+  model: 'google-nano-banana-pro-edit',
+  prompt: 'cinematic shot of the character in the location',
+  image: 'https://example.com/character.jpg',
+  images: [
+    'https://example.com/character.jpg',
+    'https://example.com/location.jpg',
+  ],
+})
+```
+
 **Text-to-speech**
 
 ```typescript
@@ -83,13 +97,13 @@ const cutout = await generate({
 Set API keys as environment variables. You only need keys for the providers you plan to call.
 
 ```bash
-# fal-ai (1,199 models)
+# fal-ai (1,201 models)
 export FAL_KEY="your-fal-key"
 
 # Replicate (687 models)
 export REPLICATE_API_TOKEN="your-replicate-token"
 
-# WaveSpeed (43 models)
+# WaveSpeed (66 models)
 export WAVESPEED_API_KEY="your-wavespeed-key"
 ```
 
@@ -167,12 +181,12 @@ const model = getModel('flux-schnell')
 
 | Category | Input | Output | Models |
 |---|---|---|---|
-| `text-to-image` | text | image | 828 |
-| `text-to-video` | text | video | 308 |
-| `image-edit` | image + text | image | 213 |
-| `image-to-video` | image + text | video | 178 |
-| `text-to-audio` | text | audio | 76 |
-| `upscale-image` | image | image | 59 |
+| `text-to-image` | text | image | 820 |
+| `text-to-video` | text | video | 318 |
+| `image-edit` | image + text | image | 210 |
+| `image-to-video` | image + text | video | 155 |
+| `text-to-audio` | text | audio | 82 |
+| `upscale-image` | image | image | 57 |
 | `training` | images | model | 50 |
 | `image-to-image` | image + text | image | 43 |
 | `segmentation` | image/video | segmentation | 34 |
@@ -180,17 +194,21 @@ const model = getModel('flux-schnell')
 | `audio-to-text` | audio | text | 25 |
 | `remove-background` | image/video | image/video | 24 |
 | `text-to-3d` | text | 3d | 19 |
-| `video-to-audio` | video | audio | 18 |
+| `video-to-audio` | video | audio | 17 |
 | `upscale-video` | video | video | 15 |
+| `video-to-video` | video | video | 15 |
 | `moderation` | text/image/video | text | 8 |
+| `audio-to-video` | audio | video | 4 |
+| `audio-edit` | audio | audio | 2 |
+| `voice-clone` | audio | text | 1 |
 
 ## Providers
 
 | Provider | Models | Auth Env Var | Protocol |
 |---|---|---|---|
-| fal-ai | 1,199 | `FAL_KEY` | Native fetch |
+| fal-ai | 1,201 | `FAL_KEY` | Native fetch |
 | Replicate | 687 | `REPLICATE_API_TOKEN` | Native fetch |
-| WaveSpeed | 43 | `WAVESPEED_API_KEY` | Native fetch |
+| WaveSpeed | 66 | `WAVESPEED_API_KEY` | Native fetch |
 
 Zero external dependencies -- all provider communication uses native `fetch`.
 
@@ -207,6 +225,7 @@ interface GenerateRequest {
   model: string                                    // required - model name
   prompt?: string                                  // text prompt
   image?: string | File                            // input image (URL or File)
+  images?: (string | File)[]                       // multiple reference images
   audio?: string | File                            // input audio
   video?: string | File                            // input video
   negative_prompt?: string                         // what to avoid

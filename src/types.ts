@@ -4,6 +4,7 @@ export interface GenerateRequest {
   model: string;
   prompt?: string;
   image?: string | File;
+  images?: (string | File)[];
   audio?: string | File;
   video?: string | File;
   negative_prompt?: string;

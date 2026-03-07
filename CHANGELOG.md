@@ -4,6 +4,12 @@ All notable changes to the getaiapi registry and library will be documented in t
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.2] - 2026-03-08
+
+### Added
+
+- **Multi-image support**: New `images` field on `GenerateRequest` for passing multiple reference images (e.g., character + location references). Maps to `image_urls` on fal-ai, replicate, and wavespeed providers.
+
 ## [0.3.1] - 2026-03-08
 
 ### Fixed

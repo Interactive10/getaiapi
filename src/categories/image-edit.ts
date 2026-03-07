@@ -13,6 +13,14 @@ export const imageEditTemplate: CategoryTemplate = {
       required: true,
     },
     {
+      universal: 'images',
+      providers: {
+        'fal-ai': 'image_urls',
+        'replicate': 'image_urls',
+        'wavespeed': 'image_urls',
+      },
+    },
+    {
       universal: 'prompt',
       providers: {
         'fal-ai': 'prompt',
