@@ -7,14 +7,35 @@ const ENV_MAP: Record<ProviderName, string> = {
   wavespeed: "WAVESPEED_API_KEY",
 };
 
+// Module-level overrides set via configureAuth()
+const keyOverrides = new Map<string, string>();
+
+export function configureAuth(keys: Partial<Record<ProviderName, string>>): void {
+  for (const [provider, key] of Object.entries(keys)) {
+    if (key?.trim()) {
+      keyOverrides.set(provider, key.trim());
+    }
+  }
+}
+
+export function resetAuth(): void {
+  keyOverrides.clear();
+}
+
 export class AuthManager {
   private keys: Map<string, string>;
 
   constructor() {
     this.keys = new Map();
+    // Overrides take priority over env vars
+    for (const [provider, key] of keyOverrides) {
+      this.keys.set(provider, key);
+    }
     for (const [provider, envVar] of Object.entries(ENV_MAP)) {
-      const key = process.env[envVar]?.trim();
-      if (key) this.keys.set(provider, key);
+      if (!this.keys.has(provider)) {
+        const key = process.env[envVar]?.trim();
+        if (key) this.keys.set(provider, key);
+      }
     }
   }
 

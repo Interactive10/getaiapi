@@ -4,6 +4,17 @@ All notable changes to the getaiapi registry and library will be documented in t
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] - 2026-03-07
+
+### Added
+
+- **R2 Storage**: New `configureStorage()`, `uploadAsset()`, `deleteAsset()` functions for Cloudflare R2 integration
+- **Auto-upload**: Binary params (Buffer/Blob/File/ArrayBuffer) in provider params are automatically uploaded to R2 and replaced with public URLs
+- **Re-upload**: URL params can be re-uploaded to R2 via `reupload` per-call option or `autoUpload` global config
+- **StorageError**: New error class for storage operations (upload/delete/config)
+- **S3 Signer**: AWS Signature V4 signing via `node:crypto` for R2 PUT/DELETE operations
+- **Types**: `StorageConfig`, `UploadResult`, `UploadOptions` exported from main entry point
+
 ## [0.1.2] - 2026-03-07
 
 ### Fixed

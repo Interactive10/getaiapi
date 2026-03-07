@@ -97,3 +97,17 @@ export class RateLimitError extends GetAIApiError {
     this.retryAfterMs = retryAfterMs;
   }
 }
+
+export type StorageOperation = "upload" | "delete" | "config";
+
+export class StorageError extends GetAIApiError {
+  readonly operation: StorageOperation;
+  readonly statusCode?: number;
+
+  constructor(operation: StorageOperation, message: string, statusCode?: number) {
+    super(`Storage ${operation} failed: ${message}`);
+    this.name = "StorageError";
+    this.operation = operation;
+    this.statusCode = statusCode;
+  }
+}
