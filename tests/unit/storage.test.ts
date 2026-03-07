@@ -73,6 +73,42 @@ describe("configureStorage", () => {
       expect((err as StorageError).operation).toBe("config");
     }
   });
+
+  it("reads R2_STORAGE_MODE and R2_PRESIGN_EXPIRES_IN from env", () => {
+    process.env.R2_ACCOUNT_ID = "env-account";
+    process.env.R2_BUCKET_NAME = "env-bucket";
+    process.env.R2_ACCESS_KEY_ID = "env-ak";
+    process.env.R2_SECRET_ACCESS_KEY = "env-sk";
+    process.env.R2_STORAGE_MODE = "presigned";
+    process.env.R2_PRESIGN_EXPIRES_IN = "1800";
+
+    configureStorage();
+    const config = getStorageConfig();
+    expect(config?.mode).toBe("presigned");
+    expect(config?.presignExpiresIn).toBe(1800);
+  });
+
+  it("ignores invalid R2_STORAGE_MODE values", () => {
+    process.env.R2_ACCOUNT_ID = "env-account";
+    process.env.R2_BUCKET_NAME = "env-bucket";
+    process.env.R2_ACCESS_KEY_ID = "env-ak";
+    process.env.R2_SECRET_ACCESS_KEY = "env-sk";
+    process.env.R2_STORAGE_MODE = "invalid";
+
+    configureStorage();
+    const config = getStorageConfig();
+    expect(config?.mode).toBeUndefined();
+  });
+
+  it("throws StorageError for non-numeric R2_PRESIGN_EXPIRES_IN", () => {
+    process.env.R2_ACCOUNT_ID = "env-account";
+    process.env.R2_BUCKET_NAME = "env-bucket";
+    process.env.R2_ACCESS_KEY_ID = "env-ak";
+    process.env.R2_SECRET_ACCESS_KEY = "env-sk";
+    process.env.R2_PRESIGN_EXPIRES_IN = "abc";
+
+    expect(() => configureStorage()).toThrow(StorageError);
+  });
 });
 
 describe("uploadAsset", () => {
@@ -426,6 +462,24 @@ describe("presignAsset", () => {
 
   it("throws StorageError when storage not configured", () => {
     expect(() => presignAsset("key.png")).toThrow(StorageError);
+  });
+
+  it("throws StorageError when expiresIn exceeds 7-day max", () => {
+    configureStorage(TEST_CONFIG);
+    expect(() => presignAsset("key.png", { expiresIn: 700000 })).toThrow(StorageError);
+    expect(() => presignAsset("key.png", { expiresIn: 700000 })).toThrow(/exceeds maximum/);
+  });
+
+  it("throws StorageError when config presignExpiresIn exceeds 7-day max", () => {
+    configureStorage({ ...TEST_CONFIG, presignExpiresIn: 700000 });
+    expect(() => presignAsset("key.png")).toThrow(StorageError);
+  });
+
+  it("allows exactly 604800 seconds (7 days)", () => {
+    configureStorage(TEST_CONFIG);
+    const url = presignAsset("key.png", { expiresIn: 604800 });
+    const parsed = new URL(url);
+    expect(parsed.searchParams.get("X-Amz-Expires")).toBe("604800");
   });
 });
 

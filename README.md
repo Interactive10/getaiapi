@@ -262,7 +262,10 @@ Resolves a model by name. Accepts canonical names, aliases, and normalized varia
 
 ## R2 Storage (Asset Uploads)
 
-Some providers can't fetch from private or presigned URLs. getaiapi includes built-in Cloudflare R2 storage support that automatically uploads binary assets to a public bucket before sending them to providers.
+getaiapi includes built-in Cloudflare R2 storage support that automatically uploads binary assets before sending them to providers. Two modes are supported:
+
+- **`public`** (default) — requires a publicly readable bucket; returns public URLs (via `publicUrlBase` or the R2 endpoint)
+- **`presigned`** — works with private buckets; returns time-limited presigned GET URLs signed with S3 Signature V4 (no public access needed, `publicUrlBase` is not required)
 
 ### Setup
 
@@ -275,15 +278,17 @@ export R2_BUCKET_NAME="your-bucket-name"
 export R2_ACCESS_KEY_ID="your-r2-access-key"
 export R2_SECRET_ACCESS_KEY="your-r2-secret-key"
 
-# Optional - custom public URL (e.g. CDN domain mapped to your bucket)
+# Optional - custom public URL (only needed for mode: 'public')
 export R2_PUBLIC_URL="https://cdn.example.com"
 
-# Optional - presigned URL mode (default: 'public')
+# Optional - use presigned URLs for private buckets (default: 'public')
 export R2_STORAGE_MODE="presigned"
-export R2_PRESIGN_EXPIRES_IN="3600"  # seconds, default: 3600
+export R2_PRESIGN_EXPIRES_IN="3600"  # seconds, default: 3600, max: 604800 (7 days)
 ```
 
-#### How to get your R2 Public URL
+#### How to get your R2 Public URL (public mode only)
+
+If using `mode: 'presigned'`, you can skip this — no public bucket access is needed.
 
 1. Log in to the [Cloudflare dashboard](https://dash.cloudflare.com)
 2. Go to **R2 Object Storage** in the left sidebar
