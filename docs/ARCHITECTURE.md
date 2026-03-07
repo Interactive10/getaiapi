@@ -5,6 +5,7 @@
 **Author:** Architect Agent
 **Date:** 2026-03-06
 **Status:** Draft / RFC
+**Website:** [interactive10.com/getaiapi.html](https://www.interactive10.com/getaiapi.html)
 
 ---
 

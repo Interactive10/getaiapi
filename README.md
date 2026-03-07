@@ -240,6 +240,10 @@ try {
 }
 ```
 
+## Documentation
+
+Full documentation available at [interactive10.com/getaiapi.html](https://www.interactive10.com/getaiapi.html)
+
 ## License
 
 MIT

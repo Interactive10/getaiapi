@@ -3,6 +3,7 @@
 **Author:** Product Manager Agent (with Architect, Backend, QA, Product Owner input)
 **Date:** 2026-03-06
 **Status:** Draft
+**Website:** [interactive10.com/getaiapi.html](https://www.interactive10.com/getaiapi.html)
 
 ---
 
