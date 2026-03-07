@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import type { ModelEntry, ProviderBinding } from "../../src/types.js";
 import { AuthError } from "../../src/errors.js";
-import { AuthManager } from "../../src/auth.js";
+import { AuthManager, configureAuth, resetAuth } from "../../src/auth.js";
 
 /** Helper to create a minimal ModelEntry with the given provider names. */
 function makeModel(providers: string[]): ModelEntry {
@@ -111,5 +111,73 @@ describe("AuthManager", () => {
 
     const auth = new AuthManager();
     expect(auth.getKey("fal-ai")).toBe("fal-secret");
+  });
+});
+
+describe("configureAuth", () => {
+  const savedEnv: Record<string, string | undefined> = {};
+
+  beforeEach(() => {
+    resetAuth();
+    for (const key of ["FAL_KEY", "REPLICATE_API_TOKEN", "WAVESPEED_API_KEY"]) {
+      savedEnv[key] = process.env[key];
+      delete process.env[key];
+    }
+  });
+
+  afterEach(() => {
+    resetAuth();
+    for (const [key, value] of Object.entries(savedEnv)) {
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+    }
+  });
+
+  it("sets provider keys programmatically", () => {
+    configureAuth({ "fal-ai": "my-fal-key", replicate: "my-rep-key" });
+
+    const auth = new AuthManager();
+    expect(auth.getKey("fal-ai")).toBe("my-fal-key");
+    expect(auth.getKey("replicate")).toBe("my-rep-key");
+  });
+
+  it("overrides take priority over env vars", () => {
+    process.env.FAL_KEY = "env-key";
+    configureAuth({ "fal-ai": "override-key" });
+
+    const auth = new AuthManager();
+    expect(auth.getKey("fal-ai")).toBe("override-key");
+  });
+
+  it("env vars still work for non-overridden providers", () => {
+    process.env.WAVESPEED_API_KEY = "ws-from-env";
+    configureAuth({ "fal-ai": "fal-override" });
+
+    const auth = new AuthManager();
+    expect(auth.getKey("fal-ai")).toBe("fal-override");
+    expect(auth.getKey("wavespeed")).toBe("ws-from-env");
+  });
+
+  it("trims whitespace from override keys", () => {
+    configureAuth({ "fal-ai": "  spaced-key  " });
+
+    const auth = new AuthManager();
+    expect(auth.getKey("fal-ai")).toBe("spaced-key");
+  });
+
+  it("ignores empty or undefined values", () => {
+    configureAuth({ "fal-ai": "", replicate: undefined as unknown as string });
+
+    const auth = new AuthManager();
+    expect(() => auth.getKey("fal-ai")).toThrow(AuthError);
+    expect(() => auth.getKey("replicate")).toThrow(AuthError);
+  });
+
+  it("resetAuth() clears all overrides", () => {
+    configureAuth({ "fal-ai": "my-key" });
+    resetAuth();
+
+    const auth = new AuthManager();
+    expect(() => auth.getKey("fal-ai")).toThrow(AuthError);
   });
 });

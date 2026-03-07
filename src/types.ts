@@ -156,3 +156,34 @@ export interface CategoryTemplate {
   output_extract: Record<ProviderName, string>;
   default_timeout_ms: number;
 }
+
+// === Configuration ===
+
+export interface ConfigureOptions {
+  keys?: Partial<Record<ProviderName, string>>;
+  storage?: StorageConfig;
+}
+
+// === Storage (R2) ===
+
+export interface StorageConfig {
+  accountId: string;
+  bucketName: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+  publicUrlBase?: string;
+  autoUpload?: boolean;
+}
+
+export interface UploadResult {
+  url: string;
+  key: string;
+  size_bytes: number;
+  content_type: string;
+}
+
+export interface UploadOptions {
+  key?: string;
+  contentType?: string;
+  prefix?: string;
+}

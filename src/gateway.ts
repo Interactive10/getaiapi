@@ -9,6 +9,7 @@ import { wavespeedAdapter } from './adapters/wavespeed.js'
 import type { GenerateRequest, GenerateResponse, ProviderAdapter, ProviderName } from './types.js'
 import { ValidationError, ProviderError } from './errors.js'
 import { withRetry } from './retry.js'
+import { processParamsForUpload } from './storage.js'
 
 // Adapter registry
 const adapters: Record<string, ProviderAdapter> = {
@@ -50,6 +51,11 @@ export async function generate(request: GenerateRequest): Promise<GenerateRespon
   // 6. Map input
   const providerParams = mapInput(request, binding, template)
 
+  // 6.5 Upload binary params to R2 (no-op if storage not configured)
+  const finalParams = await processParamsForUpload(providerParams, {
+    reupload: request.options?.reupload as boolean | undefined,
+  })
+
   // 7. Get adapter and auth key
   const adapter = adapters[binding.provider]
   const apiKey = auth.getKey(binding.provider)
@@ -57,7 +63,7 @@ export async function generate(request: GenerateRequest): Promise<GenerateRespon
   // 8. Submit with retry, then poll
   const timeoutMs = (request.options?.timeout as number | undefined) ?? template.default_timeout_ms
   const submitted = await withRetry(
-    () => adapter.submit(binding.endpoint, providerParams, apiKey),
+    () => adapter.submit(binding.endpoint, finalParams, apiKey),
     { timeoutMs },
   )
 

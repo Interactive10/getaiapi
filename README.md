@@ -78,7 +78,9 @@ const cutout = await generate({
 
 ## Configuration
 
-Set API keys as environment variables for the providers you want to use. You only need keys for the providers you plan to call.
+### Option 1: Environment Variables
+
+Set API keys as environment variables. You only need keys for the providers you plan to call.
 
 ```bash
 # fal-ai (1,199 models)
@@ -90,6 +92,52 @@ export REPLICATE_API_TOKEN="your-replicate-token"
 # WaveSpeed (43 models)
 export WAVESPEED_API_KEY="your-wavespeed-key"
 ```
+
+### Option 2: Programmatic Configuration
+
+Use `configure()` to set keys in code -- useful when your env vars have different names or keys come from a secrets manager.
+
+```typescript
+import { configure } from 'getaiapi'
+
+configure({
+  keys: {
+    'fal-ai': process.env.MY_FAL_TOKEN,
+    'replicate': process.env.MY_REPLICATE_TOKEN,
+    'wavespeed': process.env.MY_WAVESPEED_TOKEN,
+  },
+})
+```
+
+You can also set keys and storage together:
+
+```typescript
+configure({
+  keys: {
+    'fal-ai': 'your-fal-key',
+  },
+  storage: {
+    accountId: 'your-r2-account',
+    bucketName: 'your-bucket',
+    accessKeyId: 'your-r2-key',
+    secretAccessKey: 'your-r2-secret',
+    publicUrlBase: 'https://cdn.example.com',
+  },
+})
+```
+
+Or set just provider keys with `configureAuth()`:
+
+```typescript
+import { configureAuth } from 'getaiapi'
+
+configureAuth({
+  'fal-ai': myKeyVault.get('fal'),
+  'replicate': myKeyVault.get('replicate'),
+})
+```
+
+Programmatic keys take priority over environment variables. Any provider not set programmatically falls back to its default env var.
 
 Models are automatically filtered to only show providers where you have a valid key configured.
 
@@ -212,6 +260,117 @@ Returns all models the caller has API keys for. Accepts optional filters:
 
 Resolves a model by name. Accepts canonical names, aliases, and normalized variants. Throws `ModelNotFoundError` if no match is found.
 
+## R2 Storage (Asset Uploads)
+
+Some providers can't fetch from private or presigned URLs. getaiapi includes built-in Cloudflare R2 storage support that automatically uploads binary assets to a public bucket before sending them to providers.
+
+### Setup
+
+Set these environment variables:
+
+```bash
+# Required
+export R2_ACCOUNT_ID="your-cloudflare-account-id"
+export R2_BUCKET_NAME="your-bucket-name"
+export R2_ACCESS_KEY_ID="your-r2-access-key"
+export R2_SECRET_ACCESS_KEY="your-r2-secret-key"
+
+# Optional - custom public URL (e.g. CDN domain mapped to your bucket)
+export R2_PUBLIC_URL="https://cdn.example.com"
+```
+
+Then call `configureStorage()` once at startup:
+
+```typescript
+import { configureStorage } from 'getaiapi'
+
+// Read from environment variables
+configureStorage()
+
+// Or pass config directly
+configureStorage({
+  accountId: 'your-account-id',
+  bucketName: 'your-bucket',
+  accessKeyId: 'your-key',
+  secretAccessKey: 'your-secret',
+  publicUrlBase: 'https://cdn.example.com', // optional
+  autoUpload: false,                         // optional
+})
+```
+
+### Automatic Uploads in `generate()`
+
+Once storage is configured, any `Buffer`, `Blob`, `File`, or `ArrayBuffer` values in provider params are automatically uploaded to R2 and replaced with public URLs before the request is sent to the provider. No code changes needed -- it just works.
+
+```typescript
+import { generate, configureStorage } from 'getaiapi'
+import { readFileSync } from 'fs'
+
+configureStorage()
+
+const result = await generate({
+  model: 'gpt-image-1.5-edit',
+  image: readFileSync('./photo.jpg'),  // Buffer uploaded to R2 automatically
+  prompt: 'add a rainbow in the sky',
+})
+```
+
+To also re-upload URL strings through R2 (useful when providers can't access the original URL), pass `reupload: true` per-call:
+
+```typescript
+const result = await generate({
+  model: 'kling-video-pro',
+  image: 'https://private-server.com/img.jpg',
+  prompt: 'animate this image',
+  options: { reupload: true },
+})
+```
+
+Or enable it globally with `autoUpload: true` in the storage config.
+
+### Standalone Upload / Delete
+
+You can also use R2 storage directly:
+
+```typescript
+import { uploadAsset, deleteAsset, configureStorage } from 'getaiapi'
+
+configureStorage()
+
+// Upload a buffer
+const { url, key, size_bytes, content_type } = await uploadAsset(
+  Buffer.from('hello world'),
+  { contentType: 'text/plain', prefix: 'uploads' }
+)
+console.log(url) // https://cdn.example.com/uploads/a1b2c3d4-...
+
+// Delete by key
+await deleteAsset(key)
+```
+
+**UploadOptions**
+
+| Option | Type | Description |
+|---|---|---|
+| `key` | `string` | Custom object key (default: auto-generated UUID) |
+| `contentType` | `string` | MIME type (default: detected from input or `application/octet-stream`) |
+| `prefix` | `string` | Key prefix / folder (e.g. `"uploads"`) |
+
+### Storage Errors
+
+```typescript
+import { StorageError } from 'getaiapi'
+
+try {
+  await uploadAsset(buffer)
+} catch (err) {
+  if (err instanceof StorageError) {
+    console.error(err.operation)  // 'upload' | 'delete' | 'config'
+    console.error(err.statusCode) // HTTP status from R2, if applicable
+  }
+}
+```
+
 ## Error Handling
 
 All errors extend `GetAIApiError` and can be caught uniformly or by type:
@@ -224,6 +383,7 @@ All errors extend `GetAIApiError` and can be caught uniformly or by type:
 | `ProviderError` | Provider returned an error response |
 | `TimeoutError` | Generation exceeded the timeout |
 | `RateLimitError` | Provider returned HTTP 429 |
+| `StorageError` | R2 upload, delete, or config failure |
 
 ```typescript
 import { generate, AuthError, ModelNotFoundError } from 'getaiapi'
