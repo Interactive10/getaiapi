@@ -101,8 +101,8 @@ export function signS3Request(
   return {
     url,
     headers: {
-      ...allHeaders,
-      Authorization: authorization,
+      ...lcHeaders,
+      authorization,
     },
   };
 }

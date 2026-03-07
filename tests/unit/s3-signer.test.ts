@@ -18,9 +18,9 @@ describe("signS3Request", () => {
       TEST_CREDS,
     );
 
-    expect(result.headers.Authorization).toMatch(/^AWS4-HMAC-SHA256 Credential=/);
-    expect(result.headers.Authorization).toContain(TEST_CREDS.accessKeyId);
-    expect(result.headers.Authorization).toContain("auto/s3/aws4_request");
+    expect(result.headers.authorization).toMatch(/^AWS4-HMAC-SHA256 Credential=/);
+    expect(result.headers.authorization).toContain(TEST_CREDS.accessKeyId);
+    expect(result.headers.authorization).toContain("auto/s3/aws4_request");
     expect(result.headers["x-amz-date"]).toMatch(/^\d{8}T\d{6}Z$/);
     expect(result.headers["x-amz-content-sha256"]).toBeTruthy();
     expect(result.headers.host).toBe("test-account.r2.cloudflarestorage.com");
@@ -35,7 +35,7 @@ describe("signS3Request", () => {
       TEST_CREDS,
     );
 
-    expect(result.headers.Authorization).toMatch(/^AWS4-HMAC-SHA256/);
+    expect(result.headers.authorization).toMatch(/^AWS4-HMAC-SHA256/);
     expect(result.headers["x-amz-content-sha256"]).toBe(
       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", // sha256 of ""
     );
@@ -50,7 +50,7 @@ describe("signS3Request", () => {
       { accessKeyId: "AK", secretAccessKey: "SK" },
     );
 
-    expect(result.headers.Authorization).toContain("auto/s3/aws4_request");
+    expect(result.headers.authorization).toContain("auto/s3/aws4_request");
   });
 
   it("signed headers are sorted and lowercased", () => {
@@ -63,7 +63,7 @@ describe("signS3Request", () => {
     );
 
     // Extract SignedHeaders from Authorization
-    const match = result.headers.Authorization.match(/SignedHeaders=([^,]+)/);
+    const match = result.headers.authorization.match(/SignedHeaders=([^,]+)/);
     expect(match).toBeTruthy();
     const signedHeaders = match![1].split(";");
     const sorted = [...signedHeaders].sort();
@@ -86,5 +86,19 @@ describe("signS3Request", () => {
     const url = "https://test.r2.cloudflarestorage.com/bucket/my-file.png";
     const result = signS3Request("PUT", url, {}, Buffer.from(""), TEST_CREDS);
     expect(result.url).toBe(url);
+  });
+
+  it("returns all header keys lowercased", () => {
+    const result = signS3Request(
+      "PUT",
+      "https://test.r2.cloudflarestorage.com/bucket/key",
+      { "Content-Type": "text/plain", "X-Custom-Header": "value" },
+      Buffer.from("test"),
+      TEST_CREDS,
+    );
+
+    for (const key of Object.keys(result.headers)) {
+      expect(key).toBe(key.toLowerCase());
+    }
   });
 });
