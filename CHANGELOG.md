@@ -4,6 +4,20 @@ All notable changes to the getaiapi registry and library will be documented in t
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.4] - 2026-03-08
+
+### Fixed
+
+- **fal-ai extract_path**: Fixed 182 endpoints with wrong `extract_path` in the registry. Models were silently returning empty output because `parseOutput` was looking for the wrong field (e.g., `images[].url` when the model returns `image`, `video`, `audio`, `audio_file`, etc.).
+- **fal-ai output types**: Fixed 89 endpoints with wrong `output_map.type` (e.g., audio models marked as `image`).
+- **fal-ai categories**: Fixed 27 endpoints miscategorized (e.g., audio output models listed as `text-to-image`).
+
+### Added
+
+- **fal-ai parseOutput**: Added support for `image.url` (singular image, 93 endpoints), `audio_file.url` (4 endpoints), `audio_url` (string or object, 1 endpoint), and `video_url` (string URL, 2 endpoints) extract paths.
+- **fal-ai URL parity tests**: 1241 tests verifying adapter URL construction matches the official `@fal-ai/client` SDK for every endpoint in the registry.
+- **Registry verification tools**: `tools/fal-endpoint-verifier.ts` (audit + live probe) and `tools/fal-registry-fixer.ts` (automated registry repair).
+
 ## [0.3.3] - 2026-03-08
 
 ### Fixed

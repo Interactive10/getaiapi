@@ -206,6 +206,131 @@ describe("falAiAdapter", () => {
 
       expect(items[0].content_type).toBe("image/jpeg");
     });
+
+    it("should extract singular image from image.url path", () => {
+      const mapping: OutputMapping = {
+        type: "image",
+        extract_path: "image.url",
+      };
+
+      const raw = {
+        image: {
+          url: "https://fal.media/files/example/output.png",
+          content_type: "image/png",
+        },
+        seed: 42,
+      };
+
+      const items = falAiAdapter.parseOutput(raw, mapping);
+
+      expect(items).toEqual([
+        {
+          type: "image",
+          url: "https://fal.media/files/example/output.png",
+          content_type: "image/png",
+        },
+      ]);
+    });
+
+    it("should extract audio from audio_file.url path", () => {
+      const mapping: OutputMapping = {
+        type: "audio",
+        extract_path: "audio_file.url",
+      };
+
+      const raw = {
+        audio_file: {
+          url: "https://fal.media/files/example/output.wav",
+          content_type: "audio/wav",
+        },
+      };
+
+      const items = falAiAdapter.parseOutput(raw, mapping);
+
+      expect(items).toEqual([
+        {
+          type: "audio",
+          url: "https://fal.media/files/example/output.wav",
+          content_type: "audio/wav",
+        },
+      ]);
+    });
+
+    it("should extract audio from audio_url path (string URL)", () => {
+      const mapping: OutputMapping = {
+        type: "audio",
+        extract_path: "audio_url",
+      };
+
+      const raw = {
+        audio_url: "https://fal.media/files/example/output.mp3",
+      };
+
+      const items = falAiAdapter.parseOutput(raw, mapping);
+
+      expect(items).toEqual([
+        {
+          type: "audio",
+          url: "https://fal.media/files/example/output.mp3",
+          content_type: "audio/mpeg",
+        },
+      ]);
+    });
+
+    it("should extract audio from audio_url path (object)", () => {
+      const mapping: OutputMapping = {
+        type: "audio",
+        extract_path: "audio_url",
+      };
+
+      const raw = {
+        audio_url: {
+          url: "https://fal.media/files/example/output.wav",
+          content_type: "audio/wav",
+        },
+      };
+
+      const items = falAiAdapter.parseOutput(raw, mapping);
+
+      expect(items).toEqual([
+        {
+          type: "audio",
+          url: "https://fal.media/files/example/output.wav",
+          content_type: "audio/wav",
+        },
+      ]);
+    });
+
+    it("should extract video from video_url path (string URL)", () => {
+      const mapping: OutputMapping = {
+        type: "video",
+        extract_path: "video_url",
+      };
+
+      const raw = {
+        video_url: "https://fal.media/files/example/output.mp4",
+      };
+
+      const items = falAiAdapter.parseOutput(raw, mapping);
+
+      expect(items).toEqual([
+        {
+          type: "video",
+          url: "https://fal.media/files/example/output.mp4",
+          content_type: "video/mp4",
+        },
+      ]);
+    });
+
+    it("should return empty array for image.url when image is missing", () => {
+      const mapping: OutputMapping = {
+        type: "image",
+        extract_path: "image.url",
+      };
+
+      const items = falAiAdapter.parseOutput({}, mapping);
+      expect(items).toEqual([]);
+    });
   });
 
   describe("HTTP error handling", () => {

@@ -147,6 +147,18 @@ export const falAiAdapter: ProviderAdapter = {
       }));
     }
 
+    if (path === "image.url") {
+      const image = data.image as { url: string; content_type?: string } | undefined;
+      if (!image?.url) return [];
+      return [
+        {
+          type: outputMapping.type,
+          url: image.url,
+          content_type: image.content_type ?? outputMapping.content_type ?? "image/png",
+        },
+      ];
+    }
+
     if (path === "video.url") {
       const video = data.video as { url: string; content_type?: string } | undefined;
       if (!video?.url) return [];
@@ -167,6 +179,44 @@ export const falAiAdapter: ProviderAdapter = {
           type: outputMapping.type,
           url: audio.url,
           content_type: audio.content_type ?? outputMapping.content_type ?? "audio/mpeg",
+        },
+      ];
+    }
+
+    if (path === "audio_file.url") {
+      const audioFile = data.audio_file as { url: string; content_type?: string } | undefined;
+      if (!audioFile?.url) return [];
+      return [
+        {
+          type: outputMapping.type,
+          url: audioFile.url,
+          content_type: audioFile.content_type ?? outputMapping.content_type ?? "audio/mpeg",
+        },
+      ];
+    }
+
+    if (path === "audio_url") {
+      const audioUrl = data.audio_url as { url: string; content_type?: string } | string | undefined;
+      if (!audioUrl) return [];
+      const url = typeof audioUrl === "string" ? audioUrl : audioUrl.url;
+      if (!url) return [];
+      return [
+        {
+          type: outputMapping.type,
+          url,
+          content_type: (typeof audioUrl === "object" ? audioUrl.content_type : undefined) ?? outputMapping.content_type ?? "audio/mpeg",
+        },
+      ];
+    }
+
+    if (path === "video_url") {
+      const videoUrl = data.video_url as string | undefined;
+      if (!videoUrl) return [];
+      return [
+        {
+          type: outputMapping.type,
+          url: videoUrl,
+          content_type: outputMapping.content_type ?? "video/mp4",
         },
       ];
     }
