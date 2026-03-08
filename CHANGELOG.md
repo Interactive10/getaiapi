@@ -4,6 +4,16 @@ All notable changes to the getaiapi registry and library will be documented in t
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.5] - 2026-03-08
+
+### Fixed
+
+- **Build artifacts**: 0.3.2–0.3.4 were published from a stale `dist/` — types and runtime didn't include changes from those versions. Rebuilt from current source so `images` field, `image_urls` mapping, polling URL fix, and all output parser additions are now present in the published package.
+
+### Added
+
+- **prepublishOnly script**: `npm run build` now runs automatically before `npm publish`, preventing stale builds from being published again.
+
 ## [0.3.4] - 2026-03-08
 
 ### Fixed

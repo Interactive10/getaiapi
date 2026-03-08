@@ -1,6 +1,6 @@
 {
   "name": "getaiapi",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "type": "module",
   "description": "Unified AI API Gateway - one function to call any AI model",
   "main": "./dist/index.js",
@@ -46,6 +46,7 @@
   },
   "scripts": {
     "build": "tsup",
+    "prepublishOnly": "npm run build",
     "test": "vitest run",
     "catalog": "tsx scripts/catalog.ts",
     "generate-registry": "tsx scripts/generate-registry.ts"
