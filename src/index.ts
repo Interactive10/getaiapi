@@ -33,6 +33,7 @@ export {
   GetAIApiError,
   AuthError,
   ModelNotFoundError,
+  NoProviderError,
   ValidationError,
   ProviderError,
   TimeoutError,

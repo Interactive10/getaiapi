@@ -4,6 +4,13 @@ All notable changes to the getaiapi registry and library will be documented in t
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Fixed
+
+- **NoProviderError**: When a model exists but none of the user's configured providers support it, the error now says `Model "X" found but requires Y (ENV_VAR)` instead of the misleading `Model "X" not found. Did you mean: X?`.
+- **codeplugtech-face-swap**: Recategorized from `text-to-image` to `image-to-image` — model takes two images (no prompt), but `text-to-image` validation rejected requests without a prompt.
+
 ## [0.4.2] - 2026-03-09
 
 ### Changed
