@@ -6,6 +6,7 @@ import { getCategoryTemplate } from './categories/index.js'
 import { falAiAdapter } from './adapters/fal-ai.js'
 import { replicateAdapter } from './adapters/replicate.js'
 import { wavespeedAdapter } from './adapters/wavespeed.js'
+import { openRouterAdapter } from './adapters/openrouter.js'
 import type { GenerateRequest, GenerateResponse, ProviderAdapter, ProviderName } from './types.js'
 import { ValidationError, ProviderError } from './errors.js'
 import { withRetry } from './retry.js'
@@ -16,6 +17,7 @@ const adapters: Record<string, ProviderAdapter> = {
   'fal-ai': falAiAdapter,
   'replicate': replicateAdapter,
   'wavespeed': wavespeedAdapter,
+  'openrouter': openRouterAdapter,
 }
 
 export async function generate(request: GenerateRequest): Promise<GenerateResponse> {
@@ -86,24 +88,36 @@ export async function generate(request: GenerateRequest): Promise<GenerateRespon
   const outputs = mapOutput(result.output, binding.output_map)
 
   // 10. Build response
+  const rawOutput = typeof result.output === 'object' && result.output !== null
+    ? result.output as Record<string, unknown>
+    : undefined
+
+  const metadata: GenerateResponse['metadata'] = {
+    inference_time_ms: Date.now() - startTime,
+    seed: rawOutput?.seed as number | undefined,
+    safety_flagged: rawOutput
+      ? (
+          Array.isArray(rawOutput.has_nsfw_concepts)
+            ? (rawOutput.has_nsfw_concepts as boolean[]).some((v: boolean) => v)
+            : undefined
+        )
+      : undefined,
+  }
+
+  // Extract token usage from OpenRouter responses
+  if (rawOutput?.usage) {
+    const usage = rawOutput.usage as Record<string, number>
+    metadata.tokens = usage.total_tokens
+    metadata.prompt_tokens = usage.prompt_tokens
+    metadata.completion_tokens = usage.completion_tokens
+  }
+
   return {
     id: randomUUID(),
     model: model.canonical_name,
     provider: binding.provider,
     status: 'completed',
     outputs,
-    metadata: {
-      inference_time_ms: Date.now() - startTime,
-      seed: typeof result.output === 'object' && result.output !== null
-        ? (result.output as Record<string, unknown>).seed as number | undefined
-        : undefined,
-      safety_flagged: typeof result.output === 'object' && result.output !== null
-        ? (
-            Array.isArray((result.output as Record<string, unknown>).has_nsfw_concepts)
-              ? ((result.output as Record<string, unknown>).has_nsfw_concepts as boolean[]).some((v: boolean) => v)
-              : undefined
-          )
-        : undefined,
-    },
+    metadata,
   }
 }

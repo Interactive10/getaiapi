@@ -267,13 +267,13 @@
     "aliases": [
       "adirik-e5-mistral-7b-instruct"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -1153,13 +1153,13 @@
       "andreasjansson-llama-2-13b-embeddings",
       "llama-2-13b-embeddings"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -1361,13 +1361,13 @@
     "aliases": [
       "anthropic-claude-3.5-haiku"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -1390,13 +1390,13 @@
     "aliases": [
       "anthropic-claude-3.7-sonnet"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -1419,13 +1419,13 @@
     "aliases": [
       "anthropic-claude-4-sonnet"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -1448,13 +1448,13 @@
     "aliases": [
       "anthropic-claude-4.5-haiku"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -1477,13 +1477,13 @@
     "aliases": [
       "anthropic-claude-4.5-sonnet"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -1506,13 +1506,13 @@
     "aliases": [
       "anthropic-claude-opus-4.6"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -7902,6 +7902,99 @@
     ]
   },
   {
+    "canonical_name": "claude-haiku-4-5",
+    "aliases": [
+      "claude-haiku-4-5",
+      "claude-haiku",
+      "haiku-4-5"
+    ],
+    "category": "text-generation",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-claude-haiku-4-5",
+        "endpoint": "anthropic/claude-haiku-4-5",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "claude-opus-4-6",
+    "aliases": [
+      "claude-opus-4-6",
+      "claude-opus",
+      "opus-4-6"
+    ],
+    "category": "text-generation",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-claude-opus-4-6",
+        "endpoint": "anthropic/claude-opus-4-6",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "claude-sonnet-4-6",
+    "aliases": [
+      "claude-sonnet-4-6",
+      "claude-sonnet",
+      "sonnet-4-6"
+    ],
+    "category": "text-generation",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-claude-sonnet-4-6",
+        "endpoint": "anthropic/claude-sonnet-4-6",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "codeformer",
     "aliases": [
       "codeformer"
@@ -8607,13 +8700,13 @@
     "aliases": [
       "cuuupid-gte-qwen2-7b-instruct"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -8665,13 +8758,13 @@
     "aliases": [
       "cuuupid-qwen2-vl-2b"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -8723,13 +8816,13 @@
     "aliases": [
       "daanelson-minigpt-4"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -9166,13 +9259,13 @@
     "aliases": [
       "deepseek-ai-deepseek-r1"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -9195,13 +9288,13 @@
     "aliases": [
       "deepseek-ai-deepseek-v3"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -9225,13 +9318,13 @@
       "deepseek-ai-deepseek-v3.1",
       "deepseek-ai-deepseek-3.1"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -9245,6 +9338,36 @@
           "type": "image",
           "extract_path": "output[]",
           "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "deepseek-v3",
+    "aliases": [
+      "deepseek-v3",
+      "deepseek-chat"
+    ],
+    "category": "text-generation",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-deepseek-v3",
+        "endpoint": "deepseek/deepseek-chat-v3-0324",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
         }
       }
     ]
@@ -16836,6 +16959,37 @@
     ]
   },
   {
+    "canonical_name": "gemini-2.0-flash",
+    "aliases": [
+      "gemini-2.0-flash",
+      "gemini-flash",
+      "google-gemini-flash"
+    ],
+    "category": "text-generation",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-gemini-2.0-flash",
+        "endpoint": "google/gemini-2.0-flash-001",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "gemini-25-flash-image",
     "aliases": [
       "gemini-25-flash-image"
@@ -17287,13 +17441,13 @@
       "google-deepmind-gemma-2b-it",
       "deepmind-gemma-2b-it"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -18339,6 +18493,66 @@
           "type": "image",
           "extract_path": "images[].url",
           "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "gpt-4o",
+    "aliases": [
+      "gpt-4o",
+      "openai-gpt-4o"
+    ],
+    "category": "text-generation",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-gpt-4o",
+        "endpoint": "openai/gpt-4o",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "gpt-4o-mini",
+    "aliases": [
+      "gpt-4o-mini",
+      "openai-gpt-4o-mini"
+    ],
+    "category": "text-generation",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-gpt-4o-mini",
+        "endpoint": "openai/gpt-4o-mini",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
         }
       }
     ]
@@ -27970,6 +28184,37 @@
     ]
   },
   {
+    "canonical_name": "llama-3.1-70b",
+    "aliases": [
+      "llama-3.1-70b",
+      "llama-70b",
+      "meta-llama-70b"
+    ],
+    "category": "text-generation",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-llama-3.1-70b",
+        "endpoint": "meta-llama/llama-3.1-70b-instruct",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "llava-next",
     "aliases": [
       "llava-next"
@@ -30419,13 +30664,13 @@
       "lucataco-deepseek-ocr",
       "deepseek-ocr"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -31018,13 +31263,13 @@
       "lucataco-ollama-llama3.2-vision-11b",
       "ollama-llama3.2-vision-11b"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -31048,13 +31293,13 @@
       "lucataco-ollama-llama3.2-vision-90b",
       "ollama-llama3.2-vision-90b"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -31230,13 +31475,13 @@
       "lucataco-qwen-vl-chat",
       "qwen-vl-chat"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -31260,13 +31505,13 @@
       "lucataco-qwen2-vl-7b-instruct",
       "qwen2-vl-7b-instruct"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -31290,13 +31535,13 @@
       "lucataco-qwen2.5-omni-7b",
       "qwen2.5-omni-7b"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -31802,13 +32047,13 @@
       "lucataco-videollama3-7b",
       "videollama3-7b"
     ],
-    "category": "text-to-video",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "video"
+        "text"
       ]
     },
     "providers": [
@@ -33288,13 +33533,13 @@
       "meta-llama-2-13b",
       "llama-2-13b"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33318,13 +33563,13 @@
       "meta-llama-2-13b-chat",
       "llama-2-13b-chat"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33348,13 +33593,13 @@
       "meta-llama-2-70b",
       "llama-2-70b"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33378,13 +33623,13 @@
       "meta-llama-2-70b-chat",
       "llama-2-70b-chat"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33408,13 +33653,13 @@
       "meta-llama-2-7b",
       "llama-2-7b"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33438,13 +33683,13 @@
       "meta-llama-2-7b-chat",
       "llama-2-7b-chat"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33468,13 +33713,13 @@
       "meta-llama-4-maverick-instruct",
       "llama-4-maverick-instruct"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33498,13 +33743,13 @@
       "meta-llama-4-scout-instruct",
       "llama-4-scout-instruct"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33528,13 +33773,13 @@
       "meta-llama-guard-3-8b",
       "llama-guard-3-8b"
     ],
-    "category": "text-to-image",
+    "category": "moderation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33558,13 +33803,13 @@
       "meta-llama-guard-4-12b",
       "llama-guard-4-12b"
     ],
-    "category": "text-to-image",
+    "category": "moderation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33588,13 +33833,13 @@
       "meta-meta-llama-3-70b",
       "meta-llama-3-70b"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33618,13 +33863,13 @@
       "meta-meta-llama-3-70b-instruct",
       "meta-llama-3-70b-instruct"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33648,13 +33893,13 @@
       "meta-meta-llama-3-8b",
       "meta-llama-3-8b"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33678,13 +33923,13 @@
       "meta-meta-llama-3-8b-instruct",
       "meta-llama-3-8b-instruct"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33708,13 +33953,13 @@
       "meta-meta-llama-3.1-405b-instruct",
       "meta-llama-3.1-405b-instruct"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -33738,13 +33983,13 @@
       "meta-meta-llama-guard-2-8b",
       "meta-llama-guard-2-8b"
     ],
-    "category": "text-to-image",
+    "category": "moderation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -35579,18 +35824,48 @@
     ]
   },
   {
-    "canonical_name": "mistralai-mistral-7b-v0.1",
+    "canonical_name": "mistral-large",
     "aliases": [
-      "mistralai-mistral-7b-v0.1",
-      "mistralai-mistral-7b-0.1"
+      "mistral-large",
+      "mistralai-large"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-mistral-large",
+        "endpoint": "mistralai/mistral-large",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "mistralai-mistral-7b-v0.1",
+    "aliases": [
+      "mistralai-mistral-7b-v0.1",
+      "mistralai-mistral-7b-0.1"
+    ],
+    "category": "text-generation",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
       ]
     },
     "providers": [
@@ -37427,13 +37702,13 @@
       "openai-gpt-4.1",
       "gpt-4.1"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -37457,13 +37732,13 @@
       "openai-gpt-4.1-mini",
       "gpt-4.1-mini"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -37487,13 +37762,13 @@
       "openai-gpt-4.1-nano",
       "gpt-4.1-nano"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -37517,13 +37792,13 @@
       "openai-gpt-4o",
       "gpt-4o"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -37547,13 +37822,13 @@
       "openai-gpt-4o-mini",
       "gpt-4o-mini"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -38636,13 +38911,13 @@
     "aliases": [
       "pbevan1-llama-3.1-8b-ocr-correction"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -41755,18 +42030,48 @@
     ]
   },
   {
-    "canonical_name": "qwen-3-guard",
+    "canonical_name": "qwen-2.5-72b",
     "aliases": [
-      "qwen-3-guard",
-      "3-guard"
+      "qwen-2.5-72b",
+      "qwen-72b"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-qwen-2.5-72b",
+        "endpoint": "qwen/qwen-2.5-72b-instruct",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "qwen-3-guard",
+    "aliases": [
+      "qwen-3-guard",
+      "3-guard"
+    ],
+    "category": "moderation",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
       ]
     },
     "providers": [
@@ -44028,13 +44333,13 @@
       "qwen-qwen3-235b-a22b-instruct-2507",
       "qwen3-235b-a22b-instruct-2507"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -44875,13 +45180,13 @@
     "aliases": [
       "replicate-llama-7b"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -55828,13 +56133,13 @@
     "aliases": [
       "yorickvp-llava-13b"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -55857,13 +56162,13 @@
     "aliases": [
       "yorickvp-llava-v1.6-mistral-7b"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [
@@ -55886,13 +56191,13 @@
     "aliases": [
       "yorickvp-llava-v1.6-vicuna-13b"
     ],
-    "category": "text-to-image",
+    "category": "text-generation",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "image"
+        "text"
       ]
     },
     "providers": [

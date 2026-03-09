@@ -1,6 +1,6 @@
 {
   "name": "getaiapi",
-  "version": "0.3.5",
+  "version": "0.4.1",
   "type": "module",
   "description": "Unified AI API Gateway - one function to call any AI model",
   "main": "./dist/index.js",
@@ -37,8 +37,11 @@
     "fal-ai",
     "replicate",
     "wavespeed",
+    "openrouter",
     "image-generation",
+    "text-generation",
     "text-to-image",
+    "llm",
     "unified-api"
   ],
   "engines": {

@@ -224,6 +224,7 @@ describe('Discovery API', () => {
         'fal-ai': 'FAL_KEY',
         'replicate': 'REPLICATE_API_TOKEN',
         'wavespeed': 'WAVESPEED_API_KEY',
+        'openrouter': 'OPENROUTER_API_KEY',
       }
 
       for (const model of registry) {

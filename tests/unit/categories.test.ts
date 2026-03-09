@@ -9,6 +9,7 @@ import {
   textToAudioTemplate,
   audioToTextTemplate,
   removeBackgroundTemplate,
+  textGenerationTemplate,
 } from '../../src/categories/index.js'
 import type { CategoryTemplate, ModelCategory } from '../../src/types.js'
 
@@ -21,10 +22,11 @@ const allTemplates: { name: string; template: CategoryTemplate; category: ModelC
   { name: 'text-to-audio', template: textToAudioTemplate, category: 'text-to-audio' },
   { name: 'audio-to-text', template: audioToTextTemplate, category: 'audio-to-text' },
   { name: 'remove-background', template: removeBackgroundTemplate, category: 'remove-background' },
+  { name: 'text-generation', template: textGenerationTemplate, category: 'text-generation' },
 ]
 
 describe('Category Templates', () => {
-  it('has exactly 8 registered templates', () => {
+  it('has exactly 9 registered templates', () => {
     const registeredCategories: ModelCategory[] = [
       'text-to-image',
       'image-edit',
@@ -34,11 +36,12 @@ describe('Category Templates', () => {
       'text-to-audio',
       'audio-to-text',
       'remove-background',
+      'text-generation',
     ]
     for (const cat of registeredCategories) {
       expect(getCategoryTemplate(cat)).toBeDefined()
     }
-    expect(registeredCategories).toHaveLength(8)
+    expect(registeredCategories).toHaveLength(9)
   })
 
   describe.each(allTemplates)('$name template', ({ template, category }) => {
@@ -55,10 +58,8 @@ describe('Category Templates', () => {
       expect(['image', 'video', 'audio', 'text', '3d', 'segmentation']).toContain(template.output_type)
     })
 
-    it('has output_extract with all three providers', () => {
-      expect(template.output_extract).toHaveProperty('fal-ai')
-      expect(template.output_extract).toHaveProperty('replicate')
-      expect(template.output_extract).toHaveProperty('wavespeed')
+    it('has output_extract with at least one provider', () => {
+      expect(Object.keys(template.output_extract).length).toBeGreaterThan(0)
     })
 
     it('has a positive default_timeout_ms', () => {
@@ -144,5 +145,23 @@ describe('Specific template validations', () => {
     expect(image?.providers['fal-ai']).toBe('image_url')
     expect(image?.providers['wavespeed']).toBe('image_url')
     expect(image?.providers['replicate']).toBe('image')
+  })
+
+  it('text-generation has prompt as required', () => {
+    const prompt = textGenerationTemplate.input_mappings.find((m) => m.universal === 'prompt')
+    expect(prompt?.required).toBe(true)
+  })
+
+  it('text-generation output type is text', () => {
+    expect(textGenerationTemplate.output_type).toBe('text')
+  })
+
+  it('text-generation has openrouter in output_extract', () => {
+    expect(textGenerationTemplate.output_extract).toHaveProperty('openrouter')
+    expect(textGenerationTemplate.output_extract.openrouter).toBe('choices[0].message.content')
+  })
+
+  it('text-generation timeout is 2 minutes', () => {
+    expect(textGenerationTemplate.default_timeout_ms).toBe(120000)
   })
 })

@@ -250,4 +250,35 @@ describe('mapOutput', () => {
     const items = mapOutput(raw, outputMapping)
     expect(items[0].content_type).toBe('image/webp')
   })
+
+  it('extracts text content from choices[0].message.content (OpenRouter)', () => {
+    const raw = {
+      choices: [
+        { message: { role: 'assistant', content: 'Hello world' } },
+      ],
+    }
+    const outputMapping: OutputMapping = {
+      type: 'text',
+      extract_path: 'choices[0].message.content',
+      content_type: 'text/plain',
+    }
+    const items = mapOutput(raw, outputMapping)
+    expect(items).toHaveLength(1)
+    expect(items[0]).toEqual({
+      type: 'text',
+      content: 'Hello world',
+      content_type: 'text/plain',
+    })
+  })
+
+  it('returns empty array for choices[0] when choices is empty', () => {
+    const raw = { choices: [] }
+    const outputMapping: OutputMapping = {
+      type: 'text',
+      extract_path: 'choices[0].message.content',
+      content_type: 'text/plain',
+    }
+    const items = mapOutput(raw, outputMapping)
+    expect(items).toEqual([])
+  })
 })

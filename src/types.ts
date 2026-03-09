@@ -39,12 +39,16 @@ export interface GenerateResponse {
     inference_time_ms?: number;
     cost?: number;
     safety_flagged?: boolean;
+    tokens?: number;
+    prompt_tokens?: number;
+    completion_tokens?: number;
   };
 }
 
 export interface OutputItem {
   type: OutputType;
-  url: string;
+  url?: string;
+  content?: string;
   content_type: string;
   size_bytes?: number;
 }
@@ -67,9 +71,10 @@ export type ModelCategory =
   | "image-edit"
   | "video-to-audio"
   | "moderation"
-  | "training";
+  | "training"
+  | "text-generation";
 
-export type ProviderName = "fal-ai" | "replicate" | "wavespeed";
+export type ProviderName = "fal-ai" | "replicate" | "wavespeed" | "openrouter";
 
 export type InputType = "text" | "image" | "audio" | "video";
 
