@@ -17808,94 +17808,6 @@
     ]
   },
   {
-    "canonical_name": "google-nano-banana",
-    "aliases": [
-      "google-nano-banana"
-    ],
-    "category": "text-to-image",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "image"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-google-nano-banana",
-        "endpoint": "google/nano-banana",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "google-nano-banana-2",
-    "aliases": [
-      "google-nano-banana-2"
-    ],
-    "category": "text-to-image",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "image"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-google-nano-banana-2",
-        "endpoint": "google/nano-banana-2",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "google-nano-banana-2-edit",
-    "aliases": [
-      "google-nano-banana-2-edit"
-    ],
-    "category": "image-edit",
-    "modality": {
-      "inputs": [
-        "image",
-        "text"
-      ],
-      "outputs": [
-        "image"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "wavespeed",
-        "skill_id": "wavespeed-google-nano-banana-2-edit",
-        "endpoint": "google/nano-banana-2/edit",
-        "auth_env": "WAVESPEED_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "data.outputs[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
     "canonical_name": "google-nano-banana-2-edit-fast",
     "aliases": [
       "google-nano-banana-2-edit-fast",
@@ -17981,65 +17893,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "data.outputs[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "google-nano-banana-edit",
-    "aliases": [
-      "google-nano-banana-edit"
-    ],
-    "category": "image-edit",
-    "modality": {
-      "inputs": [
-        "image",
-        "text"
-      ],
-      "outputs": [
-        "image"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "wavespeed",
-        "skill_id": "wavespeed-google-nano-banana-edit",
-        "endpoint": "google/nano-banana/edit",
-        "auth_env": "WAVESPEED_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "data.outputs[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "google-nano-banana-pro",
-    "aliases": [
-      "google-nano-banana-pro"
-    ],
-    "category": "text-to-image",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "image"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-google-nano-banana-pro",
-        "endpoint": "google/nano-banana-pro",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -18390,37 +18243,6 @@
     ]
   },
   {
-    "canonical_name": "google-veo3.1-fast-image-to-video",
-    "aliases": [
-      "google-veo3.1-fast-image-to-video",
-      "google-veo3.1-fast"
-    ],
-    "category": "image-to-video",
-    "modality": {
-      "inputs": [
-        "image",
-        "text"
-      ],
-      "outputs": [
-        "video"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "wavespeed",
-        "skill_id": "wavespeed-google-veo3.1-fast-image-to-video",
-        "endpoint": "google/veo3.1-fast/image-to-video",
-        "auth_env": "WAVESPEED_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "video",
-          "extract_path": "data.outputs[]",
-          "content_type": "video/mp4"
-        }
-      }
-    ]
-  },
-  {
     "canonical_name": "got-ocr-v2",
     "aliases": [
       "got-ocr-v2"
@@ -18566,7 +18388,8 @@
   {
     "canonical_name": "gpt-image-1-mini",
     "aliases": [
-      "gpt-image-1-mini"
+      "gpt-image-1-mini",
+      "openai-gpt-image-1-mini"
     ],
     "category": "text-to-image",
     "modality": {
@@ -18587,6 +18410,18 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
+          "content_type": "image/png"
+        }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-openai-gpt-image-1-mini",
+        "endpoint": "openai/gpt-image-1-mini",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -18656,7 +18491,8 @@
   {
     "canonical_name": "gpt-image-1.5",
     "aliases": [
-      "gpt-image-1.5"
+      "gpt-image-1.5",
+      "openai-gpt-image-1.5"
     ],
     "category": "text-to-image",
     "modality": {
@@ -18677,6 +18513,18 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
+          "content_type": "image/png"
+        }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-openai-gpt-image-1.5",
+        "endpoint": "openai/gpt-image-1.5",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -36735,6 +36583,7 @@
   {
     "canonical_name": "nano-banana",
     "aliases": [
+      "google-nano-banana",
       "nano-banana"
     ],
     "category": "text-to-image",
@@ -36758,12 +36607,25 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-google-nano-banana",
+        "endpoint": "google/nano-banana",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
       }
     ]
   },
   {
     "canonical_name": "nano-banana-2",
     "aliases": [
+      "google-nano-banana-2",
       "nano-banana-2"
     ],
     "category": "text-to-image",
@@ -36787,12 +36649,25 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-google-nano-banana-2",
+        "endpoint": "google/nano-banana-2",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
       }
     ]
   },
   {
     "canonical_name": "nano-banana-2-edit",
     "aliases": [
+      "google-nano-banana-2-edit",
       "nano-banana-2-edit"
     ],
     "category": "image-edit",
@@ -36817,12 +36692,25 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
+      },
+      {
+        "provider": "wavespeed",
+        "skill_id": "wavespeed-google-nano-banana-2-edit",
+        "endpoint": "google/nano-banana-2/edit",
+        "auth_env": "WAVESPEED_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "data.outputs[]",
+          "content_type": "image/png"
+        }
       }
     ]
   },
   {
     "canonical_name": "nano-banana-edit",
     "aliases": [
+      "google-nano-banana-edit",
       "nano-banana-edit"
     ],
     "category": "image-edit",
@@ -36847,12 +36735,25 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
+      },
+      {
+        "provider": "wavespeed",
+        "skill_id": "wavespeed-google-nano-banana-edit",
+        "endpoint": "google/nano-banana/edit",
+        "auth_env": "WAVESPEED_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "data.outputs[]",
+          "content_type": "image/png"
+        }
       }
     ]
   },
   {
     "canonical_name": "nano-banana-pro",
     "aliases": [
+      "google-nano-banana-pro",
       "nano-banana-pro"
     ],
     "category": "text-to-image",
@@ -36874,6 +36775,18 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
+          "content_type": "image/png"
+        }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-google-nano-banana-pro",
+        "endpoint": "google/nano-banana-pro",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -38092,64 +38005,6 @@
     ]
   },
   {
-    "canonical_name": "openai-gpt-image-1-mini",
-    "aliases": [
-      "openai-gpt-image-1-mini"
-    ],
-    "category": "text-to-image",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "image"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-openai-gpt-image-1-mini",
-        "endpoint": "openai/gpt-image-1-mini",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "openai-gpt-image-1.5",
-    "aliases": [
-      "openai-gpt-image-1.5"
-    ],
-    "category": "text-to-image",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "image"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-openai-gpt-image-1.5",
-        "endpoint": "openai/gpt-image-1.5",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
     "canonical_name": "openai-gpt-oss-120b",
     "aliases": [
       "openai-gpt-oss-120b",
@@ -38353,35 +38208,6 @@
           "type": "image",
           "extract_path": "output[]",
           "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "openai-whisper",
-    "aliases": [
-      "openai-whisper"
-    ],
-    "category": "audio-to-text",
-    "modality": {
-      "inputs": [
-        "audio"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-openai-whisper",
-        "endpoint": "openai/whisper",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "text",
-          "extract_path": "output[]",
-          "content_type": "text/plain"
         }
       }
     ]
@@ -50726,6 +50552,8 @@
   {
     "canonical_name": "veo3.1-fast-image-to-video",
     "aliases": [
+      "google-veo3.1-fast",
+      "google-veo3.1-fast-image-to-video",
       "veo3.1-fast-image-to-video"
     ],
     "category": "image-to-video",
@@ -50748,6 +50576,18 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "wavespeed",
+        "skill_id": "wavespeed-google-veo3.1-fast-image-to-video",
+        "endpoint": "google/veo3.1-fast/image-to-video",
+        "auth_env": "WAVESPEED_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "video",
+          "extract_path": "data.outputs[]",
           "content_type": "video/mp4"
         }
       }
@@ -55336,6 +55176,7 @@
   {
     "canonical_name": "whisper",
     "aliases": [
+      "openai-whisper",
       "whisper"
     ],
     "category": "audio-to-text",
@@ -55357,6 +55198,18 @@
         "output_map": {
           "type": "text",
           "extract_path": "output",
+          "content_type": "text/plain"
+        }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-openai-whisper",
+        "endpoint": "openai/whisper",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "text",
+          "extract_path": "output[]",
           "content_type": "text/plain"
         }
       }

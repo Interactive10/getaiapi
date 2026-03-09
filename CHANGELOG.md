@@ -8,7 +8,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
-- **Model identity graph**: Merged 5 duplicate model entries that existed separately per provider into unified entries with combined `aliases` and `providers` arrays. Models `gpt-4o`, `gpt-4o-mini`, `claude-haiku-4-5`, `claude-opus-4-6`, and `deepseek-v3` now each have both Replicate and OpenRouter bindings in a single registry entry. Old canonical names (e.g., `openai-gpt-4o`, `anthropic-claude-opus-4.6`) are preserved as aliases for backward compatibility.
+- **Model identity graph**: Merged 14 duplicate model entries that existed separately per provider into unified entries with combined `aliases` and `providers` arrays. Includes `gpt-4o`, `gpt-4o-mini`, `claude-haiku-4-5`, `claude-opus-4-6`, `deepseek-v3`, `nano-banana`, `nano-banana-2`, `nano-banana-2-edit`, `nano-banana-edit`, `nano-banana-pro`, `veo3.1-fast-image-to-video`, `gpt-image-1-mini`, `gpt-image-1.5`, and `whisper`. Old canonical names (e.g., `openai-gpt-4o`, `google-nano-banana-2-edit`) are preserved as aliases for backward compatibility. Registry reduced from 1940 to 1926 entries.
 
 ### Added
 
