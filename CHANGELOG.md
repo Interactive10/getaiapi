@@ -6,6 +6,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-03-09
+
+### Changed
+
+- **Model identity graph (batch 3)**: Merged 35 additional duplicate model entries across providers (fal-ai, Replicate, WaveSpeed) into unified entries. Includes FLUX (dev, schnell, pulid), Ideogram (v2, v2-turbo, v2a, v2a-turbo, character), Qwen image models (8 variants), Recraft (20b, vectorize), HunyuanVideo, LTX-Video, SANA, CodeFormer, AuraSR, and more. Registry reduced from 1,925 to 1,890 entries.
+
 ### Fixed
 
 - **NoProviderError**: When a model exists but none of the user's configured providers support it, the error now says `Model "X" found but requires Y (ENV_VAR)` instead of the misleading `Model "X" not found. Did you mean: X?`.
