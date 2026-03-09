@@ -1444,35 +1444,6 @@
     ]
   },
   {
-    "canonical_name": "anthropic-claude-4.5-haiku",
-    "aliases": [
-      "anthropic-claude-4.5-haiku"
-    ],
-    "category": "text-generation",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-anthropic-claude-4.5-haiku",
-        "endpoint": "anthropic/claude-4.5-haiku",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
     "canonical_name": "anthropic-claude-4.5-sonnet",
     "aliases": [
       "anthropic-claude-4.5-sonnet"
@@ -1491,35 +1462,6 @@
         "provider": "replicate",
         "skill_id": "replicate-anthropic-claude-4.5-sonnet",
         "endpoint": "anthropic/claude-4.5-sonnet",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "anthropic-claude-opus-4.6",
-    "aliases": [
-      "anthropic-claude-opus-4.6"
-    ],
-    "category": "text-generation",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-anthropic-claude-opus-4.6",
-        "endpoint": "anthropic/claude-opus-4.6",
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
@@ -7904,8 +7846,9 @@
   {
     "canonical_name": "claude-haiku-4-5",
     "aliases": [
-      "claude-haiku-4-5",
+      "anthropic-claude-4.5-haiku",
       "claude-haiku",
+      "claude-haiku-4-5",
       "haiku-4-5"
     ],
     "category": "text-generation",
@@ -7929,14 +7872,27 @@
           "extract_path": "choices[0].message.content",
           "content_type": "text/plain"
         }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-anthropic-claude-4.5-haiku",
+        "endpoint": "anthropic/claude-4.5-haiku",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
       }
     ]
   },
   {
     "canonical_name": "claude-opus-4-6",
     "aliases": [
-      "claude-opus-4-6",
+      "anthropic-claude-opus-4.6",
       "claude-opus",
+      "claude-opus-4-6",
       "opus-4-6"
     ],
     "category": "text-generation",
@@ -7959,6 +7915,18 @@
           "type": "text",
           "extract_path": "choices[0].message.content",
           "content_type": "text/plain"
+        }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-anthropic-claude-opus-4.6",
+        "endpoint": "anthropic/claude-opus-4.6",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
         }
       }
     ]
@@ -9284,35 +9252,6 @@
     ]
   },
   {
-    "canonical_name": "deepseek-ai-deepseek-v3",
-    "aliases": [
-      "deepseek-ai-deepseek-v3"
-    ],
-    "category": "text-generation",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-deepseek-ai-deepseek-v3",
-        "endpoint": "deepseek-ai/deepseek-v3",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
     "canonical_name": "deepseek-ai-deepseek-v3.1",
     "aliases": [
       "deepseek-ai-deepseek-v3.1",
@@ -9345,8 +9284,9 @@
   {
     "canonical_name": "deepseek-v3",
     "aliases": [
-      "deepseek-v3",
-      "deepseek-chat"
+      "deepseek-ai-deepseek-v3",
+      "deepseek-chat",
+      "deepseek-v3"
     ],
     "category": "text-generation",
     "modality": {
@@ -9368,6 +9308,18 @@
           "type": "text",
           "extract_path": "choices[0].message.content",
           "content_type": "text/plain"
+        }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-deepseek-ai-deepseek-v3",
+        "endpoint": "deepseek-ai/deepseek-v3",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
         }
       }
     ]
@@ -18524,6 +18476,18 @@
           "extract_path": "choices[0].message.content",
           "content_type": "text/plain"
         }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-openai-gpt-4o",
+        "endpoint": "openai/gpt-4o",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
       }
     ]
   },
@@ -18553,6 +18517,18 @@
           "type": "text",
           "extract_path": "choices[0].message.content",
           "content_type": "text/plain"
+        }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-openai-gpt-4o-mini",
+        "endpoint": "openai/gpt-4o-mini",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
         }
       }
     ]
@@ -37776,66 +37752,6 @@
         "provider": "replicate",
         "skill_id": "replicate-openai-gpt-4.1-nano",
         "endpoint": "openai/gpt-4.1-nano",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "openai-gpt-4o",
-    "aliases": [
-      "openai-gpt-4o",
-      "gpt-4o"
-    ],
-    "category": "text-generation",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-openai-gpt-4o",
-        "endpoint": "openai/gpt-4o",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "openai-gpt-4o-mini",
-    "aliases": [
-      "openai-gpt-4o-mini",
-      "gpt-4o-mini"
-    ],
-    "category": "text-generation",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-openai-gpt-4o-mini",
-        "endpoint": "openai/gpt-4o-mini",
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {

@@ -4,6 +4,17 @@ All notable changes to the getaiapi registry and library will be documented in t
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.2] - 2026-03-09
+
+### Changed
+
+- **Model identity graph**: Merged 5 duplicate model entries that existed separately per provider into unified entries with combined `aliases` and `providers` arrays. Models `gpt-4o`, `gpt-4o-mini`, `claude-haiku-4-5`, `claude-opus-4-6`, and `deepseek-v3` now each have both Replicate and OpenRouter bindings in a single registry entry. Old canonical names (e.g., `openai-gpt-4o`, `anthropic-claude-opus-4.6`) are preserved as aliases for backward compatibility.
+
+### Added
+
+- **Registry duplicate detection**: New `scripts/validate-registry.js` checks for alias collisions and normalized name duplicates to prevent future duplicate entries.
+- **MODELS.md generator**: New `scripts/generate-models-md.js` generates `docs/MODELS.md` from `registry.json`.
+
 ## [0.4.1] - 2026-03-09
 
 ### Fixed

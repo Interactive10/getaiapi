@@ -1,6 +1,6 @@
 # Model Directory
 
-Complete list of all 1940 models supported by getaiapi, sorted alphabetically.
+Complete list of all 1935 models supported by getaiapi, sorted alphabetically.
 
 | Model | Category | fal-ai | Replicate | WaveSpeed | OpenRouter |
 |---|---|---|---|---|---|
@@ -53,9 +53,7 @@ Complete list of all 1940 models supported by getaiapi, sorted alphabetically.
 | `anthropic-claude-3.5-haiku` | text-generation | - | Y | - | - |
 | `anthropic-claude-3.7-sonnet` | text-generation | - | Y | - | - |
 | `anthropic-claude-4-sonnet` | text-generation | - | Y | - | - |
-| `anthropic-claude-4.5-haiku` | text-generation | - | Y | - | - |
 | `anthropic-claude-4.5-sonnet` | text-generation | - | Y | - | - |
-| `anthropic-claude-opus-4.6` | text-generation | - | Y | - | - |
 | `appmeloncreator-platmoji-beta` | text-to-image | - | Y | - | - |
 | `arbiter-image` | text-to-image | Y | - | - | - |
 | `arbiter-image-image` | text-to-image | Y | - | - | - |
@@ -269,8 +267,8 @@ Complete list of all 1940 models supported by getaiapi, sorted alphabetically.
 | `clarity-upscaler` | upscale-image | Y | - | - | - |
 | `clarityai-crystal-upscaler` | upscale-image | Y | - | - | - |
 | `clarityai-crystal-video-upscaler` | upscale-video | Y | - | - | - |
-| `claude-haiku-4-5` | text-generation | - | - | - | Y |
-| `claude-opus-4-6` | text-generation | - | - | - | Y |
+| `claude-haiku-4-5` | text-generation | - | Y | - | Y |
+| `claude-opus-4-6` | text-generation | - | Y | - | Y |
 | `claude-sonnet-4-6` | text-generation | - | - | - | Y |
 | `codeformer` | text-to-image | Y | - | - | - |
 | `codeplugtech-background_remover` | remove-background | - | Y | - | - |
@@ -316,9 +314,8 @@ Complete list of all 1940 models supported by getaiapi, sorted alphabetically.
 | `decart-lucy-restyle` | text-to-video | Y | - | - | - |
 | `deepfilternet3` | upscale-image | Y | - | - | - |
 | `deepseek-ai-deepseek-r1` | text-generation | - | Y | - | - |
-| `deepseek-ai-deepseek-v3` | text-generation | - | Y | - | - |
 | `deepseek-ai-deepseek-v3.1` | text-generation | - | Y | - | - |
-| `deepseek-v3` | text-generation | - | - | - | Y |
+| `deepseek-v3` | text-generation | - | Y | - | Y |
 | `deforum-deforum_stable_diffusion` | text-to-image | - | Y | - | - |
 | `demucs` | text-to-image | Y | - | - | - |
 | `depth-anything-video` | text-to-video | Y | - | - | - |
@@ -627,8 +624,8 @@ Complete list of all 1940 models supported by getaiapi, sorted alphabetically.
 | `google-veo-3.1-fast` | text-to-video | - | Y | - | - |
 | `google-veo3.1-fast-image-to-video` | image-to-video | - | - | Y | - |
 | `got-ocr-v2` | text-to-image | Y | - | - | - |
-| `gpt-4o` | text-generation | - | - | - | Y |
-| `gpt-4o-mini` | text-generation | - | - | - | Y |
+| `gpt-4o` | text-generation | - | Y | - | Y |
+| `gpt-4o-mini` | text-generation | - | Y | - | Y |
 | `gpt-image-1-edit-image` | image-edit | Y | - | - | - |
 | `gpt-image-1-mini` | text-to-image | Y | - | - | - |
 | `gpt-image-1-mini-edit` | image-edit | Y | - | - | - |
@@ -1275,8 +1272,6 @@ Complete list of all 1940 models supported by getaiapi, sorted alphabetically.
 | `openai-gpt-4.1` | text-generation | - | Y | - | - |
 | `openai-gpt-4.1-mini` | text-generation | - | Y | - | - |
 | `openai-gpt-4.1-nano` | text-generation | - | Y | - | - |
-| `openai-gpt-4o` | text-generation | - | Y | - | - |
-| `openai-gpt-4o-mini` | text-generation | - | Y | - | - |
 | `openai-gpt-4o-mini-transcribe` | audio-to-text | - | Y | - | - |
 | `openai-gpt-4o-transcribe` | audio-to-text | - | Y | - | - |
 | `openai-gpt-5` | text-to-image | - | Y | - | - |
@@ -1944,7 +1939,3 @@ Complete list of all 1940 models supported by getaiapi, sorted alphabetically.
 | `zsyoaoa-invsr` | text-to-image | - | Y | - | - |
 | `zylim0702-qr_code_controlnet` | text-to-image | - | Y | - | - |
 | `zylim0702-remove_bg` | text-to-image | - | Y | - | - |
-
----
-
-Generated from `registry/registry.json`. 1940 models across 4 providers.
