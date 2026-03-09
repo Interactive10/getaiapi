@@ -207,6 +207,18 @@ function genericExtract(
   for (const seg of segments) {
     if (current === null || current === undefined) return []
 
+    // Indexed array access: key[N]
+    const indexMatch = seg.match(/^(.+)\[(\d+)\]$/)
+    if (indexMatch) {
+      const key = indexMatch[1]
+      const index = parseInt(indexMatch[2], 10)
+      const arr = (current as Record<string, unknown>)[key]
+      if (!Array.isArray(arr) || index >= arr.length) return []
+      current = arr[index]
+      continue
+    }
+
+    // Array iteration: key[]
     const arrayMatch = seg.match(/^(.+)\[\]$/)
     if (arrayMatch) {
       const key = arrayMatch[1]
@@ -236,6 +248,9 @@ function genericExtract(
 
   // Single value at end of path
   if (typeof current === 'string') {
+    if (type === 'text') {
+      return [{ type, content: current, content_type: contentType }]
+    }
     return [{ type, url: current, content_type: contentType }]
   }
 

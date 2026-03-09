@@ -4,6 +4,28 @@ All notable changes to the getaiapi registry and library will be documented in t
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.1] - 2026-03-09
+
+### Fixed
+
+- **OpenRouter empty outputs**: `mapOutput()` returned empty `outputs[]` for OpenRouter responses because `genericExtract` didn't support indexed array access (`choices[0]`). Added `key[N]` support so `choices[0].message.content` is correctly traversed and text content is returned in `outputs[0].content`.
+
+## [0.4.0] - 2026-03-08
+
+### Added
+
+- **OpenRouter provider**: New provider for text/LLM generation via OpenRouter API gateway, supporting 200+ models (Claude, GPT, Gemini, Llama, etc.) through a single OpenAI-compatible API.
+- **Text generation category**: New `text-generation` category template for prompt-in, text-out workflows.
+- **10 LLM models**: claude-sonnet-4-6, claude-opus-4-6, claude-haiku-4-5, gpt-4o, gpt-4o-mini, gemini-2.0-flash, llama-3.1-70b, mistral-large, deepseek-v3, qwen-2.5-72b.
+- **Phase 2 options**: System prompts (`options.system`), `temperature`, `max_tokens`, `top_p` via `options` passthrough.
+- **Token metadata**: `tokens`, `prompt_tokens`, `completion_tokens` fields on `GenerateResponse.metadata` for cost tracking.
+- **Text output support**: `content` field on `OutputItem` for text outputs that don't have a URL.
+- **Model directory**: Full model listing at `docs/MODELS.md` with provider availability.
+
+### Fixed
+
+- **Registry recategorization**: 47 Replicate LLM models (Claude, GPT, Llama, DeepSeek, Gemma, Mistral, Qwen, LLaVA, etc.) miscategorized as `text-to-image` → `text-generation`. 4 guard/moderation models (llama-guard, qwen-3-guard) → `moderation`. 1 video LLM (videollama3) → `text-generation`.
+
 ## [0.3.5] - 2026-03-08
 
 ### Fixed

@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue.svg)](https://www.typescriptlang.org/)
 
-A unified TypeScript library that wraps 1,930 AI models across 3 providers into a single `generate()` function. One input shape. One output shape. Any model.
+A unified TypeScript library that wraps 1,940+ AI models across 4 providers into a single `generate()` function. One input shape. One output shape. Any model.
 
 ## Install
 
@@ -28,6 +28,31 @@ console.log(result.outputs[0].url)
 ```
 
 ## More Examples
+
+**Text generation (LLMs)**
+
+```typescript
+const answer = await generate({
+  model: 'claude-sonnet-4-6',
+  prompt: 'Explain quantum computing in one paragraph'
+})
+
+console.log(answer.outputs[0].content)
+```
+
+With system prompt and parameters:
+
+```typescript
+const reply = await generate({
+  model: 'gpt-4o',
+  prompt: 'Write a haiku about TypeScript',
+  options: {
+    system: 'You are a creative poet.',
+    temperature: 0.9,
+    max_tokens: 100,
+  }
+})
+```
 
 **Text-to-video**
 
@@ -105,6 +130,9 @@ export REPLICATE_API_TOKEN="your-replicate-token"
 
 # WaveSpeed (66 models)
 export WAVESPEED_API_KEY="your-wavespeed-key"
+
+# OpenRouter (10+ LLM models — Claude, GPT, Gemini, Llama, etc.)
+export OPENROUTER_API_KEY="your-openrouter-key"
 ```
 
 ### Option 2: Programmatic Configuration
@@ -119,6 +147,7 @@ configure({
     'fal-ai': process.env.MY_FAL_TOKEN,
     'replicate': process.env.MY_REPLICATE_TOKEN,
     'wavespeed': process.env.MY_WAVESPEED_TOKEN,
+    'openrouter': process.env.MY_OPENROUTER_TOKEN,
   },
 })
 ```
@@ -181,11 +210,12 @@ const model = getModel('flux-schnell')
 
 | Category | Input | Output | Models |
 |---|---|---|---|
-| `text-to-image` | text | image | 820 |
-| `text-to-video` | text | video | 318 |
+| `text-to-image` | text | image | 743 |
+| `text-to-video` | text | video | 321 |
 | `image-edit` | image + text | image | 210 |
-| `image-to-video` | image + text | video | 155 |
-| `text-to-audio` | text | audio | 82 |
+| `image-to-video` | image + text | video | 165 |
+| `text-to-audio` | text | audio | 95 |
+| `text-generation` | text | text | 57 |
 | `upscale-image` | image | image | 57 |
 | `training` | images | model | 50 |
 | `image-to-image` | image + text | image | 43 |
@@ -197,7 +227,7 @@ const model = getModel('flux-schnell')
 | `video-to-audio` | video | audio | 17 |
 | `upscale-video` | video | video | 15 |
 | `video-to-video` | video | video | 15 |
-| `moderation` | text/image/video | text | 8 |
+| `moderation` | text/image/video | text | 12 |
 | `audio-to-video` | audio | video | 4 |
 | `audio-edit` | audio | audio | 2 |
 | `voice-clone` | audio | text | 1 |
@@ -209,8 +239,11 @@ const model = getModel('flux-schnell')
 | fal-ai | 1,201 | `FAL_KEY` | Native fetch |
 | Replicate | 687 | `REPLICATE_API_TOKEN` | Native fetch |
 | WaveSpeed | 66 | `WAVESPEED_API_KEY` | Native fetch |
+| OpenRouter | 10 | `OPENROUTER_API_KEY` | Native fetch |
 
 Zero external dependencies -- all provider communication uses native `fetch`.
+
+See the full [Model Directory](docs/MODELS.md) for all 1,940 models with provider availability.
 
 ## API Reference
 
@@ -256,12 +289,16 @@ interface GenerateResponse {
     inference_time_ms?: number
     cost?: number
     safety_flagged?: boolean
+    tokens?: number           // total tokens (LLM only)
+    prompt_tokens?: number    // input tokens (LLM only)
+    completion_tokens?: number // output tokens (LLM only)
   }
 }
 
 interface OutputItem {
   type: 'image' | 'video' | 'audio' | 'text' | '3d' | 'segmentation'
-  url: string
+  url?: string      // URL for media outputs
+  content?: string  // text content for LLM outputs
   content_type: string
   size_bytes?: number
 }

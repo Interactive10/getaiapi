@@ -6,6 +6,7 @@ import { upscaleImageTemplate } from './upscale-image.js'
 import { textToAudioTemplate } from './text-to-audio.js'
 import { audioToTextTemplate } from './audio-to-text.js'
 import { removeBackgroundTemplate } from './remove-background.js'
+import { textGenerationTemplate } from './text-generation.js'
 import type { CategoryTemplate, ModelCategory } from '../types.js'
 
 const templates: Partial<Record<ModelCategory, CategoryTemplate>> = {
@@ -17,6 +18,7 @@ const templates: Partial<Record<ModelCategory, CategoryTemplate>> = {
   'text-to-audio': textToAudioTemplate,
   'audio-to-text': audioToTextTemplate,
   'remove-background': removeBackgroundTemplate,
+  'text-generation': textGenerationTemplate,
 }
 
 export function getCategoryTemplate(category: ModelCategory): CategoryTemplate | undefined {
@@ -32,4 +34,5 @@ export {
   textToAudioTemplate,
   audioToTextTemplate,
   removeBackgroundTemplate,
+  textGenerationTemplate,
 }

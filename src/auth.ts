@@ -5,6 +5,7 @@ const ENV_MAP: Record<ProviderName, string> = {
   "fal-ai": "FAL_KEY",
   replicate: "REPLICATE_API_TOKEN",
   wavespeed: "WAVESPEED_API_KEY",
+  openrouter: "OPENROUTER_API_KEY",
 };
 
 // Module-level overrides set via configureAuth()
