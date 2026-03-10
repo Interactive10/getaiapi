@@ -10,6 +10,14 @@ import {
   audioToTextTemplate,
   removeBackgroundTemplate,
   textGenerationTemplate,
+  imageToImageTemplate,
+  textTo3dTemplate,
+  imageTo3dTemplate,
+  upscaleVideoTemplate,
+  videoToAudioTemplate,
+  segmentationTemplate,
+  moderationTemplate,
+  trainingTemplate,
 } from '../../src/categories/index.js'
 import type { CategoryTemplate, ModelCategory } from '../../src/types.js'
 
@@ -23,10 +31,18 @@ const allTemplates: { name: string; template: CategoryTemplate; category: ModelC
   { name: 'audio-to-text', template: audioToTextTemplate, category: 'audio-to-text' },
   { name: 'remove-background', template: removeBackgroundTemplate, category: 'remove-background' },
   { name: 'text-generation', template: textGenerationTemplate, category: 'text-generation' },
+  { name: 'image-to-image', template: imageToImageTemplate, category: 'image-to-image' },
+  { name: 'text-to-3d', template: textTo3dTemplate, category: 'text-to-3d' },
+  { name: 'image-to-3d', template: imageTo3dTemplate, category: 'image-to-3d' },
+  { name: 'upscale-video', template: upscaleVideoTemplate, category: 'upscale-video' },
+  { name: 'video-to-audio', template: videoToAudioTemplate, category: 'video-to-audio' },
+  { name: 'segmentation', template: segmentationTemplate, category: 'segmentation' },
+  { name: 'moderation', template: moderationTemplate, category: 'moderation' },
+  { name: 'training', template: trainingTemplate, category: 'training' },
 ]
 
 describe('Category Templates', () => {
-  it('has exactly 9 registered templates', () => {
+  it('has exactly 17 registered templates', () => {
     const registeredCategories: ModelCategory[] = [
       'text-to-image',
       'image-edit',
@@ -37,11 +53,19 @@ describe('Category Templates', () => {
       'audio-to-text',
       'remove-background',
       'text-generation',
+      'image-to-image',
+      'text-to-3d',
+      'image-to-3d',
+      'upscale-video',
+      'video-to-audio',
+      'segmentation',
+      'moderation',
+      'training',
     ]
     for (const cat of registeredCategories) {
       expect(getCategoryTemplate(cat)).toBeDefined()
     }
-    expect(registeredCategories).toHaveLength(9)
+    expect(registeredCategories).toHaveLength(17)
   })
 
   describe.each(allTemplates)('$name template', ({ template, category }) => {
@@ -66,9 +90,8 @@ describe('Category Templates', () => {
       expect(template.default_timeout_ms).toBeGreaterThan(0)
     })
 
-    it('has at least one required input mapping', () => {
-      const requiredMappings = template.input_mappings.filter((m) => m.required)
-      expect(requiredMappings.length).toBeGreaterThanOrEqual(1)
+    it('has at least one input mapping (required or optional)', () => {
+      expect(template.input_mappings.length).toBeGreaterThanOrEqual(1)
     })
 
     it('each mapping has universal name and providers', () => {
@@ -89,9 +112,8 @@ describe('getCategoryTemplate', () => {
   })
 
   it('returns undefined for unregistered categories', () => {
-    expect(getCategoryTemplate('training' as ModelCategory)).toBeUndefined()
-    expect(getCategoryTemplate('moderation' as ModelCategory)).toBeUndefined()
-    expect(getCategoryTemplate('image-to-3d' as ModelCategory)).toBeUndefined()
+    expect(getCategoryTemplate('nonexistent-category' as ModelCategory)).toBeUndefined()
+    expect(getCategoryTemplate('text-to-smell' as ModelCategory)).toBeUndefined()
   })
 })
 

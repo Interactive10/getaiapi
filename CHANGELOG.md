@@ -6,6 +6,22 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.4.6] - 2026-03-09
+
+### Fixed
+
+- **Replicate 404 fallback**: Community models (e.g., `codeplugtech/face-swap`) that don't support the newer `/v1/models/{owner}/{name}/predictions` endpoint now automatically fall back to `/v1/predictions` with the latest version hash. The adapter fetches the version via `GET /models/{owner}/{name}` on 404, matching the official Replicate SDK behavior.
+
+## [0.4.5] - 2026-03-09
+
+### Fixed
+
+- **Category registration**: Registered 8 missing category templates (image-to-image, text-to-3d, image-to-3d, upscale-video, video-to-audio, segmentation, moderation, training) in `src/categories/index.ts`. These templates existed as files but were never added to the lookup map, causing `getCategoryTemplate()` to return `undefined` at runtime.
+
+### Changed
+
+- **Category tests**: Updated to cover all 17 registered categories instead of only 9. Relaxed required-mapping assertion for moderation (all inputs are optional).
+
 ## [0.4.3] - 2026-03-09
 
 ### Changed
