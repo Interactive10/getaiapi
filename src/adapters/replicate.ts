@@ -49,6 +49,52 @@ function inferContentType(url: string): string {
   return "image/jpeg";
 }
 
+// Cache version hashes to avoid repeated lookups and rate limits
+const versionCache = new Map<string, string>();
+
+// Endpoints that need the legacy /predictions route (404 on /models/.../predictions)
+const legacyEndpoints = new Set<string>();
+
+async function fetchLatestVersion(endpoint: string, auth: string): Promise<string> {
+  const cached = versionCache.get(endpoint);
+  if (cached) return cached;
+
+  const url = `${BASE_URL}/models/${endpoint}`;
+  const response = await fetch(url, {
+    headers: { Authorization: `Bearer ${auth}` },
+  });
+
+  await handleHttpErrors(response, endpoint);
+
+  const data = (await response.json()) as {
+    latest_version?: { id: string };
+  };
+
+  if (!data.latest_version?.id) {
+    throw new ProviderError("replicate", endpoint, 404, "No version found for model");
+  }
+
+  versionCache.set(endpoint, data.latest_version.id);
+  return data.latest_version.id;
+}
+
+async function submitWithVersion(
+  endpoint: string,
+  params: Record<string, unknown>,
+  auth: string,
+): Promise<ProviderResponse> {
+  const version = await fetchLatestVersion(endpoint, auth);
+  const response = await fetch(`${BASE_URL}/predictions`, {
+    method: "POST",
+    headers: authHeaders(auth),
+    body: JSON.stringify({ version, input: params }),
+  });
+
+  await handleHttpErrors(response, endpoint);
+  const data = (await response.json()) as { id: string };
+  return { id: data.id, status: "pending" };
+}
+
 export const replicateAdapter: ProviderAdapter = {
   name: "replicate",
 
@@ -57,21 +103,28 @@ export const replicateAdapter: ProviderAdapter = {
     params: Record<string, unknown>,
     auth: string,
   ): Promise<ProviderResponse> {
-    const url = `${BASE_URL}/models/${endpoint}/predictions`;
-    const response = await fetch(url, {
+    // Known legacy endpoints skip straight to version-based submission
+    if (legacyEndpoints.has(endpoint)) {
+      return submitWithVersion(endpoint, params, auth);
+    }
+
+    // Try the newer /models/{owner}/{name}/predictions endpoint first
+    const modelsUrl = `${BASE_URL}/models/${endpoint}/predictions`;
+    const response = await fetch(modelsUrl, {
       method: "POST",
       headers: authHeaders(auth),
       body: JSON.stringify({ input: params }),
     });
 
-    await handleHttpErrors(response, endpoint);
+    if (response.status !== 404) {
+      await handleHttpErrors(response, endpoint);
+      const data = (await response.json()) as { id: string };
+      return { id: data.id, status: "pending" };
+    }
 
-    const data = (await response.json()) as { id: string };
-
-    return {
-      id: data.id,
-      status: "pending",
-    };
+    // 404: remember this endpoint and fall back to version-based submission
+    legacyEndpoints.add(endpoint);
+    return submitWithVersion(endpoint, params, auth);
   },
 
   async poll(
