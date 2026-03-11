@@ -139,8 +139,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -151,7 +151,7 @@
     "aliases": [
       "ace-step-audio-outpaint"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -168,8 +168,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -267,13 +267,13 @@
     "aliases": [
       "adirik-e5-mistral-7b-instruct"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -1063,7 +1063,7 @@
     "aliases": [
       "amt-interpolation-frame-interpolation"
     ],
-    "category": "text-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -1080,8 +1080,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -1153,13 +1153,13 @@
       "andreasjansson-llama-2-13b-embeddings",
       "llama-2-13b-embeddings"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -1303,7 +1303,7 @@
     "aliases": [
       "animatediff-sparsectrl-lcm"
     ],
-    "category": "image-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -1320,8 +1320,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -1361,13 +1361,13 @@
     "aliases": [
       "anthropic-claude-3.5-haiku"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -1390,13 +1390,13 @@
     "aliases": [
       "anthropic-claude-3.7-sonnet"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -1419,13 +1419,13 @@
     "aliases": [
       "anthropic-claude-4-sonnet"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -1444,17 +1444,46 @@
     ]
   },
   {
-    "canonical_name": "anthropic-claude-4.5-sonnet",
+    "canonical_name": "anthropic-claude-4.5-haiku",
     "aliases": [
-      "anthropic-claude-4.5-sonnet"
+      "anthropic-claude-4.5-haiku"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-anthropic-claude-4.5-haiku",
+        "endpoint": "anthropic/claude-4.5-haiku",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "anthropic-claude-4.5-sonnet",
+    "aliases": [
+      "anthropic-claude-4.5-sonnet"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
         "text"
+      ],
+      "outputs": [
+        "image"
       ]
     },
     "providers": [
@@ -1462,6 +1491,35 @@
         "provider": "replicate",
         "skill_id": "replicate-anthropic-claude-4.5-sonnet",
         "endpoint": "anthropic/claude-4.5-sonnet",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "anthropic-claude-opus-4.6",
+    "aliases": [
+      "anthropic-claude-opus-4.6"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-anthropic-claude-opus-4.6",
+        "endpoint": "anthropic/claude-opus-4.6",
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
@@ -1593,10 +1651,11 @@
     "aliases": [
       "argil-avatars-audio-to-video"
     ],
-    "category": "audio-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "audio"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -1623,9 +1682,10 @@
       "argil-avatars-text-to-video",
       "argil-avatars"
     ],
-    "category": "text-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -1824,8 +1884,7 @@
   {
     "canonical_name": "aura-sr",
     "aliases": [
-      "aura-sr",
-      "zsxkib-aura-sr"
+      "aura-sr"
     ],
     "category": "upscale-image",
     "modality": {
@@ -1845,19 +1904,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-zsxkib-aura-sr",
-        "endpoint": "zsxkib/aura-sr",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -1886,7 +1933,7 @@
         "param_map": {},
         "output_map": {
           "type": "video",
-          "extract_path": "video_url",
+          "extract_path": "video.url",
           "content_type": "video/mp4"
         }
       }
@@ -1984,8 +2031,7 @@
   {
     "canonical_name": "bagel",
     "aliases": [
-      "bagel",
-      "bytedance-bagel"
+      "bagel"
     ],
     "category": "text-to-image",
     "modality": {
@@ -2006,18 +2052,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-bytedance-bagel",
-        "endpoint": "bytedance/bagel",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -2192,7 +2226,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -2220,8 +2254,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -2250,7 +2284,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -2279,7 +2313,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -2307,8 +2341,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -2845,6 +2879,35 @@
     ]
   },
   {
+    "canonical_name": "black-forest-labs-flux-dev",
+    "aliases": [
+      "black-forest-labs-flux-dev"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-black-forest-labs-flux-dev",
+        "endpoint": "black-forest-labs/flux-dev",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "black-forest-labs-flux-dev-lora",
     "aliases": [
       "black-forest-labs-flux-dev-lora",
@@ -3204,6 +3267,35 @@
     ]
   },
   {
+    "canonical_name": "black-forest-labs-flux-schnell",
+    "aliases": [
+      "black-forest-labs-flux-schnell"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-black-forest-labs-flux-schnell",
+        "endpoint": "black-forest-labs/flux-schnell",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "black-forest-labs-flux-schnell-lora",
     "aliases": [
       "black-forest-labs-flux-schnell-lora",
@@ -3256,7 +3348,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -3401,7 +3493,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -3430,7 +3522,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       },
@@ -3471,7 +3563,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -4483,7 +4575,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -4571,7 +4663,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -4687,7 +4779,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -4715,8 +4807,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -4910,6 +5002,35 @@
     ]
   },
   {
+    "canonical_name": "bytedance-bagel",
+    "aliases": [
+      "bytedance-bagel"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-bytedance-bagel",
+        "endpoint": "bytedance/bagel",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "bytedance-dolphin",
     "aliases": [
       "bytedance-dolphin",
@@ -5067,6 +5188,35 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "bytedance-flux-pulid",
+    "aliases": [
+      "bytedance-flux-pulid"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-bytedance-flux-pulid",
+        "endpoint": "bytedance/flux-pulid",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -5249,6 +5399,35 @@
           "type": "video",
           "extract_path": "video.url",
           "content_type": "video/mp4"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "bytedance-pulid",
+    "aliases": [
+      "bytedance-pulid"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-bytedance-pulid",
+        "endpoint": "bytedance/pulid",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
         }
       }
     ]
@@ -6203,8 +6382,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
+          "type": "3d",
+          "extract_path": "model_mesh.url",
           "content_type": "model/gltf-binary"
         }
       }
@@ -6233,7 +6412,7 @@
         "param_map": {},
         "output_map": {
           "type": "audio",
-          "extract_path": "audio_file.url",
+          "extract_path": "audio.url",
           "content_type": "audio/mpeg"
         }
       }
@@ -6262,7 +6441,7 @@
         "param_map": {},
         "output_map": {
           "type": "audio",
-          "extract_path": "audio_file.url",
+          "extract_path": "audio.url",
           "content_type": "audio/mpeg"
         }
       }
@@ -6290,8 +6469,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "audio",
+          "extract_path": "audio.url",
           "content_type": "audio/mpeg"
         }
       }
@@ -6320,7 +6499,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -6349,7 +6528,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -6651,11 +6830,11 @@
     "aliases": [
       "chenxwh-video-retalking"
     ],
-    "category": "video-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "video",
-        "audio"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -7608,10 +7787,39 @@
     ]
   },
   {
+    "canonical_name": "cjwbw-vqfr",
+    "aliases": [
+      "cjwbw-vqfr",
+      "vqfr"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-cjwbw-vqfr",
+        "endpoint": "cjwbw/vqfr",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "clarity-upscaler",
     "aliases": [
-      "clarity-upscaler",
-      "philz1337x-clarity-upscaler"
+      "clarity-upscaler"
     ],
     "category": "upscale-image",
     "modality": {
@@ -7631,19 +7839,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-philz1337x-clarity-upscaler",
-        "endpoint": "philz1337x/clarity-upscaler",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -7708,129 +7904,9 @@
     ]
   },
   {
-    "canonical_name": "claude-haiku-4-5",
-    "aliases": [
-      "anthropic-claude-4.5-haiku",
-      "claude-haiku",
-      "claude-haiku-4-5",
-      "haiku-4-5"
-    ],
-    "category": "text-generation",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "openrouter",
-        "skill_id": "openrouter-claude-haiku-4-5",
-        "endpoint": "anthropic/claude-haiku-4-5",
-        "auth_env": "OPENROUTER_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "text",
-          "extract_path": "choices[0].message.content",
-          "content_type": "text/plain"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-anthropic-claude-4.5-haiku",
-        "endpoint": "anthropic/claude-4.5-haiku",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "claude-opus-4-6",
-    "aliases": [
-      "anthropic-claude-opus-4.6",
-      "claude-opus",
-      "claude-opus-4-6",
-      "opus-4-6"
-    ],
-    "category": "text-generation",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "openrouter",
-        "skill_id": "openrouter-claude-opus-4-6",
-        "endpoint": "anthropic/claude-opus-4-6",
-        "auth_env": "OPENROUTER_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "text",
-          "extract_path": "choices[0].message.content",
-          "content_type": "text/plain"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-anthropic-claude-opus-4.6",
-        "endpoint": "anthropic/claude-opus-4.6",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "claude-sonnet-4-6",
-    "aliases": [
-      "claude-sonnet-4-6",
-      "claude-sonnet",
-      "sonnet-4-6"
-    ],
-    "category": "text-generation",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "openrouter",
-        "skill_id": "openrouter-claude-sonnet-4-6",
-        "endpoint": "anthropic/claude-sonnet-4-6",
-        "auth_env": "OPENROUTER_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "text",
-          "extract_path": "choices[0].message.content",
-          "content_type": "text/plain"
-        }
-      }
-    ]
-  },
-  {
     "canonical_name": "codeformer",
     "aliases": [
-      "codeformer",
-      "lucataco-codeformer"
+      "codeformer"
     ],
     "category": "text-to-image",
     "modality": {
@@ -7850,19 +7926,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-lucataco-codeformer",
-        "endpoint": "lucataco/codeformer",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -7902,10 +7966,10 @@
     "aliases": [
       "codeplugtech-face-swap"
     ],
-    "category": "image-to-image",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "image"
@@ -7987,8 +8051,7 @@
   {
     "canonical_name": "cogvideox-5b",
     "aliases": [
-      "cogvideox-5b",
-      "cuuupid-cogvideox-5b"
+      "cogvideox-5b"
     ],
     "category": "text-to-video",
     "modality": {
@@ -8009,18 +8072,6 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
-          "content_type": "video/mp4"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-cuuupid-cogvideox-5b",
-        "endpoint": "cuuupid/cogvideox-5b",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "video",
-          "extract_path": "output[]",
           "content_type": "video/mp4"
         }
       }
@@ -8373,7 +8424,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -8384,7 +8435,7 @@
     "aliases": [
       "csm-1b"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -8401,8 +8452,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -8496,6 +8547,35 @@
     ]
   },
   {
+    "canonical_name": "cuuupid-cogvideox-5b",
+    "aliases": [
+      "cuuupid-cogvideox-5b"
+    ],
+    "category": "text-to-video",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "video"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-cuuupid-cogvideox-5b",
+        "endpoint": "cuuupid/cogvideox-5b",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "video",
+          "extract_path": "output[]",
+          "content_type": "video/mp4"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "cuuupid-glm-4v-9b",
     "aliases": [
       "cuuupid-glm-4v-9b"
@@ -8529,13 +8609,13 @@
     "aliases": [
       "cuuupid-gte-qwen2-7b-instruct"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -8587,13 +8667,13 @@
     "aliases": [
       "cuuupid-qwen2-vl-2b"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -8645,13 +8725,13 @@
     "aliases": [
       "daanelson-minigpt-4"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -8868,7 +8948,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -8928,8 +9008,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -8958,8 +9038,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -8988,8 +9068,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -9076,8 +9156,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio_file.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -9088,13 +9168,13 @@
     "aliases": [
       "deepseek-ai-deepseek-r1"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -9113,25 +9193,24 @@
     ]
   },
   {
-    "canonical_name": "deepseek-ai-deepseek-v3.1",
+    "canonical_name": "deepseek-ai-deepseek-v3",
     "aliases": [
-      "deepseek-ai-deepseek-v3.1",
-      "deepseek-ai-deepseek-3.1"
+      "deepseek-ai-deepseek-v3"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
       {
         "provider": "replicate",
-        "skill_id": "replicate-deepseek-ai-deepseek-v3.1",
-        "endpoint": "deepseek-ai/deepseek-v3.1",
+        "skill_id": "replicate-deepseek-ai-deepseek-v3",
+        "endpoint": "deepseek-ai/deepseek-v3",
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
@@ -9143,38 +9222,25 @@
     ]
   },
   {
-    "canonical_name": "deepseek-v3",
+    "canonical_name": "deepseek-ai-deepseek-v3.1",
     "aliases": [
-      "deepseek-ai-deepseek-v3",
-      "deepseek-chat",
-      "deepseek-v3"
+      "deepseek-ai-deepseek-v3.1",
+      "deepseek-ai-deepseek-3.1"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
       {
-        "provider": "openrouter",
-        "skill_id": "openrouter-deepseek-v3",
-        "endpoint": "deepseek/deepseek-chat-v3-0324",
-        "auth_env": "OPENROUTER_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "text",
-          "extract_path": "choices[0].message.content",
-          "content_type": "text/plain"
-        }
-      },
-      {
         "provider": "replicate",
-        "skill_id": "replicate-deepseek-ai-deepseek-v3",
-        "endpoint": "deepseek-ai/deepseek-v3",
+        "skill_id": "replicate-deepseek-ai-deepseek-v3.1",
+        "endpoint": "deepseek-ai/deepseek-v3.1",
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
@@ -9246,8 +9312,7 @@
   {
     "canonical_name": "depth-anything-video",
     "aliases": [
-      "depth-anything-video",
-      "lucataco-depth-anything-video"
+      "depth-anything-video"
     ],
     "category": "text-to-video",
     "modality": {
@@ -9268,18 +9333,6 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
-          "content_type": "video/mp4"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-lucataco-depth-anything-video",
-        "endpoint": "lucataco/depth-anything-video",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "video",
-          "extract_path": "output[]",
           "content_type": "video/mp4"
         }
       }
@@ -9307,8 +9360,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "text",
+          "extract_path": "output",
           "content_type": "text/plain"
         }
       }
@@ -9348,7 +9401,7 @@
     "aliases": [
       "diffrhythm"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -9365,8 +9418,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -9395,7 +9448,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -9424,7 +9477,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -9453,7 +9506,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -9482,7 +9535,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -9541,7 +9594,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -9581,10 +9634,11 @@
     "aliases": [
       "dubbing"
     ],
-    "category": "video-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "video"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -9628,7 +9682,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -9746,8 +9800,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -9758,13 +9812,13 @@
     "aliases": [
       "elevenlabs-audio-isolation"
     ],
-    "category": "audio-edit",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
-        "audio"
+        "text"
       ],
       "outputs": [
-        "audio"
+        "image"
       ]
     },
     "providers": [
@@ -9775,9 +9829,9 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
-          "content_type": "audio/mpeg"
+          "type": "image",
+          "extract_path": "images[].url",
+          "content_type": "image/png"
         }
       }
     ]
@@ -9787,10 +9841,10 @@
     "aliases": [
       "elevenlabs-dubbing"
     ],
-    "category": "video-to-video",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
-        "video"
+        "text"
       ],
       "outputs": [
         "video"
@@ -9829,13 +9883,13 @@
       "elevenlabs-flash-v2.5",
       "elevenlabs-flash-2.5"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "audio"
+        "image"
       ]
     },
     "providers": [
@@ -9846,9 +9900,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "audio",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "audio/mpeg"
+          "content_type": "image/png"
         }
       }
     ]
@@ -9911,10 +9965,10 @@
     "aliases": [
       "elevenlabs-sfx-v2"
     ],
-    "category": "text-to-audio",
+    "category": "video-to-audio",
     "modality": {
       "inputs": [
-        "text"
+        "video"
       ],
       "outputs": [
         "audio"
@@ -9924,7 +9978,7 @@
       {
         "provider": "fal-ai",
         "skill_id": "fal-elevenlabs-sfx-v2",
-        "endpoint": "fal-ai/elevenlabs/sound-effects/v2",
+        "endpoint": "",
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
@@ -9989,37 +10043,6 @@
           "type": "text",
           "extract_path": "output",
           "content_type": "text/plain"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "elevenlabs-text-to-dialogue-eleven-v3",
-    "aliases": [
-      "elevenlabs-text-to-dialogue-eleven-v3",
-      "elevenlabs-dialogue-v3",
-      "elevenlabs-multi-speaker"
-    ],
-    "category": "text-to-audio",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "audio"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "fal-ai",
-        "skill_id": "fal-elevenlabs-text-to-dialogue",
-        "endpoint": "fal-ai/elevenlabs/text-to-dialogue/eleven-v3",
-        "auth_env": "FAL_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
-          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -10118,13 +10141,13 @@
       "elevenlabs-turbo-v2.5",
       "elevenlabs-turbo-2.5"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "audio"
+        "image"
       ]
     },
     "providers": [
@@ -10135,9 +10158,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "audio",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "audio/mpeg"
+          "content_type": "image/png"
         }
       }
     ]
@@ -10147,13 +10170,13 @@
     "aliases": [
       "elevenlabs-v2-multilingual"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "audio"
+        "image"
       ]
     },
     "providers": [
@@ -10164,9 +10187,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "audio",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "audio/mpeg"
+          "content_type": "image/png"
         }
       }
     ]
@@ -10176,13 +10199,13 @@
     "aliases": [
       "elevenlabs-v3"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "audio"
+        "image"
       ]
     },
     "providers": [
@@ -10193,9 +10216,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "audio",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "audio/mpeg"
+          "content_type": "image/png"
         }
       }
     ]
@@ -10205,13 +10228,13 @@
     "aliases": [
       "elevenlabs-voice-changer"
     ],
-    "category": "audio-edit",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
-        "audio"
+        "text"
       ],
       "outputs": [
-        "audio"
+        "image"
       ]
     },
     "providers": [
@@ -10222,9 +10245,9 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
-          "content_type": "audio/mpeg"
+          "type": "image",
+          "extract_path": "images[].url",
+          "content_type": "image/png"
         }
       }
     ]
@@ -10311,8 +10334,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
+          "type": "3d",
+          "extract_path": "model_mesh.url",
           "content_type": "model/gltf-binary"
         }
       }
@@ -10341,7 +10364,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -10369,8 +10392,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "image.url",
+          "type": "segmentation",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -10457,7 +10480,7 @@
         "param_map": {},
         "output_map": {
           "type": "audio",
-          "extract_path": "audio_url",
+          "extract_path": "audio.url",
           "content_type": "audio/mpeg"
         }
       }
@@ -10466,8 +10489,7 @@
   {
     "canonical_name": "face-to-sticker",
     "aliases": [
-      "face-to-sticker",
-      "fofr-face-to-sticker"
+      "face-to-sticker"
     ],
     "category": "text-to-image",
     "modality": {
@@ -10488,18 +10510,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-fofr-face-to-sticker",
-        "endpoint": "fofr/face-to-sticker",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -11448,7 +11458,7 @@
         "param_map": {},
         "output_map": {
           "type": "video",
-          "extract_path": "video_url",
+          "extract_path": "video.url",
           "content_type": "video/mp4"
         }
       }
@@ -11476,8 +11486,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
+          "type": "video",
+          "extract_path": "video.url",
           "content_type": "video/mp4"
         }
       }
@@ -11488,7 +11498,7 @@
     "aliases": [
       "ffmpeg-api-loudnorm"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -11505,8 +11515,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -11546,7 +11556,7 @@
     "aliases": [
       "ffmpeg-api-merge-audios"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -11563,8 +11573,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -11767,7 +11777,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -11796,7 +11806,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -11825,7 +11835,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -12004,7 +12014,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -12033,7 +12043,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -12120,7 +12130,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -12178,7 +12188,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -12207,7 +12217,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -12236,8 +12246,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "image.url",
+          "type": "segmentation",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -12266,7 +12276,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -12353,8 +12363,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "image.url",
+          "type": "segmentation",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -12384,7 +12394,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -12828,8 +12838,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
+          "type": "text",
+          "extract_path": "output",
           "content_type": "text/plain"
         }
       }
@@ -13007,8 +13017,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
+          "type": "text",
+          "extract_path": "output",
           "content_type": "text/plain"
         }
       }
@@ -13244,8 +13254,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
+          "type": "text",
+          "extract_path": "output",
           "content_type": "text/plain"
         }
       }
@@ -13390,8 +13400,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
+          "type": "text",
+          "extract_path": "output",
           "content_type": "text/plain"
         }
       }
@@ -14163,7 +14173,6 @@
   {
     "canonical_name": "flux-dev",
     "aliases": [
-      "black-forest-labs-flux-dev",
       "flux-dev"
     ],
     "category": "text-to-image",
@@ -14185,18 +14194,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-black-forest-labs-flux-dev",
-        "endpoint": "black-forest-labs/flux-dev",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -15338,8 +15335,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
+          "type": "3d",
+          "extract_path": "model_mesh.url",
           "content_type": "model/gltf-binary"
         }
       }
@@ -15750,8 +15747,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
+          "type": "text",
+          "extract_path": "output",
           "content_type": "text/plain"
         }
       }
@@ -15868,8 +15865,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
+          "type": "text",
+          "extract_path": "output",
           "content_type": "text/plain"
         }
       }
@@ -15908,7 +15905,6 @@
   {
     "canonical_name": "flux-pulid",
     "aliases": [
-      "bytedance-flux-pulid",
       "flux-pulid"
     ],
     "category": "text-to-image",
@@ -15932,25 +15928,12 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-bytedance-flux-pulid",
-        "endpoint": "bytedance/flux-pulid",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
       }
     ]
   },
   {
     "canonical_name": "flux-schnell",
     "aliases": [
-      "black-forest-labs-flux-schnell",
       "flux-schnell"
     ],
     "category": "text-to-image",
@@ -15972,18 +15955,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-black-forest-labs-flux-schnell",
-        "endpoint": "black-forest-labs/flux-schnell",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -16130,7 +16101,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -16271,6 +16242,35 @@
         "provider": "replicate",
         "skill_id": "replicate-fofr-face-to-many",
         "endpoint": "fofr/face-to-many",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "fofr-face-to-sticker",
+    "aliases": [
+      "fofr-face-to-sticker"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-fofr-face-to-sticker",
+        "endpoint": "fofr/face-to-sticker",
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
@@ -16808,37 +16808,6 @@
     ]
   },
   {
-    "canonical_name": "gemini-2.0-flash",
-    "aliases": [
-      "gemini-2.0-flash",
-      "gemini-flash",
-      "google-gemini-flash"
-    ],
-    "category": "text-generation",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "openrouter",
-        "skill_id": "openrouter-gemini-2.0-flash",
-        "endpoint": "google/gemini-2.0-flash-001",
-        "auth_env": "OPENROUTER_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "text",
-          "extract_path": "choices[0].message.content",
-          "content_type": "text/plain"
-        }
-      }
-    ]
-  },
-  {
     "canonical_name": "gemini-25-flash-image",
     "aliases": [
       "gemini-25-flash-image"
@@ -17043,7 +17012,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -17073,7 +17042,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -17218,7 +17187,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -17290,13 +17259,13 @@
       "google-deepmind-gemma-2b-it",
       "deepmind-gemma-2b-it"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -17705,6 +17674,94 @@
     ]
   },
   {
+    "canonical_name": "google-nano-banana",
+    "aliases": [
+      "google-nano-banana"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-google-nano-banana",
+        "endpoint": "google/nano-banana",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "google-nano-banana-2",
+    "aliases": [
+      "google-nano-banana-2"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-google-nano-banana-2",
+        "endpoint": "google/nano-banana-2",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "google-nano-banana-2-edit",
+    "aliases": [
+      "google-nano-banana-2-edit"
+    ],
+    "category": "image-edit",
+    "modality": {
+      "inputs": [
+        "image",
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "wavespeed",
+        "skill_id": "wavespeed-google-nano-banana-2-edit",
+        "endpoint": "google/nano-banana-2/edit",
+        "auth_env": "WAVESPEED_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "data.outputs[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "google-nano-banana-2-edit-fast",
     "aliases": [
       "google-nano-banana-2-edit-fast",
@@ -17796,10 +17853,9 @@
     ]
   },
   {
-    "canonical_name": "google-nano-banana-pro-edit",
+    "canonical_name": "google-nano-banana-edit",
     "aliases": [
-      "google-nano-banana-pro-edit",
-      "nano-banana-pro-edit"
+      "google-nano-banana-edit"
     ],
     "category": "image-edit",
     "modality": {
@@ -17813,17 +17869,64 @@
     },
     "providers": [
       {
-        "provider": "fal-ai",
-        "skill_id": "fal-ai-nano-banana-pro-edit",
-        "endpoint": "fal-ai/nano-banana-pro/edit",
-        "auth_env": "FAL_KEY",
+        "provider": "wavespeed",
+        "skill_id": "wavespeed-google-nano-banana-edit",
+        "endpoint": "google/nano-banana/edit",
+        "auth_env": "WAVESPEED_API_KEY",
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "images[].url",
+          "extract_path": "data.outputs[]",
           "content_type": "image/png"
         }
-      },
+      }
+    ]
+  },
+  {
+    "canonical_name": "google-nano-banana-pro",
+    "aliases": [
+      "google-nano-banana-pro"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-google-nano-banana-pro",
+        "endpoint": "google/nano-banana-pro",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "google-nano-banana-pro-edit",
+    "aliases": [
+      "google-nano-banana-pro-edit"
+    ],
+    "category": "image-edit",
+    "modality": {
+      "inputs": [
+        "image",
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
       {
         "provider": "wavespeed",
         "skill_id": "wavespeed-google-nano-banana-pro-edit",
@@ -17995,13 +18098,13 @@
       "google-veo-2",
       "veo-2"
     ],
-    "category": "text-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "video"
+        "image"
       ]
     },
     "providers": [
@@ -18012,9 +18115,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "video",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "video/mp4"
+          "content_type": "image/png"
         }
       }
     ]
@@ -18025,13 +18128,13 @@
       "google-veo-3",
       "veo-3"
     ],
-    "category": "text-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "video"
+        "image"
       ]
     },
     "providers": [
@@ -18042,9 +18145,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "video",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "video/mp4"
+          "content_type": "image/png"
         }
       }
     ]
@@ -18055,13 +18158,13 @@
       "google-veo-3-fast",
       "veo-3-fast"
     ],
-    "category": "text-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "video"
+        "image"
       ]
     },
     "providers": [
@@ -18072,9 +18175,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "video",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "video/mp4"
+          "content_type": "image/png"
         }
       }
     ]
@@ -18085,13 +18188,13 @@
       "google-veo-3.1",
       "veo-3.1"
     ],
-    "category": "text-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "video"
+        "image"
       ]
     },
     "providers": [
@@ -18102,9 +18205,9 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "video",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "video/mp4"
+          "content_type": "image/png"
         }
       }
     ]
@@ -18115,13 +18218,13 @@
       "google-veo-3.1-fast",
       "veo-3.1-fast"
     ],
-    "category": "text-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "video"
+        "image"
       ]
     },
     "providers": [
@@ -18132,8 +18235,39 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
-          "type": "video",
+          "type": "image",
           "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "google-veo3.1-fast-image-to-video",
+    "aliases": [
+      "google-veo3.1-fast-image-to-video",
+      "google-veo3.1-fast"
+    ],
+    "category": "image-to-video",
+    "modality": {
+      "inputs": [
+        "image",
+        "text"
+      ],
+      "outputs": [
+        "video"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "wavespeed",
+        "skill_id": "wavespeed-google-veo3.1-fast-image-to-video",
+        "endpoint": "google/veo3.1-fast/image-to-video",
+        "auth_env": "WAVESPEED_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "video",
+          "extract_path": "data.outputs[]",
           "content_type": "video/mp4"
         }
       }
@@ -18163,90 +18297,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "gpt-4o",
-    "aliases": [
-      "gpt-4o",
-      "openai-gpt-4o"
-    ],
-    "category": "text-generation",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "openrouter",
-        "skill_id": "openrouter-gpt-4o",
-        "endpoint": "openai/gpt-4o",
-        "auth_env": "OPENROUTER_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "text",
-          "extract_path": "choices[0].message.content",
-          "content_type": "text/plain"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-openai-gpt-4o",
-        "endpoint": "openai/gpt-4o",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "gpt-4o-mini",
-    "aliases": [
-      "gpt-4o-mini",
-      "openai-gpt-4o-mini"
-    ],
-    "category": "text-generation",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "openrouter",
-        "skill_id": "openrouter-gpt-4o-mini",
-        "endpoint": "openai/gpt-4o-mini",
-        "auth_env": "OPENROUTER_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "text",
-          "extract_path": "choices[0].message.content",
-          "content_type": "text/plain"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-openai-gpt-4o-mini",
-        "endpoint": "openai/gpt-4o-mini",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -18285,8 +18335,7 @@
   {
     "canonical_name": "gpt-image-1-mini",
     "aliases": [
-      "gpt-image-1-mini",
-      "openai-gpt-image-1-mini"
+      "gpt-image-1-mini"
     ],
     "category": "text-to-image",
     "modality": {
@@ -18307,18 +18356,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-openai-gpt-image-1-mini",
-        "endpoint": "openai/gpt-image-1-mini",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -18388,8 +18425,7 @@
   {
     "canonical_name": "gpt-image-1.5",
     "aliases": [
-      "gpt-image-1.5",
-      "openai-gpt-image-1.5"
+      "gpt-image-1.5"
     ],
     "category": "text-to-image",
     "modality": {
@@ -18410,18 +18446,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-openai-gpt-image-1.5",
-        "endpoint": "openai/gpt-image-1.5",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -18699,7 +18723,7 @@
     "aliases": [
       "heygen-v2-translate-precision"
     ],
-    "category": "text-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -18716,8 +18740,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -18728,7 +18752,7 @@
     "aliases": [
       "heygen-v2-translate-speed"
     ],
-    "category": "text-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -18745,8 +18769,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -19008,8 +19032,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "image.url",
+          "type": "3d",
+          "extract_path": "model_mesh.url",
           "content_type": "model/gltf-binary"
         }
       }
@@ -19492,7 +19516,7 @@
     "aliases": [
       "hunyuan-portrait"
     ],
-    "category": "image-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -19509,8 +19533,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -19519,8 +19543,7 @@
   {
     "canonical_name": "hunyuan-video",
     "aliases": [
-      "hunyuan-video",
-      "tencent-hunyuan-video"
+      "hunyuan-video"
     ],
     "category": "text-to-video",
     "modality": {
@@ -19543,26 +19566,13 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-tencent-hunyuan-video",
-        "endpoint": "tencent/hunyuan-video",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "video",
-          "extract_path": "output[]",
-          "content_type": "video/mp4"
-        }
       }
     ]
   },
   {
     "canonical_name": "hunyuan-video-foley",
     "aliases": [
-      "hunyuan-video-foley",
-      "wavespeed-ai-hunyuan-video-foley"
+      "hunyuan-video-foley"
     ],
     "category": "video-to-audio",
     "modality": {
@@ -19581,20 +19591,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
-          "content_type": "audio/mpeg"
-        }
-      },
-      {
-        "provider": "wavespeed",
-        "skill_id": "wavespeed-wavespeed-ai-hunyuan-video-foley",
-        "endpoint": "wavespeed-ai/hunyuan-video-foley",
-        "auth_env": "WAVESPEED_API_KEY",
-        "param_map": {},
-        "output_map": {
           "type": "audio",
-          "extract_path": "data.outputs[]",
+          "extract_path": "audio.url",
           "content_type": "audio/mpeg"
         }
       }
@@ -20605,6 +20603,151 @@
     ]
   },
   {
+    "canonical_name": "ideogram-ai-ideogram-character",
+    "aliases": [
+      "ideogram-ai-ideogram-character"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-ideogram-ai-ideogram-character",
+        "endpoint": "ideogram-ai/ideogram-character",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "ideogram-ai-ideogram-v2",
+    "aliases": [
+      "ideogram-ai-ideogram-v2"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-ideogram-ai-ideogram-v2",
+        "endpoint": "ideogram-ai/ideogram-v2",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "ideogram-ai-ideogram-v2-turbo",
+    "aliases": [
+      "ideogram-ai-ideogram-v2-turbo"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-ideogram-ai-ideogram-v2-turbo",
+        "endpoint": "ideogram-ai/ideogram-v2-turbo",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "ideogram-ai-ideogram-v2a",
+    "aliases": [
+      "ideogram-ai-ideogram-v2a"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-ideogram-ai-ideogram-v2a",
+        "endpoint": "ideogram-ai/ideogram-v2a",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "ideogram-ai-ideogram-v2a-turbo",
+    "aliases": [
+      "ideogram-ai-ideogram-v2a-turbo"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-ideogram-ai-ideogram-v2a-turbo",
+        "endpoint": "ideogram-ai/ideogram-v2a-turbo",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "ideogram-ai-ideogram-v3-balanced",
     "aliases": [
       "ideogram-ai-ideogram-v3-balanced"
@@ -20694,7 +20837,6 @@
   {
     "canonical_name": "ideogram-character",
     "aliases": [
-      "ideogram-ai-ideogram-character",
       "ideogram-character"
     ],
     "category": "text-to-image",
@@ -20716,18 +20858,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-ideogram-ai-ideogram-character",
-        "endpoint": "ideogram-ai/ideogram-character",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -20824,7 +20954,6 @@
   {
     "canonical_name": "ideogram-v2",
     "aliases": [
-      "ideogram-ai-ideogram-v2",
       "ideogram-v2"
     ],
     "category": "text-to-image",
@@ -20846,18 +20975,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-ideogram-ai-ideogram-v2",
-        "endpoint": "ideogram-ai/ideogram-v2",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -20925,13 +21042,12 @@
   {
     "canonical_name": "ideogram-v2-turbo",
     "aliases": [
-      "ideogram-ai-ideogram-v2-turbo",
       "ideogram-v2-turbo"
     ],
-    "category": "text-to-image",
+    "category": "upscale-image",
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "image"
@@ -20947,18 +21063,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-ideogram-ai-ideogram-v2-turbo",
-        "endpoint": "ideogram-ai/ideogram-v2-turbo",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -21026,7 +21130,6 @@
   {
     "canonical_name": "ideogram-v2a",
     "aliases": [
-      "ideogram-ai-ideogram-v2a",
       "ideogram-v2a"
     ],
     "category": "text-to-image",
@@ -21048,18 +21151,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-ideogram-ai-ideogram-v2a",
-        "endpoint": "ideogram-ai/ideogram-v2a",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -21097,13 +21188,12 @@
   {
     "canonical_name": "ideogram-v2a-turbo",
     "aliases": [
-      "ideogram-ai-ideogram-v2a-turbo",
       "ideogram-v2a-turbo"
     ],
-    "category": "text-to-image",
+    "category": "upscale-image",
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "image"
@@ -21119,18 +21209,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-ideogram-ai-ideogram-v2a-turbo",
-        "endpoint": "ideogram-ai/ideogram-v2a-turbo",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -21334,7 +21412,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -22576,7 +22654,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -22605,7 +22683,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -22634,7 +22712,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -22691,8 +22769,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "image.url",
+          "type": "segmentation",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -22721,7 +22799,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -22749,8 +22827,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "image.url",
+          "type": "segmentation",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -22779,7 +22857,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -22808,7 +22886,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -22837,7 +22915,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -23069,7 +23147,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -23098,7 +23176,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -23156,7 +23234,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -23316,11 +23394,10 @@
     "aliases": [
       "infinitalk-video-to-video"
     ],
-    "category": "video-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "video",
-        "audio",
+        "image",
         "text"
       ],
       "outputs": [
@@ -23396,7 +23473,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -23483,7 +23560,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -23541,7 +23618,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -24303,7 +24380,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -24404,13 +24481,13 @@
     "aliases": [
       "kling-video-create-voice"
     ],
-    "category": "voice-clone",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
-        "audio"
+        "text"
       ],
       "outputs": [
-        "text"
+        "video"
       ]
     },
     "providers": [
@@ -24421,9 +24498,9 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "text",
-          "extract_path": "voice_id",
-          "content_type": "text/plain"
+          "type": "video",
+          "extract_path": "video.url",
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -24433,11 +24510,11 @@
     "aliases": [
       "kling-video-lipsync-audio-to-video"
     ],
-    "category": "video-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "video",
-        "audio"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -24464,10 +24541,10 @@
       "kling-video-lipsync-text-to-video",
       "kling-video-lipsync"
     ],
-    "category": "video-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "video",
+        "image",
         "text"
       ],
       "outputs": [
@@ -24634,8 +24711,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -24693,8 +24770,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -24841,8 +24918,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -24959,8 +25036,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -24985,6 +25062,35 @@
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-o3-standard-video-to-video-reference",
         "endpoint": "fal-ai/kling-video/o3/standard/video-to-video/reference",
+        "auth_env": "FAL_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "video",
+          "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "kling-video-pro",
+    "aliases": [
+      "kling-video-pro"
+    ],
+    "category": "text-to-video",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "video"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "fal-ai",
+        "skill_id": "fal-ai-kling-video-pro",
+        "endpoint": "fal-ai/kling-video/v3/pro/image-to-video",
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
@@ -25805,14 +25911,11 @@
   {
     "canonical_name": "kling-video-v2.6-pro-motion-control",
     "aliases": [
-      "kling-video-v2.6-pro-motion-control",
-      "kwaivgi-kling-v2.6-motion-control"
+      "kling-video-v2.6-pro-motion-control"
     ],
-    "category": "image-to-video",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "video",
         "text"
       ],
       "outputs": [
@@ -25829,18 +25932,6 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
-          "content_type": "video/mp4"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-kwaivgi-kling-v2.6-motion-control",
-        "endpoint": "kwaivgi/kling-v2.6-motion-control",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "video",
-          "extract_path": "output[]",
           "content_type": "video/mp4"
         }
       }
@@ -25880,11 +25971,9 @@
     "aliases": [
       "kling-video-v2.6-standard-motion-control"
     ],
-    "category": "image-to-video",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
-        "image",
-        "video",
         "text"
       ],
       "outputs": [
@@ -25896,38 +25985,6 @@
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v2.6-standard-motion-control",
         "endpoint": "fal-ai/kling-video/v2.6/standard/motion-control",
-        "auth_env": "FAL_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
-          "content_type": "video/mp4"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "kling-video-v3-pro-image-to-video",
-    "aliases": [
-      "kling-video-v3-pro-image-to-video",
-      "kling-video-pro-image-to-video",
-      "kling-video-pro"
-    ],
-    "category": "image-to-video",
-    "modality": {
-      "inputs": [
-        "image",
-        "text"
-      ],
-      "outputs": [
-        "video"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "fal-ai",
-        "skill_id": "fal-ai-kling-video-pro",
-        "endpoint": "fal-ai/kling-video/v3/pro/image-to-video",
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
@@ -26488,8 +26545,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -26937,6 +26994,35 @@
     ]
   },
   {
+    "canonical_name": "kwaivgi-kling-v2.6-motion-control",
+    "aliases": [
+      "kwaivgi-kling-v2.6-motion-control"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-kwaivgi-kling-v2.6-motion-control",
+        "endpoint": "kwaivgi/kling-v2.6-motion-control",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "kwaivgi-kling-v3-motion-control",
     "aliases": [
       "kwaivgi-kling-v3-motion-control"
@@ -27134,8 +27220,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -27164,7 +27250,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -27251,7 +27337,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -27280,7 +27366,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -27606,6 +27692,35 @@
     ]
   },
   {
+    "canonical_name": "lightricks-ltx-video",
+    "aliases": [
+      "lightricks-ltx-video"
+    ],
+    "category": "text-to-video",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "video"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-lightricks-ltx-video",
+        "endpoint": "lightricks/ltx-video",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "video",
+          "extract_path": "output[]",
+          "content_type": "video/mp4"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "lightricks-ltx-video-0.9.7",
     "aliases": [
       "lightricks-ltx-video-0.9.7"
@@ -27802,40 +27917,9 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "image.url",
+          "type": "video",
+          "extract_path": "video.url",
           "content_type": "video/mp4"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "llama-3.1-70b",
-    "aliases": [
-      "llama-3.1-70b",
-      "llama-70b",
-      "meta-llama-70b"
-    ],
-    "category": "text-generation",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "openrouter",
-        "skill_id": "openrouter-llama-3.1-70b",
-        "endpoint": "meta-llama/llama-3.1-70b-instruct",
-        "auth_env": "OPENROUTER_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "text",
-          "extract_path": "choices[0].message.content",
-          "content_type": "text/plain"
         }
       }
     ]
@@ -27964,10 +28048,11 @@
     "aliases": [
       "longcat-single-avatar-audio-to-video"
     ],
-    "category": "audio-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "audio"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -29140,10 +29225,11 @@
     "aliases": [
       "ltx-2.3-audio-to-video"
     ],
-    "category": "audio-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "audio"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -29290,9 +29376,10 @@
     "aliases": [
       "ltx-2.3-text-to-video"
     ],
-    "category": "text-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -29319,9 +29406,10 @@
     "aliases": [
       "ltx-2.3-text-to-video-fast"
     ],
-    "category": "text-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -29346,7 +29434,6 @@
   {
     "canonical_name": "ltx-video",
     "aliases": [
-      "lightricks-ltx-video",
       "ltx-video"
     ],
     "category": "text-to-video",
@@ -29368,18 +29455,6 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
-          "content_type": "video/mp4"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-lightricks-ltx-video",
-        "endpoint": "lightricks/ltx-video",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "video",
-          "extract_path": "output[]",
           "content_type": "video/mp4"
         }
       }
@@ -29731,8 +29806,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "text",
+          "extract_path": "output",
           "content_type": "text/plain"
         }
       }
@@ -29847,8 +29922,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "text",
+          "extract_path": "output",
           "content_type": "text/plain"
         }
       }
@@ -29876,8 +29951,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "text",
+          "extract_path": "output",
           "content_type": "text/plain"
         }
       }
@@ -30180,6 +30255,35 @@
     ]
   },
   {
+    "canonical_name": "lucataco-codeformer",
+    "aliases": [
+      "lucataco-codeformer"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-lucataco-codeformer",
+        "endpoint": "lucataco/codeformer",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "lucataco-controlnet-tile",
     "aliases": [
       "lucataco-controlnet-tile",
@@ -30274,13 +30378,13 @@
       "lucataco-deepseek-ocr",
       "deepseek-ocr"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -30324,6 +30428,35 @@
           "type": "image",
           "extract_path": "output[]",
           "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "lucataco-depth-anything-video",
+    "aliases": [
+      "lucataco-depth-anything-video"
+    ],
+    "category": "text-to-video",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "video"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-lucataco-depth-anything-video",
+        "endpoint": "lucataco/depth-anything-video",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "video",
+          "extract_path": "output[]",
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -30750,6 +30883,35 @@
     ]
   },
   {
+    "canonical_name": "lucataco-moondream2",
+    "aliases": [
+      "lucataco-moondream2"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-lucataco-moondream2",
+        "endpoint": "lucataco/moondream2",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "lucataco-mvsep-mdx23-music-separation",
     "aliases": [
       "lucataco-mvsep-mdx23-music-separation",
@@ -30815,13 +30977,13 @@
       "lucataco-ollama-llama3.2-vision-11b",
       "ollama-llama3.2-vision-11b"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -30845,13 +31007,13 @@
       "lucataco-ollama-llama3.2-vision-90b",
       "ollama-llama3.2-vision-90b"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -31027,13 +31189,13 @@
       "lucataco-qwen-vl-chat",
       "qwen-vl-chat"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -31057,13 +31219,13 @@
       "lucataco-qwen2-vl-7b-instruct",
       "qwen2-vl-7b-instruct"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -31087,13 +31249,13 @@
       "lucataco-qwen2.5-omni-7b",
       "qwen2.5-omni-7b"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -31599,13 +31761,13 @@
       "lucataco-videollama3-7b",
       "videollama3-7b"
     ],
-    "category": "text-generation",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "video"
       ]
     },
     "providers": [
@@ -31706,7 +31868,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -31775,9 +31937,10 @@
     "aliases": [
       "luma-dream-machine-ray-2-flash-image-to-video"
     ],
-    "category": "text-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -31851,8 +32014,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -31863,9 +32026,10 @@
     "aliases": [
       "luma-dream-machine-ray-2-image-to-video"
     ],
-    "category": "text-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -31939,8 +32103,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -32704,7 +32868,7 @@
     "aliases": [
       "maya"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -32721,8 +32885,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -33085,13 +33249,13 @@
       "meta-llama-2-13b",
       "llama-2-13b"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33115,13 +33279,13 @@
       "meta-llama-2-13b-chat",
       "llama-2-13b-chat"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33145,13 +33309,13 @@
       "meta-llama-2-70b",
       "llama-2-70b"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33175,13 +33339,13 @@
       "meta-llama-2-70b-chat",
       "llama-2-70b-chat"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33205,13 +33369,13 @@
       "meta-llama-2-7b",
       "llama-2-7b"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33235,13 +33399,13 @@
       "meta-llama-2-7b-chat",
       "llama-2-7b-chat"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33265,13 +33429,13 @@
       "meta-llama-4-maverick-instruct",
       "llama-4-maverick-instruct"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33295,13 +33459,13 @@
       "meta-llama-4-scout-instruct",
       "llama-4-scout-instruct"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33325,13 +33489,13 @@
       "meta-llama-guard-3-8b",
       "llama-guard-3-8b"
     ],
-    "category": "moderation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33355,13 +33519,13 @@
       "meta-llama-guard-4-12b",
       "llama-guard-4-12b"
     ],
-    "category": "moderation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33385,13 +33549,13 @@
       "meta-meta-llama-3-70b",
       "meta-llama-3-70b"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33415,13 +33579,13 @@
       "meta-meta-llama-3-70b-instruct",
       "meta-llama-3-70b-instruct"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33445,13 +33609,13 @@
       "meta-meta-llama-3-8b",
       "meta-llama-3-8b"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33475,13 +33639,13 @@
       "meta-meta-llama-3-8b-instruct",
       "meta-llama-3-8b-instruct"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33505,13 +33669,13 @@
       "meta-meta-llama-3.1-405b-instruct",
       "meta-llama-3.1-405b-instruct"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -33535,13 +33699,13 @@
       "meta-meta-llama-guard-2-8b",
       "meta-llama-guard-2-8b"
     ],
-    "category": "moderation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -35249,8 +35413,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "audio",
+          "extract_path": "audio.url",
           "content_type": "audio/mpeg"
         }
       }
@@ -35309,8 +35473,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "audio",
+          "extract_path": "audio.url",
           "content_type": "audio/mpeg"
         }
       }
@@ -35376,48 +35540,18 @@
     ]
   },
   {
-    "canonical_name": "mistral-large",
-    "aliases": [
-      "mistral-large",
-      "mistralai-large"
-    ],
-    "category": "text-generation",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "openrouter",
-        "skill_id": "openrouter-mistral-large",
-        "endpoint": "mistralai/mistral-large",
-        "auth_env": "OPENROUTER_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "text",
-          "extract_path": "choices[0].message.content",
-          "content_type": "text/plain"
-        }
-      }
-    ]
-  },
-  {
     "canonical_name": "mistralai-mistral-7b-v0.1",
     "aliases": [
       "mistralai-mistral-7b-v0.1",
       "mistralai-mistral-7b-0.1"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -35458,7 +35592,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -35486,8 +35620,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "audio",
+          "extract_path": "audio.url",
           "content_type": "audio/mpeg"
         }
       }
@@ -35661,7 +35795,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -35670,7 +35804,6 @@
   {
     "canonical_name": "moondream2",
     "aliases": [
-      "lucataco-moondream2",
       "moondream2"
     ],
     "category": "text-to-image",
@@ -35692,18 +35825,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-lucataco-moondream2",
-        "endpoint": "lucataco/moondream2",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -35732,7 +35853,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -35761,7 +35882,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -35848,7 +35969,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -35877,7 +35998,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -35934,8 +36055,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "image.url",
+          "type": "segmentation",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -36256,7 +36377,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -36285,7 +36406,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -36324,12 +36445,12 @@
   {
     "canonical_name": "nano-banana",
     "aliases": [
-      "google-nano-banana",
       "nano-banana"
     ],
-    "category": "text-to-image",
+    "category": "image-edit",
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -36348,30 +36469,18 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-google-nano-banana",
-        "endpoint": "google/nano-banana",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
       }
     ]
   },
   {
     "canonical_name": "nano-banana-2",
     "aliases": [
-      "google-nano-banana-2",
       "nano-banana-2"
     ],
-    "category": "text-to-image",
+    "category": "image-edit",
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -36390,25 +36499,12 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-google-nano-banana-2",
-        "endpoint": "google/nano-banana-2",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
       }
     ]
   },
   {
     "canonical_name": "nano-banana-2-edit",
     "aliases": [
-      "google-nano-banana-2-edit",
       "nano-banana-2-edit"
     ],
     "category": "image-edit",
@@ -36433,25 +36529,12 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
-      },
-      {
-        "provider": "wavespeed",
-        "skill_id": "wavespeed-google-nano-banana-2-edit",
-        "endpoint": "google/nano-banana-2/edit",
-        "auth_env": "WAVESPEED_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "data.outputs[]",
-          "content_type": "image/png"
-        }
       }
     ]
   },
   {
     "canonical_name": "nano-banana-edit",
     "aliases": [
-      "google-nano-banana-edit",
       "nano-banana-edit"
     ],
     "category": "image-edit",
@@ -36476,30 +36559,18 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
-      },
-      {
-        "provider": "wavespeed",
-        "skill_id": "wavespeed-google-nano-banana-edit",
-        "endpoint": "google/nano-banana/edit",
-        "auth_env": "WAVESPEED_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "data.outputs[]",
-          "content_type": "image/png"
-        }
       }
     ]
   },
   {
     "canonical_name": "nano-banana-pro",
     "aliases": [
-      "google-nano-banana-pro",
       "nano-banana-pro"
     ],
-    "category": "text-to-image",
+    "category": "image-edit",
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -36518,16 +36589,34 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
-      },
+      }
+    ]
+  },
+  {
+    "canonical_name": "nano-banana-pro-edit",
+    "aliases": [
+      "nano-banana-pro-edit"
+    ],
+    "category": "image-edit",
+    "modality": {
+      "inputs": [
+        "image",
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
       {
-        "provider": "replicate",
-        "skill_id": "replicate-google-nano-banana-pro",
-        "endpoint": "google/nano-banana-pro",
-        "auth_env": "REPLICATE_API_TOKEN",
+        "provider": "fal-ai",
+        "skill_id": "fal-ai-nano-banana-pro-edit",
+        "endpoint": "fal-ai/nano-banana-pro/edit",
+        "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "output[]",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -36703,7 +36792,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -36818,8 +36907,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -36845,6 +36934,35 @@
         "provider": "replicate",
         "skill_id": "replicate-nvidia-parakeet-rnnt-1.1b",
         "endpoint": "nvidia/parakeet-rnnt-1.1b",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "nvidia-sana",
+    "aliases": [
+      "nvidia-sana"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-nvidia-sana",
+        "endpoint": "nvidia/sana",
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
@@ -36995,7 +37113,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -37303,13 +37421,13 @@
       "openai-gpt-4.1",
       "gpt-4.1"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -37333,13 +37451,13 @@
       "openai-gpt-4.1-mini",
       "gpt-4.1-mini"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -37363,13 +37481,13 @@
       "openai-gpt-4.1-nano",
       "gpt-4.1-nano"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -37377,6 +37495,66 @@
         "provider": "replicate",
         "skill_id": "replicate-openai-gpt-4.1-nano",
         "endpoint": "openai/gpt-4.1-nano",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "openai-gpt-4o",
+    "aliases": [
+      "openai-gpt-4o",
+      "gpt-4o"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-openai-gpt-4o",
+        "endpoint": "openai/gpt-4o",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "openai-gpt-4o-mini",
+    "aliases": [
+      "openai-gpt-4o-mini",
+      "gpt-4o-mini"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-openai-gpt-4o-mini",
+        "endpoint": "openai/gpt-4o-mini",
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
@@ -37717,6 +37895,64 @@
     ]
   },
   {
+    "canonical_name": "openai-gpt-image-1-mini",
+    "aliases": [
+      "openai-gpt-image-1-mini"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-openai-gpt-image-1-mini",
+        "endpoint": "openai/gpt-image-1-mini",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "openai-gpt-image-1.5",
+    "aliases": [
+      "openai-gpt-image-1.5"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-openai-gpt-image-1.5",
+        "endpoint": "openai/gpt-image-1.5",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "openai-gpt-oss-120b",
     "aliases": [
       "openai-gpt-oss-120b",
@@ -37920,6 +38156,35 @@
           "type": "image",
           "extract_path": "output[]",
           "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "openai-whisper",
+    "aliases": [
+      "openai-whisper"
+    ],
+    "category": "audio-to-text",
+    "modality": {
+      "inputs": [
+        "audio"
+      ],
+      "outputs": [
+        "text"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-openai-whisper",
+        "endpoint": "openai/whisper",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "text",
+          "extract_path": "output[]",
+          "content_type": "text/plain"
         }
       }
     ]
@@ -38365,13 +38630,13 @@
     "aliases": [
       "pbevan1-llama-3.1-8b-ocr-correction"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -38481,7 +38746,7 @@
     "aliases": [
       "personaplex"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -38498,8 +38763,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -38510,7 +38775,7 @@
     "aliases": [
       "personaplex-realtime"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -38527,8 +38792,37 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "philz1337x-clarity-upscaler",
+    "aliases": [
+      "philz1337x-clarity-upscaler"
+    ],
+    "category": "upscale-image",
+    "modality": {
+      "inputs": [
+        "image"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-philz1337x-clarity-upscaler",
+        "endpoint": "philz1337x/clarity-upscaler",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -38624,8 +38918,7 @@
   {
     "canonical_name": "photomaker",
     "aliases": [
-      "photomaker",
-      "tencentarc-photomaker"
+      "photomaker"
     ],
     "category": "text-to-image",
     "modality": {
@@ -38646,18 +38939,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-tencentarc-photomaker",
-        "endpoint": "tencentarc/photomaker",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -39042,8 +39323,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
+          "type": "text",
+          "extract_path": "output",
           "content_type": "text/plain"
         }
       }
@@ -39112,10 +39393,11 @@
     "aliases": [
       "pixverse-lipsync"
     ],
-    "category": "video-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "video"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -39318,8 +39600,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "audio",
+          "extract_path": "audio.url",
           "content_type": "audio/mpeg"
         }
       }
@@ -39330,11 +39612,10 @@
     "aliases": [
       "pixverse-swap"
     ],
-    "category": "video-to-video",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
-        "video",
-        "image"
+        "text"
       ],
       "outputs": [
         "video"
@@ -39509,7 +39790,7 @@
     "aliases": [
       "pixverse-v3.5-transition"
     ],
-    "category": "image-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -39526,8 +39807,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -39835,7 +40116,7 @@
     "aliases": [
       "pixverse-v4.5-transition"
     ],
-    "category": "image-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -39852,8 +40133,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -39953,7 +40234,7 @@
     "aliases": [
       "pixverse-v5-transition"
     ],
-    "category": "image-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -39970,8 +40251,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -39982,7 +40263,7 @@
     "aliases": [
       "pixverse-v5.5-effects"
     ],
-    "category": "image-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -39999,8 +40280,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -40072,7 +40353,7 @@
     "aliases": [
       "pixverse-v5.5-transition"
     ],
-    "category": "image-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -40089,8 +40370,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -41353,6 +41634,35 @@
     ]
   },
   {
+    "canonical_name": "prunaai-z-image-turbo",
+    "aliases": [
+      "prunaai-z-image-turbo"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-prunaai-z-image-turbo",
+        "endpoint": "prunaai/z-image-turbo",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "pseudoram-rvc-v2",
     "aliases": [
       "pseudoram-rvc-v2"
@@ -41413,7 +41723,6 @@
   {
     "canonical_name": "pulid",
     "aliases": [
-      "bytedance-pulid",
       "pulid"
     ],
     "category": "text-to-image",
@@ -41437,48 +41746,6 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-bytedance-pulid",
-        "endpoint": "bytedance/pulid",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "qwen-2.5-72b",
-    "aliases": [
-      "qwen-2.5-72b",
-      "qwen-72b"
-    ],
-    "category": "text-generation",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "text"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "openrouter",
-        "skill_id": "openrouter-qwen-2.5-72b",
-        "endpoint": "qwen/qwen-2.5-72b-instruct",
-        "auth_env": "OPENROUTER_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "text",
-          "extract_path": "choices[0].message.content",
-          "content_type": "text/plain"
-        }
       }
     ]
   },
@@ -41488,13 +41755,13 @@
       "qwen-3-guard",
       "3-guard"
     ],
-    "category": "moderation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -41880,49 +42147,6 @@
     ]
   },
   {
-    "canonical_name": "qwen-image",
-    "aliases": [
-      "qwen-image",
-      "qwen-qwen-image",
-      "wavespeedai-qwen-image"
-    ],
-    "category": "text-to-image",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "image"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-qwen-qwen-image",
-        "endpoint": "qwen/qwen-image",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-wavespeedai-qwen-image",
-        "endpoint": "wavespeedai/qwen-image",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
     "canonical_name": "qwen-image-2-edit",
     "aliases": [
       "qwen-image-2-edit",
@@ -42053,9 +42277,8 @@
   {
     "canonical_name": "qwen-image-2512",
     "aliases": [
-      "image-2512",
       "qwen-image-2512",
-      "qwen-qwen-image-2512"
+      "image-2512"
     ],
     "category": "text-to-image",
     "modality": {
@@ -42076,18 +42299,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-qwen-qwen-image-2512",
-        "endpoint": "qwen/qwen-image-2512",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -42186,11 +42397,9 @@
   {
     "canonical_name": "qwen-image-edit",
     "aliases": [
-      "image-edit",
-      "qwen",
       "qwen-image-edit",
-      "qwen-qwen",
-      "qwen-qwen-image-edit"
+      "image-edit",
+      "qwen"
     ],
     "category": "image-edit",
     "modality": {
@@ -42212,18 +42421,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-qwen-qwen-image-edit",
-        "endpoint": "qwen/qwen-image-edit",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -42634,9 +42831,8 @@
   {
     "canonical_name": "qwen-image-edit-2511",
     "aliases": [
-      "image-edit-2511",
       "qwen-image-edit-2511",
-      "qwen-qwen-image-edit-2511"
+      "image-edit-2511"
     ],
     "category": "image-edit",
     "modality": {
@@ -42658,18 +42854,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-qwen-qwen-image-edit-2511",
-        "endpoint": "qwen/qwen-image-edit-2511",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -42863,9 +43047,8 @@
   {
     "canonical_name": "qwen-image-edit-plus",
     "aliases": [
-      "image-edit-plus",
       "qwen-image-edit-plus",
-      "qwen-qwen-image-edit-plus"
+      "image-edit-plus"
     ],
     "category": "image-edit",
     "modality": {
@@ -42889,28 +43072,14 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-qwen-qwen-image-edit-plus",
-        "endpoint": "qwen/qwen-image-edit-plus",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
       }
     ]
   },
   {
     "canonical_name": "qwen-image-edit-plus-lora",
     "aliases": [
-      "image-edit-plus-lora",
       "qwen-image-edit-plus-lora",
-      "qwen-qwen-image-edit-plus-lora",
-      "wavespeed-ai-qwen-image-edit-plus-lora"
+      "image-edit-plus-lora"
     ],
     "category": "image-edit",
     "modality": {
@@ -42932,30 +43101,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-qwen-qwen-image-edit-plus-lora",
-        "endpoint": "qwen/qwen-image-edit-plus-lora",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "wavespeed",
-        "skill_id": "wavespeed-wavespeed-ai-qwen-image-edit-plus-lora",
-        "endpoint": "wavespeed-ai/qwen-image/edit-plus-lora",
-        "auth_env": "WAVESPEED_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "data.outputs[]",
           "content_type": "image/png"
         }
       }
@@ -43364,9 +43509,8 @@
   {
     "canonical_name": "qwen-image-layered",
     "aliases": [
-      "image-layered",
       "qwen-image-layered",
-      "wavespeed-ai-qwen-image-layered"
+      "image-layered"
     ],
     "category": "text-to-image",
     "modality": {
@@ -43387,18 +43531,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "wavespeed",
-        "skill_id": "wavespeed-wavespeed-ai-qwen-image-layered",
-        "endpoint": "wavespeed-ai/qwen-image/layered",
-        "auth_env": "WAVESPEED_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "data.outputs[]",
           "content_type": "image/png"
         }
       }
@@ -43619,6 +43751,35 @@
     ]
   },
   {
+    "canonical_name": "qwen-qwen-image",
+    "aliases": [
+      "qwen-qwen-image"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-qwen-qwen-image",
+        "endpoint": "qwen/qwen-image",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "qwen-qwen-image-2",
     "aliases": [
       "qwen-qwen-image-2"
@@ -43677,6 +43838,156 @@
     ]
   },
   {
+    "canonical_name": "qwen-qwen-image-2512",
+    "aliases": [
+      "qwen-qwen-image-2512"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-qwen-qwen-image-2512",
+        "endpoint": "qwen/qwen-image-2512",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "qwen-qwen-image-edit",
+    "aliases": [
+      "qwen-qwen-image-edit",
+      "qwen-qwen"
+    ],
+    "category": "image-edit",
+    "modality": {
+      "inputs": [
+        "image",
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-qwen-qwen-image-edit",
+        "endpoint": "qwen/qwen-image-edit",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "qwen-qwen-image-edit-2511",
+    "aliases": [
+      "qwen-qwen-image-edit-2511"
+    ],
+    "category": "image-edit",
+    "modality": {
+      "inputs": [
+        "image",
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-qwen-qwen-image-edit-2511",
+        "endpoint": "qwen/qwen-image-edit-2511",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "qwen-qwen-image-edit-plus",
+    "aliases": [
+      "qwen-qwen-image-edit-plus"
+    ],
+    "category": "image-edit",
+    "modality": {
+      "inputs": [
+        "image",
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-qwen-qwen-image-edit-plus",
+        "endpoint": "qwen/qwen-image-edit-plus",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "qwen-qwen-image-edit-plus-lora",
+    "aliases": [
+      "qwen-qwen-image-edit-plus-lora"
+    ],
+    "category": "image-edit",
+    "modality": {
+      "inputs": [
+        "image",
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-qwen-qwen-image-edit-plus-lora",
+        "endpoint": "qwen/qwen-image-edit-plus-lora",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "qwen-qwen-image-lora-trainer-legacy",
     "aliases": [
       "qwen-qwen-image-lora-trainer-legacy",
@@ -43712,13 +44023,13 @@
       "qwen-qwen3-235b-a22b-instruct-2507",
       "qwen3-235b-a22b-instruct-2507"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -43827,8 +44138,7 @@
   {
     "canonical_name": "recraft-20b",
     "aliases": [
-      "recraft-20b",
-      "recraft-ai-recraft-20b"
+      "recraft-20b"
     ],
     "category": "text-to-image",
     "modality": {
@@ -43851,7 +44161,24 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
-      },
+      }
+    ]
+  },
+  {
+    "canonical_name": "recraft-ai-recraft-20b",
+    "aliases": [
+      "recraft-ai-recraft-20b"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
       {
         "provider": "replicate",
         "skill_id": "replicate-recraft-ai-recraft-20b",
@@ -44158,6 +44485,35 @@
     ]
   },
   {
+    "canonical_name": "recraft-ai-recraft-vectorize",
+    "aliases": [
+      "recraft-ai-recraft-vectorize"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-recraft-ai-recraft-vectorize",
+        "endpoint": "recraft-ai/recraft-vectorize",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "recraft-upscale-creative",
     "aliases": [
       "recraft-upscale-creative"
@@ -44180,7 +44536,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -44209,7 +44565,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -44425,7 +44781,6 @@
   {
     "canonical_name": "recraft-vectorize",
     "aliases": [
-      "recraft-ai-recraft-vectorize",
       "recraft-vectorize"
     ],
     "category": "text-to-image",
@@ -44446,19 +44801,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-recraft-ai-recraft-vectorize",
-        "endpoint": "recraft-ai/recraft-vectorize",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -44527,13 +44870,13 @@
     "aliases": [
       "replicate-llama-7b"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -44701,7 +45044,7 @@
     "aliases": [
       "resemble-ai-chatterboxhd-speech-to-speech"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -44718,8 +45061,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -44777,7 +45120,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -45887,8 +46230,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "image.url",
+          "type": "segmentation",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -45974,8 +46317,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "segmentation",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -46003,8 +46346,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "segmentation",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -46148,8 +46491,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "image",
-          "extract_path": "image.url",
+          "type": "segmentation",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -46177,8 +46520,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "segmentation",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -46187,7 +46530,6 @@
   {
     "canonical_name": "sana",
     "aliases": [
-      "nvidia-sana",
       "sana"
     ],
     "category": "text-to-image",
@@ -46209,18 +46551,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-nvidia-sana",
-        "endpoint": "nvidia/sana",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -46364,8 +46694,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "3d",
+          "extract_path": "model_mesh.url",
           "content_type": "model/gltf-binary"
         }
       }
@@ -46600,7 +46930,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -46745,7 +47075,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -46773,8 +47103,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "text",
+          "extract_path": "output",
           "content_type": "text/plain"
         }
       }
@@ -46832,7 +47162,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -46901,7 +47231,7 @@
     "aliases": [
       "sonauto-v2-extend"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -46918,8 +47248,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -46948,8 +47278,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -47598,7 +47928,7 @@
         "param_map": {},
         "output_map": {
           "type": "audio",
-          "extract_path": "audio_file.url",
+          "extract_path": "audio.url",
           "content_type": "audio/mpeg"
         }
       }
@@ -47979,7 +48309,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -48017,8 +48347,7 @@
   {
     "canonical_name": "step1x-edit",
     "aliases": [
-      "step1x-edit",
-      "zsxkib-step1x-edit"
+      "step1x-edit"
     ],
     "category": "image-edit",
     "modality": {
@@ -48040,18 +48369,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-zsxkib-step1x-edit",
-        "endpoint": "zsxkib/step1x-edit",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -48139,7 +48456,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -48237,11 +48554,11 @@
     "aliases": [
       "sync-lipsync"
     ],
-    "category": "video-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "video",
-        "audio"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -48267,11 +48584,11 @@
     "aliases": [
       "sync-lipsync-2"
     ],
-    "category": "video-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "video",
-        "audio"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -48297,11 +48614,11 @@
     "aliases": [
       "sync-lipsync-2-pro"
     ],
-    "category": "video-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "video",
-        "audio"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -48327,11 +48644,11 @@
     "aliases": [
       "sync-lipsync-react-1"
     ],
-    "category": "video-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "video",
-        "audio"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -48357,11 +48674,11 @@
     "aliases": [
       "sync-lipsync-v2"
     ],
-    "category": "video-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "video",
-        "audio"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -48387,11 +48704,11 @@
     "aliases": [
       "sync-lipsync-v2-pro"
     ],
-    "category": "video-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "video",
-        "audio"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -48589,6 +48906,35 @@
     ]
   },
   {
+    "canonical_name": "tencent-hunyuan-video",
+    "aliases": [
+      "tencent-hunyuan-video"
+    ],
+    "category": "text-to-video",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "video"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-tencent-hunyuan-video",
+        "endpoint": "tencent/hunyuan-video",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "video",
+          "extract_path": "output[]",
+          "content_type": "video/mp4"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "tencent-hunyuan3d-2mv",
     "aliases": [
       "tencent-hunyuan3d-2mv",
@@ -48677,6 +49023,35 @@
     ]
   },
   {
+    "canonical_name": "tencentarc-photomaker",
+    "aliases": [
+      "tencentarc-photomaker"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-tencentarc-photomaker",
+        "endpoint": "tencentarc/photomaker",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "tencentarc-photomaker-style",
     "aliases": [
       "tencentarc-photomaker-style"
@@ -48695,6 +49070,35 @@
         "provider": "replicate",
         "skill_id": "replicate-tencentarc-photomaker-style",
         "endpoint": "tencentarc/photomaker-style",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "tencentarc-vqfr",
+    "aliases": [
+      "tencentarc-vqfr"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-tencentarc-vqfr",
+        "endpoint": "tencentarc/vqfr",
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
@@ -48728,7 +49132,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -48785,8 +49189,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "video",
+          "extract_path": "video.url",
           "content_type": "video/mp4"
         }
       }
@@ -48826,11 +49230,11 @@
     "aliases": [
       "tmappdev-lipsync"
     ],
-    "category": "video-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "video",
-        "audio"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -48875,7 +49279,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -49499,10 +49903,11 @@
     "aliases": [
       "veed-avatars-audio-to-video"
     ],
-    "category": "audio-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "audio"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -49529,9 +49934,10 @@
       "veed-avatars-text-to-video",
       "veed-avatars"
     ],
-    "category": "text-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -49659,11 +50065,11 @@
     "aliases": [
       "veed-lipsync"
     ],
-    "category": "video-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
-        "video",
-        "audio"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -49706,8 +50112,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -49735,8 +50141,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -49764,8 +50170,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -49864,13 +50270,13 @@
     "aliases": [
       "veo3-fast"
     ],
-    "category": "text-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "video"
+        "image"
       ]
     },
     "providers": [
@@ -49881,9 +50287,9 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
-          "content_type": "video/mp4"
+          "type": "image",
+          "extract_path": "images[].url",
+          "content_type": "image/png"
         }
       }
     ]
@@ -50011,13 +50417,13 @@
     "aliases": [
       "veo3.1-fast"
     ],
-    "category": "text-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "video"
+        "image"
       ]
     },
     "providers": [
@@ -50028,9 +50434,9 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
-          "content_type": "video/mp4"
+          "type": "image",
+          "extract_path": "images[].url",
+          "content_type": "image/png"
         }
       }
     ]
@@ -50096,8 +50502,6 @@
   {
     "canonical_name": "veo3.1-fast-image-to-video",
     "aliases": [
-      "google-veo3.1-fast",
-      "google-veo3.1-fast-image-to-video",
       "veo3.1-fast-image-to-video"
     ],
     "category": "image-to-video",
@@ -50120,18 +50524,6 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
-          "content_type": "video/mp4"
-        }
-      },
-      {
-        "provider": "wavespeed",
-        "skill_id": "wavespeed-google-veo3.1-fast-image-to-video",
-        "endpoint": "google/veo3.1-fast/image-to-video",
-        "auth_env": "WAVESPEED_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "video",
-          "extract_path": "data.outputs[]",
           "content_type": "video/mp4"
         }
       }
@@ -50689,7 +51081,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -50748,7 +51140,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -50954,7 +51346,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -51043,49 +51435,6 @@
           "type": "video",
           "extract_path": "video.url",
           "content_type": "video/mp4"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "vqfr",
-    "aliases": [
-      "cjwbw-vqfr",
-      "tencentarc-vqfr",
-      "vqfr"
-    ],
-    "category": "text-to-image",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "image"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-cjwbw-vqfr",
-        "endpoint": "cjwbw/vqfr",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-tencentarc-vqfr",
-        "endpoint": "tencentarc/vqfr",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
         }
       }
     ]
@@ -51182,7 +51531,7 @@
     "aliases": [
       "wan-22-vace-fun-a14b-depth"
     ],
-    "category": "image-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -51199,8 +51548,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -51229,8 +51578,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -51241,7 +51590,7 @@
     "aliases": [
       "wan-22-vace-fun-a14b-outpainting"
     ],
-    "category": "image-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -51258,8 +51607,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -51270,7 +51619,7 @@
     "aliases": [
       "wan-22-vace-fun-a14b-pose"
     ],
-    "category": "image-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -51287,8 +51636,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -51299,7 +51648,7 @@
     "aliases": [
       "wan-22-vace-fun-a14b-reframe"
     ],
-    "category": "text-to-video",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -51316,8 +51665,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -52001,14 +52350,12 @@
   {
     "canonical_name": "wan-v2.2-14b-animate-replace",
     "aliases": [
-      "wan-v2.2-14b-animate-replace",
-      "wan-video-wan-2.2-animate-replace"
+      "wan-v2.2-14b-animate-replace"
     ],
-    "category": "video-to-video",
+    "category": "text-to-video",
     "modality": {
       "inputs": [
-        "video",
-        "image"
+        "text"
       ],
       "outputs": [
         "video"
@@ -52024,18 +52371,6 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
-          "content_type": "video/mp4"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-wan-video-wan-2.2-animate-replace",
-        "endpoint": "wan-video/wan-2.2-animate-replace",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "video",
-          "extract_path": "output[]",
           "content_type": "video/mp4"
         }
       }
@@ -52124,7 +52459,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -52242,7 +52577,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -52361,7 +52696,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -52390,7 +52725,7 @@
         "param_map": {},
         "output_map": {
           "type": "image",
-          "extract_path": "image.url",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -53004,8 +53339,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -53088,6 +53423,35 @@
         "provider": "replicate",
         "skill_id": "replicate-wan-video-wan-2.2-animate-animation",
         "endpoint": "wan-video/wan-2.2-animate-animation",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "video",
+          "extract_path": "output[]",
+          "content_type": "video/mp4"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "wan-video-wan-2.2-animate-replace",
+    "aliases": [
+      "wan-video-wan-2.2-animate-replace"
+    ],
+    "category": "text-to-video",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "video"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-wan-video-wan-2.2-animate-replace",
+        "endpoint": "wan-video/wan-2.2-animate-replace",
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
@@ -53571,6 +53935,35 @@
     ]
   },
   {
+    "canonical_name": "wavespeed-ai-hunyuan-video-foley",
+    "aliases": [
+      "wavespeed-ai-hunyuan-video-foley"
+    ],
+    "category": "video-to-audio",
+    "modality": {
+      "inputs": [
+        "video"
+      ],
+      "outputs": [
+        "audio"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "wavespeed",
+        "skill_id": "wavespeed-wavespeed-ai-hunyuan-video-foley",
+        "endpoint": "wavespeed-ai/hunyuan-video-foley",
+        "auth_env": "WAVESPEED_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "audio",
+          "extract_path": "data.outputs[]",
+          "content_type": "audio/mpeg"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "wavespeed-ai-longcat-avatar",
     "aliases": [
       "wavespeed-ai-longcat-avatar",
@@ -53897,6 +54290,65 @@
         "provider": "wavespeed",
         "skill_id": "wavespeed-wavespeed-ai-qwen-image-edit-multiple-angles",
         "endpoint": "wavespeed-ai/qwen-image/edit-multiple-angles",
+        "auth_env": "WAVESPEED_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "data.outputs[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "wavespeed-ai-qwen-image-edit-plus-lora",
+    "aliases": [
+      "wavespeed-ai-qwen-image-edit-plus-lora"
+    ],
+    "category": "image-edit",
+    "modality": {
+      "inputs": [
+        "image",
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "wavespeed",
+        "skill_id": "wavespeed-wavespeed-ai-qwen-image-edit-plus-lora",
+        "endpoint": "wavespeed-ai/qwen-image/edit-plus-lora",
+        "auth_env": "WAVESPEED_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "data.outputs[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "wavespeed-ai-qwen-image-layered",
+    "aliases": [
+      "wavespeed-ai-qwen-image-layered"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "wavespeed",
+        "skill_id": "wavespeed-wavespeed-ai-qwen-image-layered",
+        "endpoint": "wavespeed-ai/qwen-image/layered",
         "auth_env": "WAVESPEED_API_KEY",
         "param_map": {},
         "output_map": {
@@ -54482,6 +54934,64 @@
     ]
   },
   {
+    "canonical_name": "wavespeed-ai-z-image-turbo-lora",
+    "aliases": [
+      "wavespeed-ai-z-image-turbo-lora"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "wavespeed",
+        "skill_id": "wavespeed-wavespeed-ai-z-image-turbo-lora",
+        "endpoint": "wavespeed-ai/z-image/turbo-lora",
+        "auth_env": "WAVESPEED_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "data.outputs[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "wavespeedai-qwen-image",
+    "aliases": [
+      "wavespeedai-qwen-image"
+    ],
+    "category": "text-to-image",
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-wavespeedai-qwen-image",
+        "endpoint": "wavespeedai/qwen-image",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "wavespeedai-wan-2.1-i2v-480p",
     "aliases": [
       "wavespeedai-wan-2.1-i2v-480p"
@@ -54602,7 +55112,6 @@
   {
     "canonical_name": "whisper",
     "aliases": [
-      "openai-whisper",
       "whisper"
     ],
     "category": "audio-to-text",
@@ -54624,18 +55133,6 @@
         "output_map": {
           "type": "text",
           "extract_path": "output",
-          "content_type": "text/plain"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-openai-whisper",
-        "endpoint": "openai/whisper",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "text",
-          "extract_path": "output[]",
           "content_type": "text/plain"
         }
       }
@@ -54704,7 +55201,7 @@
     "aliases": [
       "workflow-utilities-audio-compressor"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -54721,8 +55218,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -54820,7 +55317,7 @@
     "aliases": [
       "workflow-utilities-impulse-response"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -54837,8 +55334,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -55198,8 +55695,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "video",
-          "extract_path": "video.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -55328,13 +55825,13 @@
     "aliases": [
       "yorickvp-llava-13b"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -55357,13 +55854,13 @@
     "aliases": [
       "yorickvp-llava-v1.6-mistral-7b"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -55386,13 +55883,13 @@
     "aliases": [
       "yorickvp-llava-v1.6-vicuna-13b"
     ],
-    "category": "text-generation",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -55587,7 +56084,6 @@
   {
     "canonical_name": "z-image-turbo",
     "aliases": [
-      "prunaai-z-image-turbo",
       "z-image-turbo"
     ],
     "category": "text-to-image",
@@ -55609,18 +56105,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-prunaai-z-image-turbo",
-        "endpoint": "prunaai/z-image-turbo",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
           "content_type": "image/png"
         }
       }
@@ -55807,7 +56291,6 @@
   {
     "canonical_name": "z-image-turbo-lora",
     "aliases": [
-      "wavespeed-ai-z-image-turbo-lora",
       "z-image-turbo-lora"
     ],
     "category": "text-to-image",
@@ -55829,18 +56312,6 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
-        }
-      },
-      {
-        "provider": "wavespeed",
-        "skill_id": "wavespeed-wavespeed-ai-z-image-turbo-lora",
-        "endpoint": "wavespeed-ai/z-image/turbo-lora",
-        "auth_env": "WAVESPEED_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "data.outputs[]",
           "content_type": "image/png"
         }
       }
@@ -55880,7 +56351,7 @@
     "aliases": [
       "zonos"
     ],
-    "category": "text-to-audio",
+    "category": "text-to-image",
     "modality": {
       "inputs": [
         "text"
@@ -55897,8 +56368,8 @@
         "auth_env": "FAL_KEY",
         "param_map": {},
         "output_map": {
-          "type": "audio",
-          "extract_path": "audio.url",
+          "type": "image",
+          "extract_path": "images[].url",
           "content_type": "image/png"
         }
       }
@@ -55983,6 +56454,35 @@
         "provider": "replicate",
         "skill_id": "replicate-zsxkib-animatediff-prompt-travel",
         "endpoint": "zsxkib/animatediff-prompt-travel",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "zsxkib-aura-sr",
+    "aliases": [
+      "zsxkib-aura-sr"
+    ],
+    "category": "upscale-image",
+    "modality": {
+      "inputs": [
+        "image"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-zsxkib-aura-sr",
+        "endpoint": "zsxkib/aura-sr",
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
@@ -56559,6 +57059,36 @@
           "type": "video",
           "extract_path": "output[]",
           "content_type": "video/mp4"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "zsxkib-step1x-edit",
+    "aliases": [
+      "zsxkib-step1x-edit"
+    ],
+    "category": "image-edit",
+    "modality": {
+      "inputs": [
+        "image",
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-zsxkib-step1x-edit",
+        "endpoint": "zsxkib/step1x-edit",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "image",
+          "extract_path": "output[]",
+          "content_type": "image/png"
         }
       }
     ]

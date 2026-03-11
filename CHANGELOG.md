@@ -6,7 +6,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-## [0.4.7] - 2026-03-11
+## [0.4.8] - 2026-03-11
+
+### Added
+
+- **video-to-video category**: New category template with input mappings for video, image, prompt, resolution, seed, guidance, steps, and safety. Supports fal-ai, Replicate, and WaveSpeed providers. Fixes 422 errors when calling video-to-video models.
 
 ### Fixed
 
