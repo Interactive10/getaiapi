@@ -4,6 +4,46 @@ All notable changes to the getaiapi registry and library will be documented in t
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+## [0.4.6] - 2026-03-09
+
+### Fixed
+
+- **Replicate 404 fallback**: Community models (e.g., `codeplugtech/face-swap`) that don't support the newer `/v1/models/{owner}/{name}/predictions` endpoint now automatically fall back to `/v1/predictions` with the latest version hash. The adapter fetches the version via `GET /models/{owner}/{name}` on 404, matching the official Replicate SDK behavior.
+
+## [0.4.5] - 2026-03-09
+
+### Fixed
+
+- **Category registration**: Registered 8 missing category templates (image-to-image, text-to-3d, image-to-3d, upscale-video, video-to-audio, segmentation, moderation, training) in `src/categories/index.ts`. These templates existed as files but were never added to the lookup map, causing `getCategoryTemplate()` to return `undefined` at runtime.
+
+### Changed
+
+- **Category tests**: Updated to cover all 17 registered categories instead of only 9. Relaxed required-mapping assertion for moderation (all inputs are optional).
+
+## [0.4.3] - 2026-03-09
+
+### Changed
+
+- **Model identity graph (batch 3)**: Merged 35 additional duplicate model entries across providers (fal-ai, Replicate, WaveSpeed) into unified entries. Includes FLUX (dev, schnell, pulid), Ideogram (v2, v2-turbo, v2a, v2a-turbo, character), Qwen image models (8 variants), Recraft (20b, vectorize), HunyuanVideo, LTX-Video, SANA, CodeFormer, AuraSR, and more. Registry reduced from 1,925 to 1,890 entries.
+
+### Fixed
+
+- **NoProviderError**: When a model exists but none of the user's configured providers support it, the error now says `Model "X" found but requires Y (ENV_VAR)` instead of the misleading `Model "X" not found. Did you mean: X?`.
+- **codeplugtech-face-swap**: Recategorized from `text-to-image` to `image-to-image` — model takes two images (no prompt), but `text-to-image` validation rejected requests without a prompt.
+
+## [0.4.2] - 2026-03-09
+
+### Changed
+
+- **Model identity graph**: Merged 14 duplicate model entries that existed separately per provider into unified entries with combined `aliases` and `providers` arrays. Includes `gpt-4o`, `gpt-4o-mini`, `claude-haiku-4-5`, `claude-opus-4-6`, `deepseek-v3`, `nano-banana`, `nano-banana-2`, `nano-banana-2-edit`, `nano-banana-edit`, `nano-banana-pro`, `veo3.1-fast-image-to-video`, `gpt-image-1-mini`, `gpt-image-1.5`, and `whisper`. Old canonical names (e.g., `openai-gpt-4o`, `google-nano-banana-2-edit`) are preserved as aliases for backward compatibility. Registry reduced from 1940 to 1926 entries.
+
+### Added
+
+- **Registry duplicate detection**: New `scripts/validate-registry.js` checks for alias collisions and normalized name duplicates to prevent future duplicate entries.
+- **MODELS.md generator**: New `scripts/generate-models-md.js` generates `docs/MODELS.md` from `registry.json`.
+
 ## [0.4.1] - 2026-03-09
 
 ### Fixed

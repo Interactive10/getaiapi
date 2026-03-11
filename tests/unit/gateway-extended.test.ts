@@ -28,7 +28,7 @@ const TEST_MODEL: ModelEntry = {
 const TRAINING_MODEL: ModelEntry = {
   canonical_name: 'test-training-model',
   aliases: ['train-model'],
-  category: 'training',
+  category: 'nonexistent-category' as ModelEntry['category'],
   modality: { inputs: ['text'], outputs: ['image'] },
   providers: [
     {
@@ -129,7 +129,7 @@ describe('generate() - extended branch coverage', () => {
 
     await expect(
       generate({ model: 'test-training-model', prompt: 'train something' }),
-    ).rejects.toThrow(/No category template for "training"/)
+    ).rejects.toThrow(/No category template for "nonexistent-category"/)
   })
 
   it('throws ProviderError when poll returns failed with error message', async () => {

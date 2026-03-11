@@ -7,6 +7,14 @@ import { textToAudioTemplate } from './text-to-audio.js'
 import { audioToTextTemplate } from './audio-to-text.js'
 import { removeBackgroundTemplate } from './remove-background.js'
 import { textGenerationTemplate } from './text-generation.js'
+import { imageToImageTemplate } from './image-to-image.js'
+import { textTo3dTemplate } from './text-to-3d.js'
+import { imageTo3dTemplate } from './image-to-3d.js'
+import { upscaleVideoTemplate } from './upscale-video.js'
+import { videoToAudioTemplate } from './video-to-audio.js'
+import { segmentationTemplate } from './segmentation.js'
+import { moderationTemplate } from './moderation.js'
+import { trainingTemplate } from './training.js'
 import type { CategoryTemplate, ModelCategory } from '../types.js'
 
 const templates: Partial<Record<ModelCategory, CategoryTemplate>> = {
@@ -19,6 +27,14 @@ const templates: Partial<Record<ModelCategory, CategoryTemplate>> = {
   'audio-to-text': audioToTextTemplate,
   'remove-background': removeBackgroundTemplate,
   'text-generation': textGenerationTemplate,
+  'image-to-image': imageToImageTemplate,
+  'text-to-3d': textTo3dTemplate,
+  'image-to-3d': imageTo3dTemplate,
+  'upscale-video': upscaleVideoTemplate,
+  'video-to-audio': videoToAudioTemplate,
+  'segmentation': segmentationTemplate,
+  'moderation': moderationTemplate,
+  'training': trainingTemplate,
 }
 
 export function getCategoryTemplate(category: ModelCategory): CategoryTemplate | undefined {
@@ -35,4 +51,12 @@ export {
   audioToTextTemplate,
   removeBackgroundTemplate,
   textGenerationTemplate,
+  imageToImageTemplate,
+  textTo3dTemplate,
+  imageTo3dTemplate,
+  upscaleVideoTemplate,
+  videoToAudioTemplate,
+  segmentationTemplate,
+  moderationTemplate,
+  trainingTemplate,
 }

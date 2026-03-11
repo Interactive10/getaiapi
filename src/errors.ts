@@ -35,6 +35,38 @@ export class ModelNotFoundError extends GetAIApiError {
   }
 }
 
+export class NoProviderError extends GetAIApiError {
+  readonly query: string;
+  readonly model: string;
+  readonly requiredProviders: string[];
+  readonly availableProviders: string[];
+
+  constructor(
+    query: string,
+    model: string,
+    requiredProviders: string[],
+    availableProviders: string[],
+  ) {
+    const envHints: Record<string, string> = {
+      "fal-ai": "FAL_KEY",
+      replicate: "REPLICATE_API_TOKEN",
+      wavespeed: "WAVESPEED_API_KEY",
+      openrouter: "OPENROUTER_API_KEY",
+    };
+    const needed = requiredProviders
+      .map((p) => `${p} (${envHints[p] || "unknown"})`)
+      .join(" or ");
+    super(
+      `Model "${query}" found but requires ${needed}. You have: ${availableProviders.length > 0 ? availableProviders.join(", ") : "none"}.`,
+    );
+    this.name = "NoProviderError";
+    this.query = query;
+    this.model = model;
+    this.requiredProviders = requiredProviders;
+    this.availableProviders = availableProviders;
+  }
+}
+
 export class ValidationError extends GetAIApiError {
   readonly field: string;
 

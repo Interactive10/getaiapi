@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import type { ModelEntry, ProviderName } from "./types.js";
-import { ModelNotFoundError } from "./errors.js";
+import { ModelNotFoundError, NoProviderError } from "./errors.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -111,8 +111,12 @@ export function resolveModel(
     );
 
     if (filteredProviders.length === 0) {
-      const suggestions = findSuggestions(trimmedQuery, registry);
-      throw new ModelNotFoundError(trimmedQuery, suggestions);
+      throw new NoProviderError(
+        trimmedQuery,
+        matched.canonical_name,
+        matched.providers.map((p) => p.provider),
+        availableProviders,
+      );
     }
 
     return { ...matched, providers: filteredProviders };

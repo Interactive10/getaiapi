@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { ModelEntry } from "../../src/types.js";
-import { ModelNotFoundError } from "../../src/errors.js";
+import { ModelNotFoundError, NoProviderError } from "../../src/errors.js";
 import { readFileSync } from "fs";
 
 // Mock the fs module so we don't read the full 1.2MB registry file
@@ -207,7 +207,7 @@ describe("resolveModel", () => {
 
   it("throws when no providers remain after filtering", () => {
     expect(() => resolveModel("minimax-video", ["fal-ai"])).toThrow(
-      ModelNotFoundError,
+      NoProviderError,
     );
   });
 
