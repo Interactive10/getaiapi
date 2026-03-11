@@ -25805,11 +25805,14 @@
   {
     "canonical_name": "kling-video-v2.6-pro-motion-control",
     "aliases": [
-      "kling-video-v2.6-pro-motion-control"
+      "kling-video-v2.6-pro-motion-control",
+      "kwaivgi-kling-v2.6-motion-control"
     ],
-    "category": "text-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
+        "image",
+        "video",
         "text"
       ],
       "outputs": [
@@ -25826,6 +25829,18 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-kwaivgi-kling-v2.6-motion-control",
+        "endpoint": "kwaivgi/kling-v2.6-motion-control",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "video",
+          "extract_path": "output[]",
           "content_type": "video/mp4"
         }
       }
@@ -25865,9 +25880,11 @@
     "aliases": [
       "kling-video-v2.6-standard-motion-control"
     ],
-    "category": "text-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
+        "image",
+        "video",
         "text"
       ],
       "outputs": [
@@ -26909,35 +26926,6 @@
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-v2.6",
         "endpoint": "kwaivgi/kling-v2.6",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "kwaivgi-kling-v2.6-motion-control",
-    "aliases": [
-      "kwaivgi-kling-v2.6-motion-control"
-    ],
-    "category": "text-to-image",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "image"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-kwaivgi-kling-v2.6-motion-control",
-        "endpoint": "kwaivgi/kling-v2.6-motion-control",
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
@@ -39342,10 +39330,11 @@
     "aliases": [
       "pixverse-swap"
     ],
-    "category": "text-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "text"
+        "video",
+        "image"
       ],
       "outputs": [
         "video"
@@ -52012,12 +52001,14 @@
   {
     "canonical_name": "wan-v2.2-14b-animate-replace",
     "aliases": [
-      "wan-v2.2-14b-animate-replace"
+      "wan-v2.2-14b-animate-replace",
+      "wan-video-wan-2.2-animate-replace"
     ],
-    "category": "text-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "text"
+        "video",
+        "image"
       ],
       "outputs": [
         "video"
@@ -52033,6 +52024,18 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-wan-video-wan-2.2-animate-replace",
+        "endpoint": "wan-video/wan-2.2-animate-replace",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "video",
+          "extract_path": "output[]",
           "content_type": "video/mp4"
         }
       }
@@ -53085,35 +53088,6 @@
         "provider": "replicate",
         "skill_id": "replicate-wan-video-wan-2.2-animate-animation",
         "endpoint": "wan-video/wan-2.2-animate-animation",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "video",
-          "extract_path": "output[]",
-          "content_type": "video/mp4"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "wan-video-wan-2.2-animate-replace",
-    "aliases": [
-      "wan-video-wan-2.2-animate-replace"
-    ],
-    "category": "text-to-video",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "video"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-wan-video-wan-2.2-animate-replace",
-        "endpoint": "wan-video/wan-2.2-animate-replace",
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
