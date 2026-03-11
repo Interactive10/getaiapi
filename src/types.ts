@@ -73,7 +73,10 @@ export type ModelCategory =
   | "video-to-video"
   | "moderation"
   | "training"
-  | "text-generation";
+  | "text-generation"
+  | "doc-to-text"
+  | "image-to-text"
+  | "video-to-text";
 
 export type ProviderName = "fal-ai" | "replicate" | "wavespeed" | "openrouter";
 

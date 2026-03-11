@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue.svg)](https://www.typescriptlang.org/)
 
-A unified TypeScript library that wraps 1,940+ AI models across 4 providers into a single `generate()` function. One input shape. One output shape. Any model.
+A unified TypeScript library that wraps 1,876+ AI models across 4 providers into a single `generate()` function. One input shape. One output shape. Any model.
 
 ## Install
 
@@ -210,25 +210,28 @@ const model = getModel('flux-schnell')
 
 | Category | Input | Output | Models |
 |---|---|---|---|
-| `text-to-image` | text | image | 743 |
-| `text-to-video` | text | video | 321 |
-| `image-edit` | image + text | image | 210 |
+| `text-to-image` | text | image | 674 |
+| `text-to-video` | text | video | 310 |
+| `image-edit` | image + text | image | 205 |
 | `image-to-video` | image + text | video | 165 |
 | `text-to-audio` | text | audio | 95 |
-| `text-generation` | text | text | 57 |
-| `upscale-image` | image | image | 57 |
+| `upscale-image` | image | image | 54 |
+| `image-to-image` | image + text | image | 51 |
 | `training` | images | model | 50 |
-| `image-to-image` | image + text | image | 43 |
+| `text-generation` | text | text | 49 |
 | `segmentation` | image/video | segmentation | 34 |
 | `image-to-3d` | image | 3d | 31 |
-| `audio-to-text` | audio | text | 25 |
 | `remove-background` | image/video | image/video | 24 |
+| `audio-to-text` | audio | text | 24 |
 | `text-to-3d` | text | 3d | 19 |
-| `video-to-audio` | video | audio | 17 |
+| `video-to-video` | video | video | 18 |
+| `image-to-text` | image | text | 16 |
+| `video-to-audio` | video | audio | 16 |
 | `upscale-video` | video | video | 15 |
-| `video-to-video` | video | video | 15 |
 | `moderation` | text/image/video | text | 12 |
 | `audio-to-video` | audio | video | 4 |
+| `video-to-text` | video | text | 4 |
+| `doc-to-text` | file | text | 3 |
 | `audio-edit` | audio | audio | 2 |
 | `voice-clone` | audio | text | 1 |
 
@@ -243,7 +246,7 @@ const model = getModel('flux-schnell')
 
 Zero external dependencies -- all provider communication uses native `fetch`.
 
-See the full [Model Directory](docs/MODELS.md) for all 1,940 models with provider availability.
+See the full [Model Directory](docs/MODELS.md) for all 1,876 models with provider availability.
 
 ## API Reference
 

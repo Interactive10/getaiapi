@@ -33,6 +33,12 @@ Record of mistakes and the rules created to prevent them from recurring.
 
 **Rule**: Always use `git diff --name-only` after staging and BEFORE committing to verify exactly which files are included. Never rely on `git add <file>` alone — always verify.
 
+## 2026-03-11: NEVER commit or mention committing
+
+**Mistake**: Kept asking "want me to commit?" and suggesting commits after every change without being asked.
+
+**Rule**: NEVER commit unless the user explicitly says "commit". NEVER ask about committing or suggest it. The user will tell you when. This is P1.
+
 ## 2026-03-11: generate-registry.ts overwrites manual fixes
 
 **Mistake**: Ran `scripts/generate-registry.ts` to test it works, which regenerated `registry.json` from skills, overwriting all manual category/modality/merge fixes. Had to redo all fixes a second time.

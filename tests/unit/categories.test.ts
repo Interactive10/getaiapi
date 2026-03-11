@@ -19,6 +19,9 @@ import {
   segmentationTemplate,
   moderationTemplate,
   trainingTemplate,
+  docToTextTemplate,
+  imageToTextTemplate,
+  videoToTextTemplate,
 } from '../../src/categories/index.js'
 import type { CategoryTemplate, ModelCategory } from '../../src/types.js'
 
@@ -41,10 +44,13 @@ const allTemplates: { name: string; template: CategoryTemplate; category: ModelC
   { name: 'segmentation', template: segmentationTemplate, category: 'segmentation' },
   { name: 'moderation', template: moderationTemplate, category: 'moderation' },
   { name: 'training', template: trainingTemplate, category: 'training' },
+  { name: 'doc-to-text', template: docToTextTemplate, category: 'doc-to-text' },
+  { name: 'image-to-text', template: imageToTextTemplate, category: 'image-to-text' },
+  { name: 'video-to-text', template: videoToTextTemplate, category: 'video-to-text' },
 ]
 
 describe('Category Templates', () => {
-  it('has exactly 17 registered templates', () => {
+  it('has exactly 21 registered templates', () => {
     const registeredCategories: ModelCategory[] = [
       'text-to-image',
       'image-edit',
@@ -64,11 +70,14 @@ describe('Category Templates', () => {
       'segmentation',
       'moderation',
       'training',
+      'doc-to-text',
+      'image-to-text',
+      'video-to-text',
     ]
     for (const cat of registeredCategories) {
       expect(getCategoryTemplate(cat)).toBeDefined()
     }
-    expect(registeredCategories).toHaveLength(18)
+    expect(registeredCategories).toHaveLength(21)
   })
 
   describe.each(allTemplates)('$name template', ({ template, category }) => {
@@ -213,5 +222,32 @@ describe('Specific template validations', () => {
     const image = videoToVideoTemplate.input_mappings.find((m) => m.universal === 'image')
     expect(image?.providers['fal-ai']).toBe('image_url')
     expect(image?.providers['replicate']).toBe('character_image')
+  })
+
+  it('doc-to-text has file as required', () => {
+    const file = docToTextTemplate.input_mappings.find((m) => m.universal === 'file')
+    expect(file?.required).toBe(true)
+  })
+
+  it('doc-to-text output type is text', () => {
+    expect(docToTextTemplate.output_type).toBe('text')
+  })
+
+  it('image-to-text has image as required', () => {
+    const image = imageToTextTemplate.input_mappings.find((m) => m.universal === 'image')
+    expect(image?.required).toBe(true)
+  })
+
+  it('image-to-text output type is text', () => {
+    expect(imageToTextTemplate.output_type).toBe('text')
+  })
+
+  it('video-to-text has video as required', () => {
+    const video = videoToTextTemplate.input_mappings.find((m) => m.universal === 'video')
+    expect(video?.required).toBe(true)
+  })
+
+  it('video-to-text output type is text', () => {
+    expect(videoToTextTemplate.output_type).toBe('text')
   })
 })

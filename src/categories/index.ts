@@ -16,6 +16,9 @@ import { videoToVideoTemplate } from './video-to-video.js'
 import { segmentationTemplate } from './segmentation.js'
 import { moderationTemplate } from './moderation.js'
 import { trainingTemplate } from './training.js'
+import { docToTextTemplate } from './doc-to-text.js'
+import { imageToTextTemplate } from './image-to-text.js'
+import { videoToTextTemplate } from './video-to-text.js'
 import type { CategoryTemplate, ModelCategory } from '../types.js'
 
 const templates: Partial<Record<ModelCategory, CategoryTemplate>> = {
@@ -37,6 +40,9 @@ const templates: Partial<Record<ModelCategory, CategoryTemplate>> = {
   'segmentation': segmentationTemplate,
   'moderation': moderationTemplate,
   'training': trainingTemplate,
+  'doc-to-text': docToTextTemplate,
+  'image-to-text': imageToTextTemplate,
+  'video-to-text': videoToTextTemplate,
 }
 
 export function getCategoryTemplate(category: ModelCategory): CategoryTemplate | undefined {
@@ -62,4 +68,7 @@ export {
   segmentationTemplate,
   moderationTemplate,
   trainingTemplate,
+  docToTextTemplate,
+  imageToTextTemplate,
+  videoToTextTemplate,
 }

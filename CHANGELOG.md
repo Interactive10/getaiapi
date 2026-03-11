@@ -6,17 +6,39 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-## [0.4.8] - 2026-03-11
+### Fixed
+
+- **12 Black Forest Labs FLUX models recategorized**: 6 to `image-to-image` (flux-canny-dev, flux-canny-pro, flux-depth-dev, flux-depth-pro, flux-redux-dev, flux-redux-schnell), 6 to `image-edit` (flux-fill-dev, flux-fill-pro, flux-kontext-dev, flux-kontext-dev-lora, flux-kontext-max, flux-kontext-pro). Previously miscategorized as `text-to-image`. Also fixed modality inputs from `[text]` to `[image, text]` for all 12.
+- **9 Wan models recategorized**: `lucataco-wan-2.1-1.3b-vid2vid` text-to-image → `video-to-video`; `krea-wan-14b-video-to-video` image-edit → `video-to-video`; `wan-v2.2-a14b-video-to-video` text-to-video → `video-to-video`; `wan-v2.2-a14b-image-to-image` image-edit → `image-to-image`; `wan-v2.2-a14b-text-to-image-lora` upscale-image → `text-to-image`; `wan-22-vace-fun-a14b-reframe` text-to-video → `image-to-video`. Fixed modality outputs from `[image]` to `[video]` for wan-22-vace-fun-a14b-depth, outpainting, pose. Fixed output_map content_type and extract_path where mismatched.
+
+## [0.4.10] - 2026-03-11
+
+### Added
+
+- **doc-to-text category**: New category template for document parsing/OCR models (file input → text output). Supports fal-ai, Replicate, WaveSpeed, OpenRouter.
+- **image-to-text category**: New category template for image captioning/OCR models (image + optional prompt → text output). Supports fal-ai, Replicate, WaveSpeed, OpenRouter.
+- **video-to-text category**: New category template for video captioning/description models (video + optional prompt → text output). Supports fal-ai, Replicate, WaveSpeed, OpenRouter.
+
+### Fixed
+
+- **24 models recategorized**: 3 to `doc-to-text` (bytedance-dolphin, cudanexus-ocr-surya, datalab-to-ocr), 16 to `image-to-text` (florence-2 variants, got-ocr-v2, moondream3, cogvlm, granite-vision, llama-vision, deepseek-ocr, latex-ocr, text-extract-ocr), 4 to `video-to-text` (auto-caption, fictions-ai-autocaption, bulk-video-caption, cogvlm2-video), 1 to `text-generation` (pbevan1-llama-3.1-8b-ocr-correction). Previously miscategorized as `text-to-image`.
+- **SeedDream merges**: Merged 4 duplicate SeedDream model entries across fal-ai and WaveSpeed into unified entries.
+- **ByteDance merges**: Merged 7 duplicate ByteDance model entries across providers into unified entries. Fixed wrong categories and modality inputs.
+
+## [0.4.9] - 2026-03-11
 
 ### Added
 
 - **video-to-video category**: New category template with input mappings for video, image, prompt, resolution, seed, guidance, steps, and safety. Supports fal-ai, Replicate, and WaveSpeed providers. Fixes 422 errors when calling video-to-video models.
+- **Registry QA checklist** (`tasks/registry-qa.md`): 6 automated validation checks to run before every publish — duplicate detection, category/modality mismatch, missing templates, text-only input audit, output map sanity, full test suite.
 
 ### Fixed
 
 - **wan-v2.2-14b-animate-replace**: Corrected category from `text-to-video` to `video-to-video`, modality inputs from `[text]` to `[video, image]`. Merged duplicate Replicate entry (`wan-video-wan-2.2-animate-replace`) into single entry with both fal-ai and Replicate providers.
 - **kling-video-v2.6-pro-motion-control**: Corrected category from `text-to-video` to `image-to-video`, modality inputs from `[text]` to `[image, video, text]`. Merged duplicate Replicate entry (`kwaivgi-kling-v2.6-motion-control`) which was miscategorized as `text-to-image` with wrong output type (`image/png` → `video/mp4`).
 - **kling-video-v2.6-standard-motion-control**: Corrected category from `text-to-video` to `image-to-video`, modality inputs from `[text]` to `[image, video, text]`.
+- **kling-video-v3-pro-motion-control**: Corrected category from `text-to-video` to `image-to-video`, modality inputs from `[text]` to `[image, video, text]`. Merged duplicate Replicate entry (`kwaivgi-kling-v3-motion-control`) which was miscategorized as `text-to-image` with wrong output type.
+- **kling-video-v3-standard-motion-control**: Corrected category from `text-to-video` to `image-to-video`, modality inputs from `[text]` to `[image, video, text]`. Merged duplicate WaveSpeed entry (`kwaivgi-kling-v3.0-std-motion-control`).
 - **pixverse-swap**: Corrected category from `text-to-video` to `video-to-video`, modality inputs from `[text]` to `[video, image]`.
 
 ## [0.4.6] - 2026-03-09
