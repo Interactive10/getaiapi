@@ -70,6 +70,7 @@ export type ModelCategory =
   | "segmentation"
   | "image-edit"
   | "video-to-audio"
+  | "video-to-video"
   | "moderation"
   | "training"
   | "text-generation";

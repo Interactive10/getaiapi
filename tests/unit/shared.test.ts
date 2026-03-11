@@ -207,6 +207,18 @@ describe("assignCategory", () => {
     expect(assignCategory("lora-trainer", "Fine tune lora training", "")).toBe("training");
   });
 
+  it("detects video-to-video", () => {
+    expect(assignCategory("video-to-video-model", "Video to video transformation", "")).toBe("video-to-video");
+  });
+
+  it("detects video swap as video-to-video", () => {
+    expect(assignCategory("pixverse-swap", "Video swap face replacement", "")).toBe("video-to-video");
+  });
+
+  it("detects animate replace as video-to-video", () => {
+    expect(assignCategory("wan-animate-replace", "Animate replace character", "")).toBe("video-to-video");
+  });
+
   it("detects avatar as image-to-video", () => {
     expect(assignCategory("ai-avatar", "Create talking avatar", "")).toBe("image-to-video");
   });
@@ -364,7 +376,7 @@ describe("readAllSkills", () => {
       "text-to-image", "image-to-image", "text-to-video", "image-to-video",
       "text-to-audio", "audio-to-text", "image-to-3d", "text-to-3d",
       "upscale-image", "upscale-video", "remove-background", "segmentation",
-      "image-edit", "video-to-audio", "moderation", "training",
+      "image-edit", "video-to-audio", "video-to-video", "moderation", "training",
     ];
     const skillsDir = path.resolve(import.meta.dirname ?? __dirname, "..", "..", "skills");
     const { skills } = readAllSkills(skillsDir);

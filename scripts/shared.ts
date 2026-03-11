@@ -20,6 +20,7 @@ export type ModelCategory =
   | "segmentation"
   | "image-edit"
   | "video-to-audio"
+  | "video-to-video"
   | "moderation"
   | "training";
 
@@ -109,6 +110,7 @@ export function assignCategory(name: string, description: string, body: string):
   if (/moderat|nsfw|content.moderat|safeguard/.test(text)) return "moderation";
   if (/training|trainer|fine.tun|lora.train/.test(text)) return "training";
   if (/segmentation|\bsam\b|segment/.test(text)) return "segmentation";
+  if (/video.to.video|\bv2v\b|video.swap|animate.replace/.test(text)) return "video-to-video";
   if (/image.to.video|\bi2v\b|avatar|talking|lip.sync|lipsync/.test(text)) return "image-to-video";
   if (/text.to.video|\bt2v\b|video.generation/.test(text)) return "text-to-video";
   if (/\bedit\b|editing|inpaint/.test(text)) return "image-edit";

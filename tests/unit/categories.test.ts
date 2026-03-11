@@ -15,6 +15,7 @@ import {
   imageTo3dTemplate,
   upscaleVideoTemplate,
   videoToAudioTemplate,
+  videoToVideoTemplate,
   segmentationTemplate,
   moderationTemplate,
   trainingTemplate,
@@ -36,6 +37,7 @@ const allTemplates: { name: string; template: CategoryTemplate; category: ModelC
   { name: 'image-to-3d', template: imageTo3dTemplate, category: 'image-to-3d' },
   { name: 'upscale-video', template: upscaleVideoTemplate, category: 'upscale-video' },
   { name: 'video-to-audio', template: videoToAudioTemplate, category: 'video-to-audio' },
+  { name: 'video-to-video', template: videoToVideoTemplate, category: 'video-to-video' },
   { name: 'segmentation', template: segmentationTemplate, category: 'segmentation' },
   { name: 'moderation', template: moderationTemplate, category: 'moderation' },
   { name: 'training', template: trainingTemplate, category: 'training' },
@@ -58,6 +60,7 @@ describe('Category Templates', () => {
       'image-to-3d',
       'upscale-video',
       'video-to-audio',
+      'video-to-video',
       'segmentation',
       'moderation',
       'training',
@@ -65,7 +68,7 @@ describe('Category Templates', () => {
     for (const cat of registeredCategories) {
       expect(getCategoryTemplate(cat)).toBeDefined()
     }
-    expect(registeredCategories).toHaveLength(17)
+    expect(registeredCategories).toHaveLength(18)
   })
 
   describe.each(allTemplates)('$name template', ({ template, category }) => {
@@ -185,5 +188,30 @@ describe('Specific template validations', () => {
 
   it('text-generation timeout is 2 minutes', () => {
     expect(textGenerationTemplate.default_timeout_ms).toBe(120000)
+  })
+
+  it('video-to-video has video as required', () => {
+    const video = videoToVideoTemplate.input_mappings.find((m) => m.universal === 'video')
+    expect(video?.required).toBe(true)
+  })
+
+  it('video-to-video output type is video', () => {
+    expect(videoToVideoTemplate.output_type).toBe('video')
+  })
+
+  it('video-to-video timeout is 5 minutes', () => {
+    expect(videoToVideoTemplate.default_timeout_ms).toBe(300000)
+  })
+
+  it('video-to-video maps video to video_url for fal-ai', () => {
+    const video = videoToVideoTemplate.input_mappings.find((m) => m.universal === 'video')
+    expect(video?.providers['fal-ai']).toBe('video_url')
+    expect(video?.providers['replicate']).toBe('video')
+  })
+
+  it('video-to-video maps image to image_url for fal-ai and character_image for replicate', () => {
+    const image = videoToVideoTemplate.input_mappings.find((m) => m.universal === 'image')
+    expect(image?.providers['fal-ai']).toBe('image_url')
+    expect(image?.providers['replicate']).toBe('character_image')
   })
 })

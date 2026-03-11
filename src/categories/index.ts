@@ -12,6 +12,7 @@ import { textTo3dTemplate } from './text-to-3d.js'
 import { imageTo3dTemplate } from './image-to-3d.js'
 import { upscaleVideoTemplate } from './upscale-video.js'
 import { videoToAudioTemplate } from './video-to-audio.js'
+import { videoToVideoTemplate } from './video-to-video.js'
 import { segmentationTemplate } from './segmentation.js'
 import { moderationTemplate } from './moderation.js'
 import { trainingTemplate } from './training.js'
@@ -32,6 +33,7 @@ const templates: Partial<Record<ModelCategory, CategoryTemplate>> = {
   'image-to-3d': imageTo3dTemplate,
   'upscale-video': upscaleVideoTemplate,
   'video-to-audio': videoToAudioTemplate,
+  'video-to-video': videoToVideoTemplate,
   'segmentation': segmentationTemplate,
   'moderation': moderationTemplate,
   'training': trainingTemplate,
@@ -56,6 +58,7 @@ export {
   imageTo3dTemplate,
   upscaleVideoTemplate,
   videoToAudioTemplate,
+  videoToVideoTemplate,
   segmentationTemplate,
   moderationTemplate,
   trainingTemplate,
