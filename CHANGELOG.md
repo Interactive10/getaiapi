@@ -6,6 +6,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.4.7] - 2026-03-11
+
+### Fixed
+
+- **wan-v2.2-14b-animate-replace**: Corrected category from `text-to-video` to `video-to-video`, modality inputs from `[text]` to `[video, image]`. Merged duplicate Replicate entry (`wan-video-wan-2.2-animate-replace`) into single entry with both fal-ai and Replicate providers.
+- **kling-video-v2.6-pro-motion-control**: Corrected category from `text-to-video` to `image-to-video`, modality inputs from `[text]` to `[image, video, text]`. Merged duplicate Replicate entry (`kwaivgi-kling-v2.6-motion-control`) which was miscategorized as `text-to-image` with wrong output type (`image/png` → `video/mp4`).
+- **kling-video-v2.6-standard-motion-control**: Corrected category from `text-to-video` to `image-to-video`, modality inputs from `[text]` to `[image, video, text]`.
+- **pixverse-swap**: Corrected category from `text-to-video` to `video-to-video`, modality inputs from `[text]` to `[video, image]`.
+
 ## [0.4.6] - 2026-03-09
 
 ### Fixed
