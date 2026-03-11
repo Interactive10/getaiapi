@@ -25911,11 +25911,14 @@
   {
     "canonical_name": "kling-video-v2.6-pro-motion-control",
     "aliases": [
-      "kling-video-v2.6-pro-motion-control"
+      "kling-video-v2.6-pro-motion-control",
+      "kwaivgi-kling-v2.6-motion-control"
     ],
-    "category": "text-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
+        "image",
+        "video",
         "text"
       ],
       "outputs": [
@@ -25932,6 +25935,18 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-kwaivgi-kling-v2.6-motion-control",
+        "endpoint": "kwaivgi/kling-v2.6-motion-control",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "video",
+          "extract_path": "output[]",
           "content_type": "video/mp4"
         }
       }
@@ -25971,9 +25986,11 @@
     "aliases": [
       "kling-video-v2.6-standard-motion-control"
     ],
-    "category": "text-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
+        "image",
+        "video",
         "text"
       ],
       "outputs": [
@@ -25998,11 +26015,14 @@
   {
     "canonical_name": "kling-video-v3-pro-motion-control",
     "aliases": [
-      "kling-video-v3-pro-motion-control"
+      "kling-video-v3-pro-motion-control",
+      "kwaivgi-kling-v3-motion-control"
     ],
-    "category": "text-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
+        "image",
+        "video",
         "text"
       ],
       "outputs": [
@@ -26019,6 +26039,18 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-kwaivgi-kling-v3-motion-control",
+        "endpoint": "kwaivgi/kling-v3-motion-control",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "video",
+          "extract_path": "output[]",
           "content_type": "video/mp4"
         }
       }
@@ -26088,11 +26120,14 @@
   {
     "canonical_name": "kling-video-v3-standard-motion-control",
     "aliases": [
-      "kling-video-v3-standard-motion-control"
+      "kling-video-v3-standard-motion-control",
+      "kwaivgi-kling-v3.0-std-motion-control"
     ],
-    "category": "text-to-video",
+    "category": "image-to-video",
     "modality": {
       "inputs": [
+        "image",
+        "video",
         "text"
       ],
       "outputs": [
@@ -26109,6 +26144,18 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "wavespeed",
+        "skill_id": "wavespeed-kwaivgi-kling-v3.0-std-motion-control",
+        "endpoint": "kwaivgi/kling-v3.0-std/motion-control",
+        "auth_env": "WAVESPEED_API_KEY",
+        "param_map": {},
+        "output_map": {
+          "type": "video",
+          "extract_path": "data.outputs[]",
           "content_type": "video/mp4"
         }
       }
@@ -26994,64 +27041,6 @@
     ]
   },
   {
-    "canonical_name": "kwaivgi-kling-v2.6-motion-control",
-    "aliases": [
-      "kwaivgi-kling-v2.6-motion-control"
-    ],
-    "category": "text-to-image",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "image"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-kwaivgi-kling-v2.6-motion-control",
-        "endpoint": "kwaivgi/kling-v2.6-motion-control",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "kwaivgi-kling-v3-motion-control",
-    "aliases": [
-      "kwaivgi-kling-v3-motion-control"
-    ],
-    "category": "text-to-image",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "image"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-kwaivgi-kling-v3-motion-control",
-        "endpoint": "kwaivgi/kling-v3-motion-control",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "image",
-          "extract_path": "output[]",
-          "content_type": "image/png"
-        }
-      }
-    ]
-  },
-  {
     "canonical_name": "kwaivgi-kling-v3-omni-video",
     "aliases": [
       "kwaivgi-kling-v3-omni-video"
@@ -27104,35 +27093,6 @@
         "output_map": {
           "type": "video",
           "extract_path": "output[]",
-          "content_type": "video/mp4"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "kwaivgi-kling-v3.0-std-motion-control",
-    "aliases": [
-      "kwaivgi-kling-v3.0-std-motion-control"
-    ],
-    "category": "text-to-video",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "video"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "wavespeed",
-        "skill_id": "wavespeed-kwaivgi-kling-v3.0-std-motion-control",
-        "endpoint": "kwaivgi/kling-v3.0-std/motion-control",
-        "auth_env": "WAVESPEED_API_KEY",
-        "param_map": {},
-        "output_map": {
-          "type": "video",
-          "extract_path": "data.outputs[]",
           "content_type": "video/mp4"
         }
       }
@@ -39612,10 +39572,11 @@
     "aliases": [
       "pixverse-swap"
     ],
-    "category": "text-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "text"
+        "video",
+        "image"
       ],
       "outputs": [
         "video"
@@ -52350,12 +52311,14 @@
   {
     "canonical_name": "wan-v2.2-14b-animate-replace",
     "aliases": [
-      "wan-v2.2-14b-animate-replace"
+      "wan-v2.2-14b-animate-replace",
+      "wan-video-wan-2.2-animate-replace"
     ],
-    "category": "text-to-video",
+    "category": "video-to-video",
     "modality": {
       "inputs": [
-        "text"
+        "video",
+        "image"
       ],
       "outputs": [
         "video"
@@ -52371,6 +52334,18 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "replicate",
+        "skill_id": "replicate-wan-video-wan-2.2-animate-replace",
+        "endpoint": "wan-video/wan-2.2-animate-replace",
+        "auth_env": "REPLICATE_API_TOKEN",
+        "param_map": {},
+        "output_map": {
+          "type": "video",
+          "extract_path": "output[]",
           "content_type": "video/mp4"
         }
       }
@@ -53423,35 +53398,6 @@
         "provider": "replicate",
         "skill_id": "replicate-wan-video-wan-2.2-animate-animation",
         "endpoint": "wan-video/wan-2.2-animate-animation",
-        "auth_env": "REPLICATE_API_TOKEN",
-        "param_map": {},
-        "output_map": {
-          "type": "video",
-          "extract_path": "output[]",
-          "content_type": "video/mp4"
-        }
-      }
-    ]
-  },
-  {
-    "canonical_name": "wan-video-wan-2.2-animate-replace",
-    "aliases": [
-      "wan-video-wan-2.2-animate-replace"
-    ],
-    "category": "text-to-video",
-    "modality": {
-      "inputs": [
-        "text"
-      ],
-      "outputs": [
-        "video"
-      ]
-    },
-    "providers": [
-      {
-        "provider": "replicate",
-        "skill_id": "replicate-wan-video-wan-2.2-animate-replace",
-        "endpoint": "wan-video/wan-2.2-animate-replace",
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {},
         "output_map": {
