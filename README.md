@@ -187,13 +187,13 @@ Models are automatically filtered to only show providers where you have a valid 
 ## Model Discovery
 
 ```typescript
-import { listModels, getModel } from 'getaiapi'
+import { listModels, resolveModel, deriveCategory } from 'getaiapi'
 
-// List all available models (filtered by your API keys)
+// List all models
 const all = listModels()
 
-// Filter by category
-const imageModels = listModels({ category: 'text-to-image' })
+// Filter by input/output modality
+const imageModels = listModels({ input: 'text', output: 'image' })
 
 // Filter by provider
 const falModels = listModels({ provider: 'fal-ai' })
@@ -201,37 +201,35 @@ const falModels = listModels({ provider: 'fal-ai' })
 // Search by name
 const fluxModels = listModels({ query: 'flux' })
 
-// Get details for a specific model
-const model = getModel('flux-schnell')
-// => { canonical_name, aliases, category, modality, providers }
+// Resolve a specific model
+const model = resolveModel('flux-schnell')
+// => { canonical_name, aliases, modality, providers }
+
+// Derive a display label from modality
+deriveCategory(model) // => "text-to-image"
 ```
 
-## Supported Categories
+## Modality
 
-| Category | Input | Output | Models |
-|---|---|---|---|
-| `text-to-image` | text | image | 281 |
-| `image-edit` | image + text | image | 238 |
-| `image-to-video` | image + text | video | 211 |
-| `text-to-video` | text | video | 202 |
-| `image-to-image` | image + text | image | 176 |
-| `video-to-video` | video | video | 152 |
-| `text-to-audio` | text | audio | 127 |
-| `text-generation` | text | text | 95 |
-| `upscale-image` | image | image | 63 |
-| `image-to-text` | image | text | 54 |
-| `training` | images | model | 50 |
-| `image-to-3d` | image | 3d | 40 |
-| `segmentation` | image/video | segmentation | 37 |
-| `remove-background` | image/video | image/video | 31 |
-| `audio-to-text` | audio | text | 31 |
-| `upscale-video` | video | video | 20 |
-| `text-to-3d` | text | 3d | 16 |
-| `video-to-text` | video | text | 14 |
-| `video-to-audio` | video | audio | 14 |
-| `moderation` | text/image/video | text | 13 |
-| `doc-to-text` | file | text | 8 |
-| `audio-to-video` | audio | video | 3 |
+Models declare their input and output types via `modality`. There are no fixed categories — modality is the source of truth.
+
+**Input types:** `text`, `image`, `audio`, `video`
+
+**Output types:** `image`, `video`, `audio`, `text`, `3d`, `segmentation`
+
+Common combinations across 1,940+ models:
+
+| Inputs | Outputs | Example |
+|---|---|---|
+| text | image | `flux-schnell`, `ideogram-v3` |
+| text | video | `veo3.1`, `sora-2` |
+| image, text | image | `gpt-image-1.5-edit`, `flux-2-pro-edit` |
+| image, text | video | `kling-video-v3-pro`, `seedance-v1.5-pro` |
+| text | audio | `elevenlabs-v3`, `minimax-music-v2` |
+| text | text | `claude-sonnet-4-6`, `gpt-4o` |
+| image | image | `topaz-upscale-image`, `birefnet-v2` |
+| image | 3d | `trellis-image-to-3d` |
+| audio | text | `whisper` |
 
 ## Providers
 
@@ -244,8 +242,6 @@ const model = getModel('flux-schnell')
 
 Zero external dependencies -- all provider communication uses native `fetch`.
 
-See the full [Model Directory](docs/MODELS.md) for all 1,940 models with provider availability.
-
 ## API Reference
 
 ### `generate(request: GenerateRequest): Promise<GenerateResponse>`
@@ -257,6 +253,7 @@ The core function. Resolves the model, maps parameters, calls the provider, and 
 ```typescript
 interface GenerateRequest {
   model: string                                    // required - model name
+  provider?: ProviderName                          // preferred provider (optional)
   prompt?: string                                  // text prompt
   image?: string | File                            // input image (URL or File)
   images?: (string | File)[]                       // multiple reference images
@@ -307,15 +304,20 @@ interface OutputItem {
 
 ### `listModels(filters?: ListModelsFilters): ModelEntry[]`
 
-Returns all models the caller has API keys for. Accepts optional filters:
+Returns all models in the registry. Accepts optional filters:
 
-- `category` -- filter by model category (e.g. `'text-to-image'`)
+- `input` -- filter by input modality (e.g. `'text'`, `'image'`, `'audio'`, `'video'`)
+- `output` -- filter by output modality (e.g. `'image'`, `'video'`, `'text'`, `'3d'`)
 - `provider` -- filter by provider (e.g. `'fal-ai'`)
 - `query` -- search canonical names and aliases
 
-### `getModel(name: string): ModelEntry`
+### `resolveModel(name: string): ModelEntry`
 
-Resolves a model by name. Accepts canonical names, aliases, and normalized variants. Throws `ModelNotFoundError` if no match is found.
+Resolves a model by name. Accepts canonical names, aliases, and normalized variants. Throws if no match is found.
+
+### `deriveCategory(model: ModelEntry): string`
+
+Derives a display category label from a model's modality (e.g. `"text-to-image"`).
 
 ## R2 Storage (Asset Uploads)
 

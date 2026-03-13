@@ -20,14 +20,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Removed
 
-- `src/categories/` — 17 category template files (mappings now in per-model `param_map`)
-- `src/resolver.ts` — replaced by `src/registry.ts` with `resolveModel()`
-- `src/v2/` directory — all v2 code promoted to `src/`
-- `registry/catalog.json`, `registry/categories.json` — v1-only registry files
-- `scripts/migrate-v2.ts` — migration script no longer needed
-- `skills/v2-guide/` — v2 guide no longer needed
+- Category template system — 17 template files replaced by per-model `param_map` in registry
+- `getModel()` function — use `resolveModel()` instead
+- `ModelCategory` type and `category` field on `ModelEntry`
 - `./v2` package export — only `"."` export remains
-- V1-only test files: `categories.test.ts`, `mapper.test.ts`, `resolver.test.ts`, etc.
+- `registry/catalog.json`, `registry/categories.json` — v1-only registry files
+- V2 migration script and guide
 
 ## [0.4.12] - 2026-03-13
 
