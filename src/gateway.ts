@@ -1,18 +1,16 @@
 import { randomUUID } from 'crypto'
-import { AuthManager } from './auth.js'
-import { resolveModel } from './resolver.js'
+import { resolveModel } from './registry.js'
 import { mapInput, mapOutput } from './mapper.js'
-import { getCategoryTemplate } from './categories/index.js'
+import { AuthManager } from './auth.js'
 import { falAiAdapter } from './adapters/fal-ai.js'
 import { replicateAdapter } from './adapters/replicate.js'
 import { wavespeedAdapter } from './adapters/wavespeed.js'
 import { openRouterAdapter } from './adapters/openrouter.js'
-import type { GenerateRequest, GenerateResponse, ProviderAdapter, ProviderName } from './types.js'
+import type { GenerateRequest, GenerateResponse, ProviderName, ProviderAdapter } from './types.js'
 import { ValidationError, ProviderError } from './errors.js'
 import { withRetry } from './retry.js'
 import { processParamsForUpload } from './storage.js'
 
-// Adapter registry
 const adapters: Record<string, ProviderAdapter> = {
   'fal-ai': falAiAdapter,
   'replicate': replicateAdapter,
@@ -20,22 +18,36 @@ const adapters: Record<string, ProviderAdapter> = {
   'openrouter': openRouterAdapter,
 }
 
+const DEFAULT_TIMEOUT_MS = 120000
+
 export async function generate(request: GenerateRequest): Promise<GenerateResponse> {
   const startTime = Date.now()
 
-  // 1. Validate request
+  // 1. Validate
   if (!request.model) throw new ValidationError('model', 'model is required')
 
-  // 2. Auth - check available providers
+  // 2. Auth
   const auth = new AuthManager()
 
   // 3. Resolve model
-  const model = resolveModel(request.model, auth.availableProviders())
+  const model = resolveModel(request.model, auth.availableProviders() as ProviderName[])
 
-  // 4. Pick provider (first available)
-  const availableBindings = model.providers.filter(p =>
-    auth.availableProviders().includes(p.provider) && adapters[p.provider]
+  // 4. Pick provider
+  let availableBindings = model.providers.filter(p =>
+    auth.availableProviders().includes(p.provider) && adapters[p.provider],
   )
+
+  // If caller requested a specific provider, filter to it
+  if (request.provider) {
+    availableBindings = availableBindings.filter(p => p.provider === request.provider)
+    if (availableBindings.length === 0) {
+      throw new ValidationError(
+        'provider',
+        `Provider "${request.provider}" is not available for model "${model.canonical_name}". Available: ${model.providers.map(p => p.provider).join(', ')}`,
+      )
+    }
+  }
+
   if (availableBindings.length === 0) {
     throw new ValidationError(
       'model',
@@ -44,26 +56,20 @@ export async function generate(request: GenerateRequest): Promise<GenerateRespon
   }
   const binding = availableBindings[0]
 
-  // 5. Get category template
-  const template = getCategoryTemplate(model.category)
-  if (!template) {
-    throw new ValidationError('model', `No category template for "${model.category}" yet`)
-  }
+  // 5. Map input — uses binding.param_map directly, no template lookup
+  const providerParams = mapInput(request, binding)
 
-  // 6. Map input
-  const providerParams = mapInput(request, binding, template)
-
-  // 6.5 Upload binary params to R2 (no-op if storage not configured)
+  // 6. Upload binary params to R2 (no-op if storage not configured)
   const finalParams = await processParamsForUpload(providerParams, {
     reupload: request.options?.reupload as boolean | undefined,
   })
 
   // 7. Get adapter and auth key
   const adapter = adapters[binding.provider]
-  const apiKey = auth.getKey(binding.provider)
+  const apiKey = auth.getKey(binding.provider as any)
 
   // 8. Submit with retry, then poll
-  const timeoutMs = (request.options?.timeout as number | undefined) ?? template.default_timeout_ms
+  const timeoutMs = (request.options?.timeout as number | undefined) ?? DEFAULT_TIMEOUT_MS
   const submitted = await withRetry(
     () => adapter.submit(binding.endpoint, finalParams, apiKey),
     { timeoutMs },
@@ -104,7 +110,6 @@ export async function generate(request: GenerateRequest): Promise<GenerateRespon
       : undefined,
   }
 
-  // Extract token usage from OpenRouter responses
   if (rawOutput?.usage) {
     const usage = rawOutput.usage as Record<string, number>
     metadata.tokens = usage.total_tokens

@@ -1,46 +1,27 @@
 import type {
   GenerateRequest,
   ProviderBinding,
-  CategoryTemplate,
-  ParamMapping,
-  OutputItem,
   OutputMapping,
+  OutputItem,
   ProviderName,
 } from './types.js'
-import { ValidationError } from './errors.js'
 
 /**
  * Maps a universal GenerateRequest to provider-specific params
- * using the category template's input_mappings.
+ * using the binding's own param_map. No template lookup needed.
  */
 export function mapInput(
   request: GenerateRequest,
   binding: ProviderBinding,
-  template: CategoryTemplate,
 ): Record<string, unknown> {
   const result: Record<string, unknown> = {}
   const provider = binding.provider
 
-  for (const mapping of template.input_mappings) {
-    const value = getUniversalValue(request, mapping.universal)
+  for (const [universal, providerKey] of Object.entries(binding.param_map)) {
+    const value = (request as unknown as Record<string, unknown>)[universal]
+    if (value === undefined || value === null) continue
 
-    if (value === undefined || value === null) {
-      if (mapping.required) {
-        throw new ValidationError(
-          mapping.universal,
-          `"${mapping.universal}" is required but was not provided.`,
-        )
-      }
-      continue
-    }
-
-    const providerKey = mapping.providers[provider]
-    if (providerKey === undefined) {
-      // Provider doesn't support this param — silently drop
-      continue
-    }
-
-    const transformed = applyTransform(value, mapping, provider)
+    const transformed = applyTransform(universal, value, provider)
 
     if (Array.isArray(providerKey)) {
       // Spread into multiple params (e.g., Replicate's ["width", "height"])
@@ -68,35 +49,22 @@ export function mapInput(
 }
 
 /**
- * Extracts a universal field value from the GenerateRequest.
- */
-function getUniversalValue(request: GenerateRequest, field: string): unknown {
-  return (request as unknown as Record<string, unknown>)[field]
-}
-
-/**
- * Applies the specified transform to the value.
+ * Applies transform based on the universal key name and provider.
+ * Transforms are deterministic — no need to store them in the registry.
  */
 function applyTransform(
+  universal: string,
   value: unknown,
-  mapping: ParamMapping,
   provider: ProviderName,
 ): unknown {
-  const transform = mapping.transform
-
-  if (!transform || transform === 'none') {
+  if (universal === 'safety') {
+    // Replicate uses inverted boolean (disable_safety_checker)
+    if (provider === 'replicate') return !value
     return value
   }
 
-  if (transform === 'flip_boolean') {
-    if (provider === 'replicate') {
-      return !value
-    }
-    return value
-  }
-
-  if (transform === 'parse_size') {
-    return parseSizeForProvider(value, mapping, provider)
+  if (universal === 'size') {
+    return parseSizeForProvider(value, provider)
   }
 
   return value
@@ -105,31 +73,14 @@ function applyTransform(
 /**
  * Converts a size value to the provider-specific format.
  */
-function parseSizeForProvider(
-  value: unknown,
-  mapping: ParamMapping,
-  provider: ProviderName,
-): unknown {
-  if (provider === 'fal-ai') {
+function parseSizeForProvider(value: unknown, provider: ProviderName): unknown {
+  if (provider === 'fal-ai' || provider === 'replicate') {
     if (typeof value === 'string') {
       const [w, h] = value.split('x').map(Number)
       return { width: w, height: h }
     }
-    // Object passthrough
     return value
   }
-
-  if (provider === 'replicate') {
-    if (typeof value === 'string') {
-      const [w, h] = value.split('x').map(Number)
-      return { width: w, height: h }
-    }
-    if (typeof value === 'object' && value !== null) {
-      return value
-    }
-    return value
-  }
-
   // wavespeed and others: pass through as-is
   return value
 }
@@ -191,10 +142,6 @@ export function mapOutput(raw: unknown, outputMapping: OutputMapping): OutputIte
   return genericExtract(data, extract_path, type, defaultContentType)
 }
 
-/**
- * Generic dot-notation traversal for unknown extract paths.
- * Supports paths like "foo.bar[].baz".
- */
 function genericExtract(
   data: unknown,
   path: string,
@@ -207,7 +154,6 @@ function genericExtract(
   for (const seg of segments) {
     if (current === null || current === undefined) return []
 
-    // Indexed array access: key[N]
     const indexMatch = seg.match(/^(.+)\[(\d+)\]$/)
     if (indexMatch) {
       const key = indexMatch[1]
@@ -218,14 +164,11 @@ function genericExtract(
       continue
     }
 
-    // Array iteration: key[]
     const arrayMatch = seg.match(/^(.+)\[\]$/)
     if (arrayMatch) {
       const key = arrayMatch[1]
       current = (current as Record<string, unknown>)[key]
       if (Array.isArray(current)) {
-        // If there are more segments after this, we'd need to map deeper
-        // For now, treat as final array
         const remaining = segments.slice(segments.indexOf(seg) + 1).join('.')
         if (remaining) {
           return (current as unknown[]).map((item: any) => ({
@@ -246,7 +189,6 @@ function genericExtract(
     current = (current as Record<string, unknown>)[seg]
   }
 
-  // Single value at end of path
   if (typeof current === 'string') {
     if (type === 'text') {
       return [{ type, content: current, content_type: contentType }]

@@ -1,26 +1,26 @@
 import { readFileSync } from 'fs'
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import type { ModelEntryV2, ProviderName } from './types.js'
+import type { ModelEntry, ProviderName } from './types.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-let registryCache: ModelEntryV2[] | null = null
+let registryCache: ModelEntry[] | null = null
 
 /**
- * Reads and parses registry/v2/registry.json.
+ * Reads and parses registry/registry.json.
  * Caches the result so the file is only loaded once.
  */
-export function loadRegistry(): ModelEntryV2[] {
+export function loadRegistry(): ModelEntry[] {
   if (registryCache) return registryCache
 
   let dir = __dirname
   for (let i = 0; i < 5; i++) {
-    const candidate = resolve(dir, 'registry', 'v2', 'registry.json')
+    const candidate = resolve(dir, 'registry', 'registry.json')
     try {
       const raw = readFileSync(candidate, 'utf-8')
-      registryCache = JSON.parse(raw) as ModelEntryV2[]
+      registryCache = JSON.parse(raw) as ModelEntry[]
       return registryCache
     } catch {
       dir = dirname(dir)
@@ -28,7 +28,7 @@ export function loadRegistry(): ModelEntryV2[] {
   }
 
   throw new Error(
-    'Could not find registry/v2/registry.json. Searched upward from: ' + __dirname,
+    'Could not find registry/registry.json. Searched upward from: ' + __dirname,
   )
 }
 
@@ -44,7 +44,7 @@ export function normalizeModelName(input: string): string {
 }
 
 /**
- * Resolves a user's model name query to a matching ModelEntryV2.
+ * Resolves a user's model name query to a matching ModelEntry.
  *
  * Resolution order:
  * 1. Exact canonical match
@@ -56,7 +56,7 @@ export function normalizeModelName(input: string): string {
 export function resolveModel(
   query: string,
   availableProviders?: ProviderName[],
-): ModelEntryV2 {
+): ModelEntry {
   if (!query || typeof query !== 'string' || query.trim() === '') {
     throw new Error('Model name is required')
   }
@@ -64,7 +64,7 @@ export function resolveModel(
   const trimmedQuery = query.trim()
   const registry = loadRegistry()
 
-  let matched: ModelEntryV2 | undefined
+  let matched: ModelEntry | undefined
 
   matched = registry.find(e => e.canonical_name === trimmedQuery)
 
@@ -109,7 +109,7 @@ export function resolveModel(
   return matched
 }
 
-function findSuggestions(query: string, registry: ModelEntryV2[]): string[] {
+function findSuggestions(query: string, registry: ModelEntry[]): string[] {
   const normalizedQuery = normalizeModelName(query)
   if (normalizedQuery === '') return []
 

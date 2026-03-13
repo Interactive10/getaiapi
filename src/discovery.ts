@@ -1,52 +1,46 @@
-import type { ModelEntry, ModelCategory, ProviderName } from "./types.js";
-import { loadRegistry } from "./resolver.js";
-import { resolveModel } from "./resolver.js";
-import { AuthManager } from "./auth.js";
-
-export interface ListModelsFilters {
-  category?: ModelCategory;
-  provider?: ProviderName;
-  query?: string; // search canonical name and aliases
-  accessible?: boolean; // if true, only return models the caller has API keys for
-}
+import type { ModelEntry, ListModelsFilters } from './types.js'
+import { loadRegistry } from './registry.js'
 
 /**
- * Lists all models in the registry.
- * Set `accessible: true` to filter to only models the caller has API keys for.
- * Optionally filters by category, provider, or text query.
+ * Lists models filtered by modality, provider, or text query.
+ * Category is derived, not stored — filter by input/output modality instead.
  */
 export function listModels(filters?: ListModelsFilters): ModelEntry[] {
-  let models = loadRegistry();
+  let models = loadRegistry()
 
-  if (filters?.accessible) {
-    const auth = new AuthManager();
-    models = auth.listAvailableModels(models);
+  if (filters?.input) {
+    models = models.filter(m => m.modality.inputs.includes(filters.input!))
   }
 
-  if (filters?.category) {
-    models = models.filter((m) => m.category === filters.category);
+  if (filters?.output) {
+    models = models.filter(m => m.modality.outputs.includes(filters.output!))
   }
+
   if (filters?.provider) {
-    models = models.filter((m) =>
-      m.providers.some((p) => p.provider === filters.provider),
-    );
-  }
-  if (filters?.query) {
-    const q = filters.query.toLowerCase();
-    models = models.filter(
-      (m) =>
-        m.canonical_name.includes(q) ||
-        m.aliases.some((a) => a.includes(q)),
-    );
+    models = models.filter(m =>
+      m.providers.some(p => p.provider === filters.provider),
+    )
   }
 
-  return models;
+  if (filters?.query) {
+    const q = filters.query.toLowerCase()
+    models = models.filter(
+      m =>
+        m.canonical_name.includes(q) ||
+        m.aliases.some(a => a.includes(q)),
+    )
+  }
+
+  return models
 }
 
 /**
- * Resolves a model by name (canonical name, alias, or fuzzy match).
- * Throws ModelNotFoundError if no match is found.
+ * Derives a display category label from modality.
+ * e.g., inputs=["text"], outputs=["image"] → "text-to-image"
+ * e.g., inputs=["image","text"], outputs=["video"] → "image,text-to-video"
  */
-export function getModel(name: string): ModelEntry {
-  return resolveModel(name);
+export function deriveCategory(model: ModelEntry): string {
+  const inputs = model.modality.inputs.join(',')
+  const outputs = model.modality.outputs.join(',')
+  return `${inputs}-to-${outputs}`
 }

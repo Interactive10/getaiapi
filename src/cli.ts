@@ -1,6 +1,9 @@
 #!/usr/bin/env node
-import { parseArgs } from "node:util";
-import { generate, listModels, getModel } from "./index.js";
+import { parseArgs } from 'node:util'
+import { generate } from './gateway.js'
+import { listModels, deriveCategory } from './discovery.js'
+import { resolveModel } from './registry.js'
+import type { GenerateRequest, ListModelsFilters, InputType, OutputType, ProviderName } from './types.js'
 
 const HELP = `
 getaiapi - Unified AI API Gateway CLI
@@ -18,10 +21,10 @@ Options:
 
 Examples:
   getaiapi generate --model flux-schnell --prompt "a cat"
-  getaiapi list --category text-to-image --provider fal-ai
+  getaiapi list --input text --output image --provider fal-ai
   getaiapi list --query flux
   getaiapi info flux-schnell
-`.trim();
+`.trim()
 
 const GENERATE_HELP = `
 Usage: getaiapi generate --model <name> --prompt <text> [options]
@@ -29,6 +32,7 @@ Usage: getaiapi generate --model <name> --prompt <text> [options]
 Options:
   --model, -m     Model name (required)
   --prompt, -p    Text prompt (required)
+  --provider      Preferred provider (e.g. fal-ai, replicate)
   --seed          Seed for reproducibility
   --count, -n     Number of outputs
   --size          Output size (e.g. "1024x1024")
@@ -36,30 +40,31 @@ Options:
   --steps         Number of inference steps
   --format        Output format (png, jpeg, webp, mp4, etc.)
   --help, -h      Show this help
-`.trim();
+`.trim()
 
 const LIST_HELP = `
 Usage: getaiapi list [options]
 
 Options:
-  --category, -c   Filter by category (e.g. text-to-image)
-  --provider, -p   Filter by provider (e.g. fal-ai)
-  --query, -q      Search by name or alias
-  --help, -h       Show this help
-`.trim();
+  --input, -i    Filter by input modality (text, image, audio, video)
+  --output, -o   Filter by output modality (image, video, audio, text, 3d, segmentation)
+  --provider, -p Filter by provider (e.g. fal-ai)
+  --query, -q    Search by name or alias
+  --help, -h     Show this help
+`.trim()
 
 const INFO_HELP = `
 Usage: getaiapi info <model-name>
 
 Shows detailed information about a model including:
   - Canonical name
-  - Category
+  - Modality (inputs/outputs)
   - Aliases
   - Available providers
-`.trim();
+`.trim()
 
 function padRight(str: string, len: number): string {
-  return str.length >= len ? str : str + " ".repeat(len - str.length);
+  return str.length >= len ? str : str + ' '.repeat(len - str.length)
 }
 
 function printTable(
@@ -67,13 +72,13 @@ function printTable(
   rows: string[][],
 ): void {
   const widths = headers.map((h, i) =>
-    Math.max(h.length, ...rows.map((r) => (r[i] ?? "").length)),
-  );
-  const sep = widths.map((w) => "-".repeat(w)).join("  ");
-  console.log(headers.map((h, i) => padRight(h, widths[i])).join("  "));
-  console.log(sep);
+    Math.max(h.length, ...rows.map((r) => (r[i] ?? '').length)),
+  )
+  const sep = widths.map((w) => '-'.repeat(w)).join('  ')
+  console.log(headers.map((h, i) => padRight(h, widths[i])).join('  '))
+  console.log(sep)
   for (const row of rows) {
-    console.log(row.map((cell, i) => padRight(cell ?? "", widths[i])).join("  "));
+    console.log(row.map((cell, i) => padRight(cell ?? '', widths[i])).join('  '))
   }
 }
 
@@ -81,158 +86,160 @@ async function cmdGenerate(args: string[]): Promise<void> {
   const { values } = parseArgs({
     args,
     options: {
-      model: { type: "string", short: "m" },
-      prompt: { type: "string", short: "p" },
-      seed: { type: "string" },
-      count: { type: "string", short: "n" },
-      size: { type: "string" },
-      guidance: { type: "string" },
-      steps: { type: "string" },
-      format: { type: "string" },
-      help: { type: "boolean", short: "h" },
+      model: { type: 'string', short: 'm' },
+      prompt: { type: 'string', short: 'p' },
+      provider: { type: 'string' },
+      seed: { type: 'string' },
+      count: { type: 'string', short: 'n' },
+      size: { type: 'string' },
+      guidance: { type: 'string' },
+      steps: { type: 'string' },
+      format: { type: 'string' },
+      help: { type: 'boolean', short: 'h' },
     },
     strict: true,
-  });
+  })
 
   if (values.help) {
-    console.log(GENERATE_HELP);
-    return;
+    console.log(GENERATE_HELP)
+    return
   }
 
   if (!values.model) {
-    console.error("Error: --model is required\n");
-    console.log(GENERATE_HELP);
-    process.exit(1);
+    console.error('Error: --model is required\n')
+    console.log(GENERATE_HELP)
+    process.exit(1)
   }
 
   if (!values.prompt) {
-    console.error("Error: --prompt is required\n");
-    console.log(GENERATE_HELP);
-    process.exit(1);
+    console.error('Error: --prompt is required\n')
+    console.log(GENERATE_HELP)
+    process.exit(1)
   }
 
   const result = await generate({
     model: values.model,
     prompt: values.prompt,
+    provider: values.provider as ProviderName | undefined,
     seed: values.seed ? Number(values.seed) : undefined,
     count: values.count ? Number(values.count) : undefined,
     size: values.size ?? undefined,
     guidance: values.guidance ? Number(values.guidance) : undefined,
     steps: values.steps ? Number(values.steps) : undefined,
-    format: values.format as GenerateRequest["format"],
-  });
+    format: values.format as GenerateRequest['format'],
+  })
 
-  console.log(JSON.stringify(result, null, 2));
+  console.log(JSON.stringify(result, null, 2))
 }
 
 function cmdList(args: string[]): void {
   const { values } = parseArgs({
     args,
     options: {
-      category: { type: "string", short: "c" },
-      provider: { type: "string", short: "p" },
-      query: { type: "string", short: "q" },
-      help: { type: "boolean", short: "h" },
+      input: { type: 'string', short: 'i' },
+      output: { type: 'string', short: 'o' },
+      provider: { type: 'string', short: 'p' },
+      query: { type: 'string', short: 'q' },
+      help: { type: 'boolean', short: 'h' },
     },
     strict: true,
-  });
+  })
 
   if (values.help) {
-    console.log(LIST_HELP);
-    return;
+    console.log(LIST_HELP)
+    return
   }
 
   const models = listModels({
-    category: values.category as ListModelsFilters["category"],
-    provider: values.provider as ListModelsFilters["provider"],
+    input: values.input as InputType | undefined,
+    output: values.output as OutputType | undefined,
+    provider: values.provider as ProviderName | undefined,
     query: values.query ?? undefined,
-  });
+  })
 
   if (models.length === 0) {
-    console.log("No models found matching the given filters.");
-    return;
+    console.log('No models found matching the given filters.')
+    return
   }
 
   const rows = models.map((m) => [
     m.canonical_name,
-    m.category,
-    m.providers.map((p) => p.provider).join(", "),
-  ]);
+    deriveCategory(m),
+    m.providers.map((p) => p.provider).join(', '),
+  ])
 
-  printTable(["Name", "Category", "Providers"], rows);
+  printTable(['Name', 'Modality', 'Providers'], rows)
 }
 
 function cmdInfo(args: string[]): void {
   const { values, positionals } = parseArgs({
     args,
     options: {
-      help: { type: "boolean", short: "h" },
+      help: { type: 'boolean', short: 'h' },
     },
     allowPositionals: true,
     strict: true,
-  });
+  })
 
   if (values.help) {
-    console.log(INFO_HELP);
-    return;
+    console.log(INFO_HELP)
+    return
   }
 
-  const name = positionals[0];
+  const name = positionals[0]
   if (!name) {
-    console.error("Error: model name is required\n");
-    console.log(INFO_HELP);
-    process.exit(1);
+    console.error('Error: model name is required\n')
+    console.log(INFO_HELP)
+    process.exit(1)
   }
 
-  const model = getModel(name);
+  const model = resolveModel(name)
 
-  console.log(`Name:       ${model.canonical_name}`);
-  console.log(`Category:   ${model.category}`);
-  console.log(`Aliases:    ${model.aliases.length > 0 ? model.aliases.join(", ") : "(none)"}`);
-  console.log(`Providers:  ${model.providers.map((p) => p.provider).join(", ")}`);
-  console.log();
-  console.log("Provider details:");
+  console.log(`Name:       ${model.canonical_name}`)
+  console.log(`Modality:   ${deriveCategory(model)}`)
+  console.log(`Inputs:     ${model.modality.inputs.join(', ')}`)
+  console.log(`Outputs:    ${model.modality.outputs.join(', ')}`)
+  console.log(`Aliases:    ${model.aliases.length > 0 ? model.aliases.join(', ') : '(none)'}`)
+  console.log(`Providers:  ${model.providers.map((p) => p.provider).join(', ')}`)
+  console.log()
+  console.log('Provider details:')
   for (const p of model.providers) {
-    console.log(`  ${p.provider}`);
-    console.log(`    Skill:    ${p.skill_id}`);
-    console.log(`    Endpoint: ${p.endpoint}`);
-    console.log(`    Auth env: ${p.auth_env}`);
+    console.log(`  ${p.provider}`)
+    console.log(`    Skill:    ${p.skill_id}`)
+    console.log(`    Endpoint: ${p.endpoint}`)
+    console.log(`    Auth env: ${p.auth_env}`)
   }
 }
 
 async function main(): Promise<void> {
-  const args = process.argv.slice(2);
+  const args = process.argv.slice(2)
 
-  if (args.length === 0 || args[0] === "--help" || args[0] === "-h") {
-    console.log(HELP);
-    return;
+  if (args.length === 0 || args[0] === '--help' || args[0] === '-h') {
+    console.log(HELP)
+    return
   }
 
-  const command = args[0];
-  const rest = args.slice(1);
+  const command = args[0]
+  const rest = args.slice(1)
 
   switch (command) {
-    case "generate":
-      await cmdGenerate(rest);
-      break;
-    case "list":
-      cmdList(rest);
-      break;
-    case "info":
-      cmdInfo(rest);
-      break;
+    case 'generate':
+      await cmdGenerate(rest)
+      break
+    case 'list':
+      cmdList(rest)
+      break
+    case 'info':
+      cmdInfo(rest)
+      break
     default:
-      console.error(`Unknown command: ${command}\n`);
-      console.log(HELP);
-      process.exit(1);
+      console.error(`Unknown command: ${command}\n`)
+      console.log(HELP)
+      process.exit(1)
   }
 }
 
-// Import types used in the file
-import type { GenerateRequest } from "./types.js";
-import type { ListModelsFilters } from "./discovery.js";
-
 main().catch((err: Error) => {
-  console.error(`Error: ${err.message}`);
-  process.exit(1);
-});
+  console.error(`Error: ${err.message}`)
+  process.exit(1)
+})

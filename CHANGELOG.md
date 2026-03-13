@@ -6,6 +6,29 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.0-alpha.0] - 2026-03-13
+
+### Changed
+
+- **BREAKING: Removed v1 category-based architecture** — v2 modality-first architecture is now the only API
+- `ModelEntry` no longer has a `category` field; use `deriveCategory(model)` for display labels
+- `listModels()` now accepts `input`/`output` modality filters instead of `category`
+- `resolveModel()` replaces `getModel()` for model lookup
+- `GenerateRequest` now accepts optional `provider` field for provider selection
+- Each provider binding is self-contained with its own `param_map` (no shared category templates)
+- Registry moved from `registry/v2/registry.json` to `registry/registry.json`
+
+### Removed
+
+- `src/categories/` — 17 category template files (mappings now in per-model `param_map`)
+- `src/resolver.ts` — replaced by `src/registry.ts` with `resolveModel()`
+- `src/v2/` directory — all v2 code promoted to `src/`
+- `registry/catalog.json`, `registry/categories.json` — v1-only registry files
+- `scripts/migrate-v2.ts` — migration script no longer needed
+- `skills/v2-guide/` — v2 guide no longer needed
+- `./v2` package export — only `"."` export remains
+- V1-only test files: `categories.test.ts`, `mapper.test.ts`, `resolver.test.ts`, etc.
+
 ## [0.4.12] - 2026-03-13
 
 ### Fixed

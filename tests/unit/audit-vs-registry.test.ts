@@ -8,7 +8,7 @@ const AUDIT_FILE = path.resolve(import.meta.dirname ?? __dirname, '..', '..', 'd
 const registry: any[] = JSON.parse(fs.readFileSync(REGISTRY_FILE, 'utf-8'))
 const auditLines = fs.readFileSync(AUDIT_FILE, 'utf-8').split('\n')
 
-// Build a lookup: skill_id -> { model, provider }
+// Build lookup: skill_id -> { model, provider }
 const registryBySkillId = new Map<string, { model: any; provider: any }>()
 for (const model of registry) {
   for (const p of model.providers) {
@@ -16,7 +16,7 @@ for (const model of registry) {
   }
 }
 
-// Parse audit table rows (skip header row and separator row)
+// Parse audit table
 interface AuditEntry {
   skill_id: string
   inputs: string[]
@@ -26,7 +26,7 @@ interface AuditEntry {
 }
 
 const auditEntries: AuditEntry[] = auditLines
-  .slice(2) // skip header + separator
+  .slice(2)
   .filter(line => line.trim().startsWith('|'))
   .map(line => {
     const cols = line.split('|').map(c => c.trim()).filter(Boolean)
@@ -41,14 +41,14 @@ const auditEntries: AuditEntry[] = auditLines
   })
   .filter((e): e is AuditEntry => e !== null)
 
-describe('Registry vs Combined Audit', () => {
+describe('Registry vs Combined Audit (modality-based)', () => {
   it.each(auditEntries.map(e => [e.skill_id, e]))(
     '%s matches audit expectations',
     (_skillId, entry) => {
       const auditEntry = entry as AuditEntry
       const match = registryBySkillId.get(auditEntry.skill_id)
 
-      // Skip if skill not in registry (audit may have skills we haven't added yet)
+      // Skip if skill not in registry
       if (!match) return
 
       const { model, provider } = match
@@ -57,40 +57,37 @@ describe('Registry vs Combined Audit', () => {
       // Check provider matches
       if (provider.provider !== auditEntry.provider) {
         errors.push(
-          `provider: registry="${provider.provider}", audit="${auditEntry.provider}"`
+          `provider: registry="${provider.provider}", audit="${auditEntry.provider}"`,
         )
       }
 
-      // Check inputs match audit
-      // Normalize: audit uses "mask" and "data" which are not modality types in registry,
-      // so we only check the standard types (text, image, audio, video)
+      // Check inputs — filter to standard modality types
       const standardTypes = new Set(['text', 'image', 'audio', 'video'])
       const auditInputs = auditEntry.inputs
         .filter(i => standardTypes.has(i))
         .sort()
       const registryInputs = [...model.modality.inputs].sort()
 
-      // Every audit input should be present in registry inputs
       for (const input of auditInputs) {
         if (!registryInputs.includes(input)) {
           errors.push(
-            `missing input "${input}": registry has [${registryInputs}], audit expects [${auditInputs}]`
+            `missing input "${input}": registry has [${registryInputs}], audit expects [${auditInputs}]`,
           )
         }
       }
 
-      // Check output type matches audit
+      // Check output type — using modality instead of category
       const auditOutput = auditEntry.output
       if (standardTypes.has(auditOutput)) {
         const registryOutputs = model.modality.outputs as string[]
         if (!registryOutputs.includes(auditOutput)) {
           errors.push(
-            `output mismatch: registry has [${registryOutputs}], audit expects "${auditOutput}"`
+            `output mismatch: registry has [${registryOutputs}], audit expects "${auditOutput}"`,
           )
         }
       }
 
       expect(errors, errors.join('\n')).toEqual([])
-    }
+    },
   )
 })

@@ -3,12 +3,20 @@ import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from "vite
 // ── Mocks ────────────────────────────────────────────────────────────────────
 const mockGenerate = vi.fn();
 const mockListModels = vi.fn();
-const mockGetModel = vi.fn();
+const mockDeriveCategory = vi.fn();
+const mockResolveModel = vi.fn();
 
-vi.mock("../../src/index.js", () => ({
+vi.mock("../../src/gateway.js", () => ({
   generate: mockGenerate,
+}));
+
+vi.mock("../../src/discovery.js", () => ({
   listModels: mockListModels,
-  getModel: mockGetModel,
+  deriveCategory: mockDeriveCategory,
+}));
+
+vi.mock("../../src/registry.js", () => ({
+  resolveModel: mockResolveModel,
 }));
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -22,7 +30,8 @@ beforeEach(() => {
   vi.resetModules();
   mockGenerate.mockReset();
   mockListModels.mockReset();
-  mockGetModel.mockReset();
+  mockDeriveCategory.mockReset();
+  mockResolveModel.mockReset();
   exitCodes = [];
 
   logSpy = vi.spyOn(console, "log").mockImplementation(() => {}) as unknown as Mock;
@@ -114,6 +123,7 @@ describe("CLI - generate command", () => {
     expect(mockGenerate).toHaveBeenCalledWith({
       model: "flux-schnell",
       prompt: "a cat",
+      provider: undefined,
       seed: 42,
       count: 2,
       size: "1024x1024",
@@ -134,6 +144,7 @@ describe("CLI - generate command", () => {
     expect(mockGenerate).toHaveBeenCalledWith({
       model: "flux-schnell",
       prompt: "a dog",
+      provider: undefined,
       seed: undefined,
       count: undefined,
       size: undefined,
@@ -164,41 +175,44 @@ describe("CLI - list command", () => {
     mockListModels.mockReturnValue([
       {
         canonical_name: "flux-schnell",
-        category: "text-to-image",
+        modality: { inputs: ["text"], outputs: ["image"] },
         providers: [{ provider: "fal-ai" }, { provider: "replicate" }],
       },
     ]);
+    mockDeriveCategory.mockReturnValue("text-to-image");
 
     await runCli("list");
 
     // Header row
     expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("Name"));
-    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("Category"));
+    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("Modality"));
     expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("Providers"));
     // Data row
     expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("flux-schnell"));
     expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("fal-ai, replicate"));
   });
 
-  it("passes category, provider, and query filters", async () => {
+  it("passes input, output, provider, and query filters", async () => {
     mockListModels.mockReturnValue([]);
 
-    await runCli("list", "--category", "text-to-image", "--provider", "fal-ai", "--query", "flux");
+    await runCli("list", "--input", "text", "--output", "image", "--provider", "fal-ai", "--query", "flux");
 
     expect(mockListModels).toHaveBeenCalledWith({
-      category: "text-to-image",
+      input: "text",
+      output: "image",
       provider: "fal-ai",
       query: "flux",
     });
   });
 
-  it("passes undefined for query when not provided", async () => {
+  it("passes undefined for filters when not provided", async () => {
     mockListModels.mockReturnValue([]);
 
     await runCli("list");
 
     expect(mockListModels).toHaveBeenCalledWith({
-      category: undefined,
+      input: undefined,
+      output: undefined,
       provider: undefined,
       query: undefined,
     });
@@ -220,9 +234,9 @@ describe("CLI - info command", () => {
   });
 
   it("prints model details with aliases", async () => {
-    mockGetModel.mockReturnValue({
+    mockResolveModel.mockReturnValue({
       canonical_name: "flux-schnell",
-      category: "text-to-image",
+      modality: { inputs: ["text"], outputs: ["image"] },
       aliases: ["flux-s", "schnell"],
       providers: [
         {
@@ -239,12 +253,15 @@ describe("CLI - info command", () => {
         },
       ],
     });
+    mockDeriveCategory.mockReturnValue("text-to-image");
 
     await runCli("info", "flux-schnell");
 
-    expect(mockGetModel).toHaveBeenCalledWith("flux-schnell");
+    expect(mockResolveModel).toHaveBeenCalledWith("flux-schnell");
     expect(logSpy).toHaveBeenCalledWith("Name:       flux-schnell");
-    expect(logSpy).toHaveBeenCalledWith("Category:   text-to-image");
+    expect(logSpy).toHaveBeenCalledWith("Modality:   text-to-image");
+    expect(logSpy).toHaveBeenCalledWith("Inputs:     text");
+    expect(logSpy).toHaveBeenCalledWith("Outputs:    image");
     expect(logSpy).toHaveBeenCalledWith("Aliases:    flux-s, schnell");
     expect(logSpy).toHaveBeenCalledWith("Providers:  fal-ai, replicate");
     expect(logSpy).toHaveBeenCalledWith("Provider details:");
@@ -259,9 +276,9 @@ describe("CLI - info command", () => {
   });
 
   it("prints '(none)' when aliases array is empty", async () => {
-    mockGetModel.mockReturnValue({
+    mockResolveModel.mockReturnValue({
       canonical_name: "test-model",
-      category: "text-to-image",
+      modality: { inputs: ["text"], outputs: ["image"] },
       aliases: [],
       providers: [
         {
@@ -272,6 +289,7 @@ describe("CLI - info command", () => {
         },
       ],
     });
+    mockDeriveCategory.mockReturnValue("text-to-image");
 
     await runCli("info", "test-model");
 
@@ -299,10 +317,11 @@ describe("CLI - printTable edge cases", () => {
     mockListModels.mockReturnValue([
       {
         canonical_name: "a-very-long-model-name-that-exceeds-header",
-        category: "text-to-image",
+        modality: { inputs: ["text"], outputs: ["image"] },
         providers: [{ provider: "fal-ai" }],
       },
     ]);
+    mockDeriveCategory.mockReturnValue("text-to-image");
 
     await runCli("list");
 
@@ -318,10 +337,11 @@ describe("CLI - printTable edge cases", () => {
     mockListModels.mockReturnValue([
       {
         canonical_name: "solo",
-        category: "text-to-image",
+        modality: { inputs: ["text"], outputs: ["image"] },
         providers: [],
       },
     ]);
+    mockDeriveCategory.mockReturnValue("text-to-image");
 
     await runCli("list");
 
