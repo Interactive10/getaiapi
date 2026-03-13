@@ -1,6 +1,6 @@
 {
   "name": "getaiapi",
-  "version": "0.4.6",
+  "version": "1.0.0-alpha.0",
   "type": "module",
   "description": "Unified AI API Gateway - one function to call any AI model",
   "main": "./dist/index.js",
@@ -10,6 +10,10 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./v2": {
+      "import": "./dist/v2/index.js",
+      "types": "./dist/v2/index.d.ts"
     }
   },
   "bin": {

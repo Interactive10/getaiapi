@@ -210,27 +210,28 @@ const model = getModel('flux-schnell')
 
 | Category | Input | Output | Models |
 |---|---|---|---|
-| `text-to-image` | text | image | 743 |
-| `text-to-video` | text | video | 321 |
-| `image-edit` | image + text | image | 210 |
-| `image-to-video` | image + text | video | 165 |
-| `text-to-audio` | text | audio | 95 |
-| `text-generation` | text | text | 57 |
-| `upscale-image` | image | image | 57 |
+| `text-to-image` | text | image | 281 |
+| `image-edit` | image + text | image | 238 |
+| `image-to-video` | image + text | video | 211 |
+| `text-to-video` | text | video | 202 |
+| `image-to-image` | image + text | image | 176 |
+| `video-to-video` | video | video | 152 |
+| `text-to-audio` | text | audio | 127 |
+| `text-generation` | text | text | 95 |
+| `upscale-image` | image | image | 63 |
+| `image-to-text` | image | text | 54 |
 | `training` | images | model | 50 |
-| `image-to-image` | image + text | image | 43 |
-| `segmentation` | image/video | segmentation | 34 |
-| `image-to-3d` | image | 3d | 31 |
-| `audio-to-text` | audio | text | 25 |
-| `remove-background` | image/video | image/video | 24 |
-| `text-to-3d` | text | 3d | 19 |
-| `video-to-audio` | video | audio | 17 |
-| `upscale-video` | video | video | 15 |
-| `video-to-video` | video | video | 15 |
-| `moderation` | text/image/video | text | 12 |
-| `audio-to-video` | audio | video | 4 |
-| `audio-edit` | audio | audio | 2 |
-| `voice-clone` | audio | text | 1 |
+| `image-to-3d` | image | 3d | 40 |
+| `segmentation` | image/video | segmentation | 37 |
+| `remove-background` | image/video | image/video | 31 |
+| `audio-to-text` | audio | text | 31 |
+| `upscale-video` | video | video | 20 |
+| `text-to-3d` | text | 3d | 16 |
+| `video-to-text` | video | text | 14 |
+| `video-to-audio` | video | audio | 14 |
+| `moderation` | text/image/video | text | 13 |
+| `doc-to-text` | file | text | 8 |
+| `audio-to-video` | audio | video | 3 |
 
 ## Providers
 
