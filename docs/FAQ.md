@@ -1,5 +1,13 @@
 # FAQ
 
+## Deployment
+
+### Does getaiapi work on Vercel Edge / Cloudflare Workers?
+
+Yes. As of v1.0.0, the model registry is bundled at build time via JSON import. There is no `readFileSync`, no `fs` dependency, and no special bundler configuration required. It works in any ESM-compatible runtime including Vercel Edge Functions, Cloudflare Workers, Deno Deploy, and Bun.
+
+If you're upgrading from v0.x and had custom webpack/Next.js config to handle `fs`, you can remove it. See the [Migration Guide](MIGRATION.md).
+
 ## Errors
 
 ### `ProviderError: Provider fal-ai returned status 403`

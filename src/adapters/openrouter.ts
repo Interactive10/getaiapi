@@ -97,11 +97,9 @@ export const openRouterAdapter: ProviderAdapter = {
     taskId: string,
   ): Promise<ProviderResponse> {
     // OpenRouter is synchronous — submit() returns the completed result.
-    // poll() should never be called, but return completed as a no-op.
-    return {
-      id: taskId,
-      status: "completed",
-    };
+    // poll() should never be called. If it is, the output from submit()
+    // has already been captured by the gateway, so returning completed is safe.
+    throw new ProviderError("openrouter", taskId, 0, "OpenRouter does not support polling — results are returned synchronously from submit()");
   },
 
   parseOutput(raw: unknown, outputMapping: OutputMapping): OutputItem[] {

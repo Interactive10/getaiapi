@@ -1,6 +1,6 @@
 {
   "name": "getaiapi",
-  "version": "0.4.6",
+  "version": "1.0.0-alpha.1",
   "type": "module",
   "description": "Unified AI API Gateway - one function to call any AI model",
   "main": "./dist/index.js",
@@ -17,7 +17,6 @@
   },
   "files": [
     "dist",
-    "registry",
     "README.md",
     "LICENSE"
   ],

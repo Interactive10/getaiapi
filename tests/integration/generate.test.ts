@@ -7,7 +7,6 @@ import type { ModelEntry, ProviderResponse } from '../../src/types.js'
 const TEST_MODEL: ModelEntry = {
   canonical_name: 'test-flux-schnell',
   aliases: ['flux-schnell', 'schnell'],
-  category: 'text-to-image',
   modality: { inputs: ['text'], outputs: ['image'] },
   providers: [
     {
@@ -43,8 +42,8 @@ const FAL_RESULT = {
 
 // --- Mocks ---
 
-// Mock the resolver to return our test model
-vi.mock('../../src/resolver.js', () => ({
+// Mock the registry to return our test model
+vi.mock('../../src/registry.js', () => ({
   resolveModel: vi.fn(() => TEST_MODEL),
   loadRegistry: vi.fn(() => [TEST_MODEL]),
   normalizeModelName: vi.fn((s: string) => s.toLowerCase()),
@@ -198,11 +197,6 @@ describe('generate() - gateway orchestration', () => {
 
     const { generate } = await import('../../src/gateway.js')
 
-    // resolveModel is mocked to return TEST_MODEL, but AuthManager
-    // will see no keys available, so resolveModel filtering (via
-    // auth.availableProviders()) will cause ModelNotFoundError.
-    // However, since we mock resolveModel, the error will come from
-    // the "no adapter available" check in the gateway.
     await expect(
       generate({ model: 'test-flux-schnell', prompt: 'test' }),
     ).rejects.toThrow()

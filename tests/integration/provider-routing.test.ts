@@ -7,7 +7,6 @@ import type { ModelEntry } from '../../src/types.js'
 const MULTI_PROVIDER_MODEL: ModelEntry = {
   canonical_name: 'test-multi-provider',
   aliases: ['multi-provider'],
-  category: 'text-to-image',
   modality: { inputs: ['text'], outputs: ['image'] },
   providers: [
     {
@@ -49,8 +48,8 @@ const MULTI_PROVIDER_MODEL: ModelEntry = {
   ],
 }
 
-// --- Mock resolver to return our multi-provider model ---
-vi.mock('../../src/resolver.js', () => ({
+// --- Mock registry to return our multi-provider model ---
+vi.mock('../../src/registry.js', () => ({
   resolveModel: vi.fn(() => MULTI_PROVIDER_MODEL),
   loadRegistry: vi.fn(() => [MULTI_PROVIDER_MODEL]),
   normalizeModelName: vi.fn((s: string) => s.toLowerCase()),
