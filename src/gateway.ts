@@ -7,7 +7,7 @@ import { replicateAdapter } from './adapters/replicate.js'
 import { wavespeedAdapter } from './adapters/wavespeed.js'
 import { openRouterAdapter } from './adapters/openrouter.js'
 import type { GenerateRequest, GenerateResponse, ProviderName, ProviderAdapter } from './types.js'
-import { ValidationError, ProviderError } from './errors.js'
+import { ValidationError, ProviderError, TimeoutError } from './errors.js'
 import { withRetry } from './retry.js'
 import { processParamsForUpload } from './storage.js'
 
@@ -72,12 +72,19 @@ export async function generate(request: GenerateRequest): Promise<GenerateRespon
   const timeoutMs = (request.options?.timeout as number | undefined) ?? DEFAULT_TIMEOUT_MS
   const submitted = await withRetry(
     () => adapter.submit(binding.endpoint, finalParams, apiKey),
-    { timeoutMs },
+    { timeoutMs, provider: binding.provider, model: model.canonical_name },
   )
 
   let result = submitted
+  let pollInterval = 1000
+  const maxPollInterval = 5000
+  const pollStart = Date.now()
   while (result.status === 'processing' || result.status === 'pending') {
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    if (Date.now() - pollStart >= timeoutMs) {
+      throw new TimeoutError(binding.provider, model.canonical_name, timeoutMs)
+    }
+    await new Promise(resolve => setTimeout(resolve, pollInterval))
+    pollInterval = Math.min(pollInterval + 500, maxPollInterval)
     result = await adapter.poll(submitted.id, apiKey, binding.endpoint)
   }
 

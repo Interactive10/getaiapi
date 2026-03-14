@@ -1,35 +1,17 @@
-import { readFileSync } from 'fs'
-import { resolve, dirname } from 'path'
-import { fileURLToPath } from 'url'
+import registryData from '../registry/registry.json' with { type: 'json' }
 import type { ModelEntry, ProviderName } from './types.js'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
 
 let registryCache: ModelEntry[] | null = null
 
 /**
- * Reads and parses registry/registry.json.
- * Caches the result so the file is only loaded once.
+ * Returns the registry data.
+ * JSON is bundled at build time — no filesystem access needed.
+ * Works in Node.js, edge runtimes, serverless, and browsers.
  */
 export function loadRegistry(): ModelEntry[] {
   if (registryCache) return registryCache
-
-  let dir = __dirname
-  for (let i = 0; i < 5; i++) {
-    const candidate = resolve(dir, 'registry', 'registry.json')
-    try {
-      const raw = readFileSync(candidate, 'utf-8')
-      registryCache = JSON.parse(raw) as ModelEntry[]
-      return registryCache
-    } catch {
-      dir = dirname(dir)
-    }
-  }
-
-  throw new Error(
-    'Could not find registry/registry.json. Searched upward from: ' + __dirname,
-  )
+  registryCache = registryData as ModelEntry[]
+  return registryCache
 }
 
 /**

@@ -124,9 +124,10 @@ describe("openRouterAdapter", () => {
   });
 
   describe("poll", () => {
-    it("should return completed (no-op)", async () => {
-      const result = await openRouterAdapter.poll("gen-abc123", AUTH);
-      expect(result).toEqual({ id: "gen-abc123", status: "completed" });
+    it("should throw since OpenRouter is synchronous", async () => {
+      await expect(
+        openRouterAdapter.poll("gen-abc123", AUTH),
+      ).rejects.toThrow(ProviderError);
     });
   });
 

@@ -117,15 +117,25 @@ async function cmdGenerate(args: string[]): Promise<void> {
     process.exit(1)
   }
 
+  function parseNum(name: string, value: string | undefined): number | undefined {
+    if (!value) return undefined
+    const n = Number(value)
+    if (Number.isNaN(n)) {
+      console.error(`Error: --${name} must be a number, got "${value}"\n`)
+      process.exit(1)
+    }
+    return n
+  }
+
   const result = await generate({
     model: values.model,
     prompt: values.prompt,
     provider: values.provider as ProviderName | undefined,
-    seed: values.seed ? Number(values.seed) : undefined,
-    count: values.count ? Number(values.count) : undefined,
+    seed: parseNum('seed', values.seed),
+    count: parseNum('count', values.count),
     size: values.size ?? undefined,
-    guidance: values.guidance ? Number(values.guidance) : undefined,
-    steps: values.steps ? Number(values.steps) : undefined,
+    guidance: parseNum('guidance', values.guidance),
+    steps: parseNum('steps', values.steps),
     format: values.format as GenerateRequest['format'],
   })
 

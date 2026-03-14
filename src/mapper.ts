@@ -38,10 +38,13 @@ export function mapInput(
     }
   }
 
-  // Merge options passthrough — options wins on conflict
+  // Merge options passthrough — skip internal keys
+  const INTERNAL_KEYS = new Set(['timeout', 'reupload'])
   if (request.options) {
     for (const [key, val] of Object.entries(request.options)) {
-      result[key] = val
+      if (!INTERNAL_KEYS.has(key)) {
+        result[key] = val
+      }
     }
   }
 
@@ -97,43 +100,53 @@ export function mapOutput(raw: unknown, outputMapping: OutputMapping): OutputIte
 
   if (extract_path === 'images[].url') {
     const images: unknown[] = data?.images ?? []
-    return images.map((img: any) => ({
-      type,
-      url: img.url as string,
-      content_type: (img.content_type as string) || defaultContentType,
-    }))
+    return images
+      .filter((img: any) => img?.url)
+      .map((img: any) => ({
+        type,
+        url: img.url as string,
+        content_type: (img.content_type as string) || defaultContentType,
+      }))
   }
 
   if (extract_path === 'output[]') {
     const arr: unknown[] = Array.isArray(data) ? data : data?.output ?? []
-    return arr.map((url: unknown) => ({
-      type,
-      url: url as string,
-      content_type: defaultContentType,
-    }))
+    return arr
+      .filter((url: unknown) => typeof url === 'string' && url)
+      .map((url: unknown) => ({
+        type,
+        url: url as string,
+        content_type: defaultContentType,
+      }))
   }
 
   if (extract_path === 'data.outputs[]') {
     const outputs: unknown[] = data?.data?.outputs ?? []
-    return outputs.map((url: unknown) => ({
-      type,
-      url: url as string,
-      content_type: defaultContentType,
-    }))
+    return outputs
+      .filter((url: unknown) => typeof url === 'string' && url)
+      .map((url: unknown) => ({
+        type,
+        url: url as string,
+        content_type: defaultContentType,
+      }))
   }
 
   if (extract_path === 'video.url') {
+    const videoUrl = data?.video?.url
+    if (!videoUrl) return []
     return [{
       type: 'video',
-      url: data?.video?.url as string,
+      url: videoUrl as string,
       content_type: 'video/mp4',
     }]
   }
 
   if (extract_path === 'audio.url') {
+    const audioUrl = data?.audio?.url
+    if (!audioUrl) return []
     return [{
       type: 'audio',
-      url: data?.audio?.url as string,
+      url: audioUrl as string,
       content_type: 'audio/mpeg',
     }]
   }
