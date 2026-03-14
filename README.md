@@ -240,7 +240,7 @@ Common combinations across 1,940+ models:
 | WaveSpeed | 66 | `WAVESPEED_API_KEY` | Native fetch |
 | OpenRouter | 10 | `OPENROUTER_API_KEY` | Native fetch |
 
-Zero external dependencies -- all provider communication uses native `fetch`.
+Zero external dependencies -- all provider communication uses native `fetch`. Works in Node.js, Vercel Edge, Cloudflare Workers, Deno, Bun, and any ESM runtime -- no `fs` or special bundler config needed.
 
 ## API Reference
 
@@ -516,6 +516,16 @@ try {
   }
 }
 ```
+
+## Migrating from v0.x
+
+v1.0.0 replaces the category-based architecture with a modality-first design. Key changes:
+
+- `getModel()` is now `resolveModel()`
+- `listModels({ category: '...' })` is now `listModels({ input: '...', output: '...' })`
+- No more `readFileSync` -- works in edge runtimes without any bundler config
+
+See the full [Migration Guide](docs/MIGRATION.md) for details.
 
 ## Documentation
 

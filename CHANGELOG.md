@@ -6,6 +6,35 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.0-alpha.1] - 2026-03-14
+
+### Fixed
+
+- **Gateway poll loop timeout**: Poll loop could hang indefinitely if a provider stayed in "processing" state. Now enforces the request timeout and throws `TimeoutError` with the actual provider and model name.
+- **Gateway poll backoff**: Poll interval now ramps from 1s to 5s (was fixed 1s), reducing unnecessary API calls on slow generations.
+- **Unsafe output casts in mapper**: `mapOutput()` could return `{ url: undefined }` when provider responses had missing fields. Now filters out entries with missing URLs/values instead of casting `undefined` to `string`.
+- **Options passthrough leaking internal keys**: `timeout` and `reupload` from `request.options` were being forwarded to providers as API params. These internal keys are now excluded.
+- **OpenRouter poll() silent data loss**: `poll()` returned `{ status: "completed" }` without output data. Now throws `ProviderError` since OpenRouter is synchronous and poll should never be called.
+- **CLI NaN on invalid numeric args**: `--seed abc` silently passed `NaN` to providers. Now validates and exits with a clear error message.
+- **TimeoutError missing context**: Retry timeouts reported provider as "unknown" and model as "unknown". `withRetry()` now accepts `provider` and `model` options and passes them through to `TimeoutError`.
+
+### Changed
+
+- **Registry bundled at build time**: Replaced `readFileSync` with a JSON import (`import ... with { type: 'json' }`). The registry is now bundled into the dist output by tsup. No filesystem access at runtime — works in Vercel Edge, Cloudflare Workers, Deno Deploy, and any ESM runtime without special bundler config.
+- **`registry/` removed from npm package**: Since the registry is bundled in `dist/`, the `registry/` folder is no longer shipped in the npm package. It remains in the repo for development scripts (`generate-registry`, `validate-registry`, audit tests).
+
+### Added
+
+- **Migration guide**: New `docs/MIGRATION.md` covering v0.x → v1.0.0 breaking changes (category removal, API renames) and edge runtime compatibility (no more `readFileSync` config).
+- **FAQ: deployment section**: Documents that getaiapi works in all ESM runtimes without `fs` or bundler config.
+- **README: edge runtime note**: Providers section now mentions Vercel Edge, Cloudflare Workers, Deno, Bun compatibility.
+- **README: migration section**: Links to migration guide for users upgrading from v0.x.
+
+### Docs
+
+- **ARCHITECTURE.md**: Updated all 15 sections to match v2 modality-first architecture — removed references to `getModel()`, `category` field, category templates, and `categories.json`. Added OpenRouter adapter, updated file structure, API examples, and decision log.
+- **PRODUCT-SPEC.md**: Replaced `getModel()` with `resolveModel()`, category filters with modality filters, category templates with per-binding `param_map`. Updated provider table, file structure, and phased delivery plan.
+
 ## [1.0.0-alpha.0] - 2026-03-13
 
 ### Changed
