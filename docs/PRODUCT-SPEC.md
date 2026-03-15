@@ -55,7 +55,7 @@ One function. One input shape. One output shape. Any model. Any provider.
 - Universal output schema: `id`, `model`, `provider`, `status`, `outputs[]`, `metadata`
 - `outputs` is always an array, each item has `type`, `url`, `content_type`
 
-### F2: Model Name Resolution
+### F2: Model Name Resolution (`resolveModel`)
 - Smart model name matching: `"flux-schnell"`, `"flux schnell"`, `"FLUX_Schnell"` all work
 - Phase 0: Exact + normalized matching (strip separators, lowercase)
 - Phase 1+: Fuzzy matching, prefix matching, "did you mean" suggestions
@@ -67,14 +67,14 @@ One function. One input shape. One output shape. Any model. Any provider.
 
 ### F4: Model Discovery
 - `listModels()` - all available models (filtered by user's API keys)
-- `listModels({ category: 'text-to-image' })` - filter by category
+- `listModels({ input: 'text', output: 'image' })` - filter by input/output modality
 - `listModels({ provider: 'fal-ai' })` - filter by provider
-- `getModel('flux-schnell')` - model details (params, providers, category)
+- `resolveModel('flux-schnell')` - model details (params, providers, modality)
 
 ### F5: Skill Cataloger & Registry
 - Automated script that parses 1,954 SKILL.md files into a structured catalog
 - Generates `registry.json` with canonical names, aliases, provider bindings, param mappings
-- Category-based templates so models in the same category share 90% of mapping logic
+- Each provider binding carries its own `param_map` and `output_map` — no shared category templates
 
 ---
 
@@ -85,31 +85,35 @@ One function. One input shape. One output shape. Any model. Any provider.
 | fal-ai | 1,199 | `FAL_KEY` | Native fetch | subscribe (built-in) |
 | Replicate | 687 | `REPLICATE_API_TOKEN` | Native fetch | create + poll |
 | WaveSpeed | 66 | `WAVESPEED_API_KEY` | Native fetch (REST) | create + poll |
+| OpenRouter | — | `OPENROUTER_API_KEY` | Native fetch | synchronous |
 
 **Decision:** Use native `fetch` for all providers (no provider SDKs). This keeps the dependency footprint minimal and gives full control over HTTP behavior.
 
 ---
 
-## 6. Model Categories (16 total)
+## 6. Modality System
 
-| # | Category | Input | Output | Priority | Phase |
-|---|----------|-------|--------|----------|-------|
-| 1 | `text-to-image` | text | image | P0 | 0 |
-| 2 | `image-edit` | image + text | image | P1 | 2 |
-| 3 | `text-to-video` | text | video | P1 | 2 |
-| 4 | `image-to-video` | image + text | video | P1 | 2 |
-| 5 | `upscale-image` | image | image | P2 | 2 |
-| 6 | `text-to-audio` | text | audio | P2 | 2 |
-| 7 | `audio-to-text` | audio | text | P2 | 2 |
-| 8 | `remove-background` | image/video | image/video | P2 | 2 |
-| 9 | `image-to-image` | image + text | image | P2 | 2 |
-| 10 | `text-to-3d` | text | 3d | P3 | 2 |
-| 11 | `image-to-3d` | image | 3d | P3 | 2 |
-| 12 | `upscale-video` | video | video | P3 | 2 |
-| 13 | `video-to-audio` | video | audio | P3 | 2 |
-| 14 | `segmentation` | image/video | segmentation | P3 | 2 |
-| 15 | `moderation` | text/image/video | text | P3 | 2 |
-| 16 | `training` | images | model | P3 | 3 |
+Categories are no longer stored on models. Instead, each model declares its `modality: { inputs: InputType[], outputs: OutputType[] }`. A display category (e.g., `text-to-image`) is derived at query time via `deriveCategory(model)`.
+
+**Input types:** `text`, `image`, `audio`, `video`
+**Output types:** `image`, `video`, `audio`, `text`, `3d`, `segmentation`
+
+| Derived Category | Inputs | Outputs | Priority | Phase |
+|---|---|---|---|---|
+| `text-to-image` | text | image | P0 | 0 |
+| `image-to-image` | image, text | image | P1 | 2 |
+| `text-to-video` | text | video | P1 | 2 |
+| `image-to-video` | image, text | video | P1 | 2 |
+| `upscale-image` | image | image | P2 | 2 |
+| `text-to-audio` | text | audio | P2 | 2 |
+| `audio-to-text` | audio | text | P2 | 2 |
+| `remove-background` | image | image | P2 | 2 |
+| `text-to-3d` | text | 3d | P3 | 2 |
+| `image-to-3d` | image | 3d | P3 | 2 |
+| `upscale-video` | video | video | P3 | 2 |
+| `video-to-audio` | video | audio | P3 | 2 |
+| `segmentation` | image | segmentation | P3 | 2 |
+| `text-generation` | text | text | P1 | 1 |
 
 ---
 
@@ -121,7 +125,7 @@ One function. One input shape. One output shape. Any model. Any provider.
 | fal-ai skills | 1,199 |
 | Replicate skills | 687 |
 | WaveSpeed skills | 66 |
-| Model categories | 16 |
+| Derived categories | 14+ |
 | Cross-provider models (estimated) | ~20-30 |
 
 ---
@@ -160,11 +164,11 @@ All errors follow a unified structure:
 
 ### High Risk
 - **Skill file parsing:** 1,954 SKILL.md files from 3 different scrapers with inconsistent formats. The cataloger is the hardest part of the project.
-- **Parameter divergence:** Same concept named differently across providers (`num_images` vs `num_outputs` vs undocumented). Category templates will handle ~90%, but ~10% need model-specific overrides.
+- **Parameter divergence:** Same concept named differently across providers (`num_images` vs `num_outputs` vs undocumented). Each provider binding's `param_map` handles this per-model.
 - **Safety boolean inversion:** fal-ai uses `enable_safety_checker: true`, Replicate uses `disable_safety_checker: false`. Mapper must flip correctly.
 
 ### Medium Risk
-- **Output shape varies by category per provider:** fal-ai returns `{ images: [...] }` for images but `{ video: { url } }` for video. Each category needs its own `parseOutput`.
+- **Output shape varies by provider:** fal-ai returns `{ images: [...] }` for images but `{ video: { url } }` for video. Each provider binding's `output_map.extract_path` handles extraction.
 - **WaveSpeed API version:** Architecture doc says v2, actual skill files use v3. Must use v3.
 - **WaveSpeed CDN expiry:** Output URLs expire. Users must download promptly.
 
@@ -197,19 +201,19 @@ All errors follow a unified structure:
 ### Phase 0 (Foundation)
 - `generate({ model: "flux-schnell", prompt: "a cat" })` returns an image URL via fal-ai
 - Cataloger parses all 1,954 skills without errors
-- Registry covers all text-to-image models
+- Registry covers all text-to-image models (input: text, output: image)
 - Unit test coverage >= 80% for src/
 - Zero TypeScript errors
 
 ### Phase 1 (Multi-Provider)
 - Same model works through all 3 providers
 - Provider auto-selection based on available keys
-- All text-to-image models mapped and tested
+- All text-to-image models (input: text, output: image) mapped and tested
 
 ### Phase 2 (Expand Modalities)
-- At least 8 of 16 categories working
-- Each category has integration tests
-- No regressions in existing categories
+- At least 8 input/output modality combinations working
+- Each modality combination has integration tests
+- No regressions in existing modalities
 
 ### Phase 3 (Polish)
 - Package published to npm
@@ -224,16 +228,16 @@ All errors follow a unified structure:
 ```
 Phase 0: Foundation          Phase 1: Multi-Provider     Phase 2: Modalities        Phase 3: Polish
 -----------------------      -----------------------     ---------------------      ------------------
-Project bootstrap            Replicate adapter           image-edit category        Streaming support
-Type definitions             WaveSpeed adapter           text-to-video category     CLI tool
-Skill cataloger              Provider routing            image-to-video category    Web playground
-Registry generator           Cross-provider tests        upscale-image category     Documentation site
-Auth manager                 Full text-to-image          text-to-audio category     npm publish
-fal-ai adapter               coverage across all         audio-to-text category     Cost estimation
-Input/output mapper          3 providers                 remove-background cat.     Provider preference
-Model resolver                                          + remaining categories
+Project bootstrap            Replicate adapter           image-edit modality        Streaming support
+Type definitions             WaveSpeed adapter           text-to-video modality     CLI tool
+Skill cataloger              OpenRouter adapter          image-to-video modality    Web playground
+Registry generator           Provider routing            upscale-image modality     Documentation site
+Auth manager                 Cross-provider tests        text-to-audio modality     npm publish
+fal-ai adapter               Full text-to-image          audio-to-text modality     Cost estimation
+Input/output mapper          coverage across all         remove-background          Provider preference
+Model resolver (resolveModel) providers                  + remaining modalities
 Gateway orchestration
-text-to-image category
+Discovery (listModels, deriveCategory)
 End-to-end test
 ```
 
@@ -244,47 +248,32 @@ End-to-end test
 ```
 getaiapi/
   src/
-    index.ts              # Public API: generate, listModels, getModel
+    index.ts              # Public API: generate, listModels, resolveModel, etc.
     gateway.ts            # Core orchestration
-    resolver.ts           # Model name resolution
+    registry.ts           # Model name resolution (resolveModel, loadRegistry)
+    discovery.ts          # listModels, deriveCategory
     auth.ts               # Token management
+    configure.ts          # configure() for keys & storage
     mapper.ts             # Input/output mapping engine
     types.ts              # All shared types
     errors.ts             # Unified error types
+    storage.ts            # R2 storage integration
+    s3-signer.ts          # S3-compatible request signing
+    retry.ts              # Retry logic
+    cli.ts                # CLI entry point
     adapters/
       base.ts             # ProviderAdapter interface
       fal-ai.ts           # fal-ai adapter
       replicate.ts        # Replicate adapter
       wavespeed.ts        # WaveSpeed adapter
-    categories/
-      text-to-image.ts    # First category template
-      ...                 # One per category
+      openrouter.ts       # OpenRouter adapter (text generation)
   registry/
     registry.json         # Generated model registry
-    categories.json       # Category taxonomy
   scripts/
     catalog.ts            # SKILL.md parser -> catalog
     generate-registry.ts  # Catalog -> registry.json
   skills/                 # 1,954 existing skill definitions
   tests/
-    unit/
-      resolver.test.ts
-      mapper.test.ts
-      auth.test.ts
-      adapters/
-        fal-ai.test.ts
-        replicate.test.ts
-        wavespeed.test.ts
-    integration/
-      generate.test.ts
-    catalog/
-      schema-validation.test.ts
-    e2e/
-      smoke.test.ts       # Gated by env var
-    fixtures/
-      fal-ai/text-to-image/flux-schnell.json
-      replicate/text-to-image/flux-schnell.json
-      wavespeed/text-to-image/z-image-turbo.json
   docs/
     ARCHITECTURE.md
     PRODUCT-SPEC.md

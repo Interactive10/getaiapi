@@ -71,9 +71,11 @@ function getDelayMs(
 
 export async function withRetry<T>(
   fn: () => Promise<T>,
-  options?: Partial<RetryOptions>,
+  options?: Partial<RetryOptions> & { provider?: string; model?: string },
 ): Promise<T> {
   const opts: RetryOptions = { ...DEFAULT_OPTIONS, ...options }
+  const provider = options?.provider ?? 'unknown'
+  const model = options?.model ?? 'unknown'
   const startTime = Date.now()
   let lastError: unknown
 
@@ -82,7 +84,7 @@ export async function withRetry<T>(
     if (attempt > 0) {
       const elapsed = Date.now() - startTime
       if (elapsed >= opts.timeoutMs) {
-        throw new TimeoutError('unknown', 'unknown', opts.timeoutMs)
+        throw new TimeoutError(provider as any, model, opts.timeoutMs)
       }
     }
 
@@ -106,7 +108,7 @@ export async function withRetry<T>(
       // Check if waiting would exceed timeout
       const elapsed = Date.now() - startTime
       if (elapsed + delay >= opts.timeoutMs) {
-        throw new TimeoutError('unknown', 'unknown', opts.timeoutMs)
+        throw new TimeoutError(provider as any, model, opts.timeoutMs)
       }
 
       await sleep(delay)

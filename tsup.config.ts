@@ -6,4 +6,10 @@ export default defineConfig({
   dts: true,
   clean: true,
   sourcemap: true,
+  banner: ({ entryPoint }) => {
+    if (entryPoint?.endsWith("cli.ts")) {
+      return { js: "#!/usr/bin/env node" };
+    }
+    return {};
+  },
 });

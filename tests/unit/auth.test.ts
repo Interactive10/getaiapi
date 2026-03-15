@@ -8,7 +8,6 @@ function makeModel(providers: string[]): ModelEntry {
   return {
     canonical_name: "test-model",
     aliases: [],
-    category: "text-to-image",
     modality: { inputs: ["text"], outputs: ["image"] },
     providers: providers.map(
       (p) =>

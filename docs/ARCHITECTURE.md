@@ -11,7 +11,7 @@
 
 ## 1. Problem Statement
 
-We have 200+ AI model skills spread across 3 providers (fal-ai, Replicate, WaveSpeed), each with:
+We have 200+ AI model skills spread across 4 providers (fal-ai, Replicate, WaveSpeed, OpenRouter), each with:
 - Different authentication mechanisms
 - Different async/polling patterns
 - Different input parameter naming conventions
@@ -127,10 +127,10 @@ interface OutputItem {
 │  └──────┬──────────────┬───────────────┬────────┘    │
 │         │              │               │             │
 │         ▼              ▼               ▼             │
-│  ┌──────────┐   ┌──────────┐   ┌──────────────┐     │
-│  │  fal-ai  │   │Replicate │   │  WaveSpeed   │     │
-│  │ Adapter  │   │ Adapter  │   │   Adapter    │     │
-│  └──────────┘   └──────────┘   └──────────────┘     │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
+│  │  fal-ai  │  │Replicate │  │WaveSpeed │  │OpenRouter│  │
+│  │ Adapter  │  │ Adapter  │  │ Adapter  │  │ Adapter  │  │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘  │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -147,7 +147,6 @@ interface OutputItem {
 interface ModelEntry {
   canonical_name: string        // "flux-schnell"
   aliases: string[]             // ["flux_schnell", "fal-ai-flux-schnell", ...]
-  category: ModelCategory       // "text-to-image"
   modality: {
     inputs: InputType[]         // ["text"]
     outputs: OutputType[]       // ["image"]
@@ -156,11 +155,11 @@ interface ModelEntry {
 }
 
 interface ProviderBinding {
-  provider: "fal-ai" | "replicate" | "wavespeed"
+  provider: "fal-ai" | "replicate" | "wavespeed" | "openrouter"
   skill_id: string              // "fal-ai-flux-schnell"
   endpoint: string              // API endpoint
   auth_env: string              // "FAL_KEY"
-  param_map: Record<string, string>  // Maps universal → provider params
+  param_map: Record<string, string | string[]>  // Maps universal → provider params
   output_map: OutputMapping     // Maps provider response → universal output
 }
 ```
@@ -181,21 +180,21 @@ interface ProviderBinding {
 #### Provider Adapters
 Each adapter handles one provider's HTTP protocol:
 
-| Concern | fal-ai | Replicate | WaveSpeed |
-|---------|--------|-----------|-----------|
-| **Auth** | `Authorization: Key $FAL_KEY` | `Authorization: Bearer $REPLICATE_API_TOKEN` | `Authorization: Bearer $WAVESPEED_API_KEY` |
-| **Submit** | `fal.subscribe()` | `POST /predictions` | `POST /api/v2/wavespeed/...` |
-| **Poll** | `fal.queue.status()` | `GET /predictions/{id}` | `GET /predictions/{id}/result` |
-| **Webhook** | Supported | Supported | Supported |
-| **Async pattern** | Subscribe (built-in polling) | Create + poll loop | Create + poll loop |
+| Concern | fal-ai | Replicate | WaveSpeed | OpenRouter |
+|---------|--------|-----------|-----------|------------|
+| **Auth** | `Authorization: Key $FAL_KEY` | `Authorization: Bearer $REPLICATE_API_TOKEN` | `Authorization: Bearer $WAVESPEED_API_KEY` | `Authorization: Bearer $OPENROUTER_API_KEY` |
+| **Submit** | `fal.subscribe()` | `POST /predictions` | `POST /api/v2/wavespeed/...` | `POST /api/v1/chat/completions` |
+| **Poll** | `fal.queue.status()` | `GET /predictions/{id}` | `GET /predictions/{id}/result` | Synchronous |
+| **Webhook** | Supported | Supported | Supported | N/A |
+| **Async pattern** | Subscribe (built-in polling) | Create + poll loop | Create + poll loop | Synchronous response |
 
 Each adapter implements:
 ```typescript
 interface ProviderAdapter {
-  name: string
+  name: ProviderName
   submit(endpoint: string, params: Record<string, unknown>, auth: string): Promise<ProviderResponse>
-  poll(taskId: string, auth: string): Promise<ProviderResponse>
-  parseOutput(raw: unknown): OutputItem[]
+  poll(taskId: string, auth: string, endpoint?: string): Promise<ProviderResponse>
+  parseOutput(raw: unknown, outputMapping: OutputMapping): OutputItem[]
 }
 ```
 
@@ -232,12 +231,17 @@ Generated aliases:
 
 ---
 
-## 6. Model Categories (Modality Taxonomy)
+## 6. Modality Taxonomy
 
-Before implementing adapters for all 200+ skills, we categorize them:
+Models no longer have a stored `category` field. Instead, each model declares its `modality: { inputs: InputType[], outputs: OutputType[] }` and a display category is derived at runtime via `deriveCategory()`. The modality types are:
 
-| Category | Input | Output | Examples |
-|----------|-------|--------|----------|
+- **InputType**: `'text' | 'image' | 'audio' | 'video'`
+- **OutputType**: `'image' | 'video' | 'audio' | 'text' | '3d' | 'segmentation'`
+
+Common modality combinations:
+
+| Derived Category | Input Modality | Output Modality | Examples |
+|------------------|----------------|-----------------|----------|
 | `text-to-image` | text | image | flux-schnell, imagen-4, seedream |
 | `image-to-image` | image + text | image | flux-kontext, image-edit models |
 | `text-to-video` | text | video | veo3.1, sora-2, kling |
@@ -294,9 +298,9 @@ Priority order (by user demand):
 8. Everything else
 
 Each modality expansion is a self-contained task:
-- Add category-specific input validation
+- Add modality-specific input validation
 - Add output type handling
-- Generate + verify adapter mappings for all models in category
+- Generate + verify param_map/output_map for all models in the modality
 - Write integration tests
 
 ### Phase 3: Polish (Week 5+)
@@ -322,16 +326,19 @@ A script that parses every `skills/*/SKILL.md` and produces a structured catalog
 ```typescript
 // cataloger output
 interface SkillCatalog {
-  categories: Record<ModelCategory, SkillEntry[]>
-  providers: Record<string, SkillEntry[]>
-  duplicates: DuplicateGroup[]  // Same model on multiple providers
+  models: ModelEntry[]                     // Flat list with modality on each entry
+  providers: Record<ProviderName, SkillEntry[]>
+  duplicates: DuplicateGroup[]             // Same model on multiple providers
 }
 
 interface SkillEntry {
   skill_id: string           // "fal-ai-flux-schnell"
-  provider: string           // "fal-ai"
+  provider: ProviderName     // "fal-ai"
   model_family: string       // "flux-schnell"
-  category: ModelCategory    // "text-to-image"
+  modality: {
+    inputs: InputType[]      // ["text"]
+    outputs: OutputType[]    // ["image"]
+  }
   description: string
   release_date?: string      // ISO date: "2024-06" (year-month minimum)
   deprecated: boolean        // Flagged if model is too old or superseded
@@ -360,47 +367,51 @@ The cataloger should determine when each model was released, so we can depriorit
 - Models with a newer version in the same family auto-deprecate the older one (e.g. `seedream-4.5` deprecates `seedream-3`)
 - The cutoff is configurable: `--max-age-months=24`
 
-### 8.2 Category-First Task Generation
+### 8.2 Modality-First Task Generation
 
-Instead of one task per model, generate tasks per category:
+Instead of one task per model, generate tasks per modality combination:
 
 ```
-Task: "Implement text-to-image category"
-  Subtask: "Create param mapping for fal-ai text-to-image models (N models)"
-  Subtask: "Create param mapping for replicate text-to-image models (M models)"
-  Subtask: "Create param mapping for wavespeed text-to-image models (K models)"
-  Subtask: "Integration tests for category"
+Task: "Implement text→image models"
+  Subtask: "Create param_map + output_map for fal-ai text→image models (N models)"
+  Subtask: "Create param_map + output_map for replicate text→image models (M models)"
+  Subtask: "Create param_map + output_map for wavespeed text→image models (K models)"
+  Subtask: "Integration tests for modality"
 ```
 
-### 8.3 Adapter Generation via Templates
+### 8.3 Per-Binding param_map
 
-Within a category, most models share 90% of the same params. Generate adapters from a category template:
+There are no shared category templates. Each `ProviderBinding` in the registry carries its own `param_map` that maps universal input names to provider-specific parameter names, and its own `output_map` that describes how to extract results from the provider response.
 
-```yaml
-# Template: text-to-image
-common_inputs:
-  prompt: { required: true }
-  negative_prompt: { required: false }
-  count: { maps_to: { fal-ai: "num_images", replicate: "num_outputs", wavespeed: "num_outputs" } }
-  size: { maps_to: { fal-ai: "image_size", replicate: ["width", "height"], wavespeed: "resolution" } }
-  guidance: { maps_to: { fal-ai: "guidance_scale", replicate: "guidance", wavespeed: "guidance_scale" } }
-  seed: { universal: true }
-  format: { maps_to: { fal-ai: "output_format", replicate: "output_format", wavespeed: "output_format" } }
-
-common_outputs:
-  type: "image"
-  extract: { fal-ai: "images[].url", replicate: "output[]", wavespeed: "outputs[]" }
+```json
+{
+  "provider": "fal-ai",
+  "skill_id": "fal-ai-flux-schnell",
+  "endpoint": "fal-ai/flux/schnell",
+  "auth_env": "FAL_KEY",
+  "param_map": {
+    "count": "num_images",
+    "size": "image_size",
+    "guidance": "guidance_scale",
+    "format": "output_format"
+  },
+  "output_map": {
+    "type": "image",
+    "extract_path": "images[].url",
+    "content_type": "image/png"
+  }
+}
 ```
 
-Model-specific overrides only for models that diverge from the category template.
+This keeps each binding self-contained — no indirection through shared templates.
 
 ### 8.4 Filtering Prompt for Claude
 
 When ready to expand a category, use a prompt like:
 
-> "Read all skills in the `text-to-image` category from the catalog. For each, read its SKILL.md and generate a provider binding entry in the registry. Flag any model that has params not covered by the category template."
+> "Read all skills with modality inputs=['text'], outputs=['image'] from the catalog. For each, read its SKILL.md and generate a provider binding entry with param_map and output_map in the registry. Flag any model that has unusual params."
 
-This makes each category a bounded, parallelizable unit of work.
+This makes each modality a bounded, parallelizable unit of work.
 
 ---
 
@@ -445,6 +456,7 @@ class AuthManager {
     if (process.env.FAL_KEY) this.keys.set('fal-ai', process.env.FAL_KEY)
     if (process.env.REPLICATE_API_TOKEN) this.keys.set('replicate', process.env.REPLICATE_API_TOKEN)
     if (process.env.WAVESPEED_API_KEY) this.keys.set('wavespeed', process.env.WAVESPEED_API_KEY)
+    if (process.env.OPENROUTER_API_KEY) this.keys.set('openrouter', process.env.OPENROUTER_API_KEY)
   }
 
   availableProviders(): string[] {
@@ -516,23 +528,26 @@ const speech = await generate({
 
 // List available models (based on your API keys)
 import { listModels } from 'getaiapi'
-const models = listModels({ category: 'text-to-image' })
+const models = listModels({ input: 'text', output: 'image' })
 ```
 
 ### Discovery:
 
 ```typescript
-import { listModels, getModel } from 'getaiapi'
+import { listModels, resolveModel, deriveCategory } from 'getaiapi'
 
 // What can I use?
 listModels()                                    // All models you have keys for
-listModels({ category: 'text-to-image' })       // Filter by category
+listModels({ input: 'text', output: 'image' })  // Filter by modality
 listModels({ provider: 'replicate' })            // Filter by provider
 listModels({ query: 'flux' })                    // Search
 
 // Model details
-const info = getModel('flux-schnell')
-// { canonical_name, category, providers, supported_params, ... }
+const info = resolveModel('flux-schnell')
+// { canonical_name, modality, providers, aliases, ... }
+
+// Derive a display category from modality
+deriveCategory(info)  // "text-to-image"
 ```
 
 ---
@@ -542,24 +557,23 @@ const info = getModel('flux-schnell')
 ```
 getaiapi/
 ├── src/
-│   ├── index.ts                 # Public API: generate, listModels, getModel
+│   ├── index.ts                 # Public API: generate, listModels, resolveModel, etc.
 │   ├── gateway.ts               # Core orchestration
-│   ├── resolver.ts              # Model name resolution + fuzzy matching
+│   ├── registry.ts              # Model name resolution + fuzzy matching
+│   ├── discovery.ts             # listModels, deriveCategory
 │   ├── auth.ts                  # Token management
 │   ├── mapper.ts                # Input/output mapping engine
+│   ├── configure.ts             # configure, configureAuth
+│   ├── storage.ts               # R2 storage: upload, delete, presign
 │   ├── adapters/
 │   │   ├── base.ts              # ProviderAdapter interface
 │   │   ├── fal-ai.ts
 │   │   ├── replicate.ts
-│   │   └── wavespeed.ts
-│   ├── categories/              # Category-specific mapping templates
-│   │   ├── text-to-image.ts
-│   │   ├── image-to-video.ts
-│   │   └── ...
+│   │   ├── wavespeed.ts
+│   │   └── openrouter.ts
 │   └── types.ts                 # Shared types
 ├── registry/
 │   ├── registry.json            # Generated model registry
-│   └── categories.json          # Category taxonomy
 ├── scripts/
 │   ├── catalog.ts               # Parse SKILL.md files → catalog
 │   └── generate-registry.ts     # Catalog → registry.json
@@ -577,7 +591,7 @@ getaiapi/
 |----------|--------|-------------|-----|
 | Single `generate()` function | Yes | Separate `generateImage()`, `generateVideo()` | Simpler API, modality inferred from model |
 | JSON registry over DB | JSON file | SQLite, Postgres | No infra needed, git-versioned, fast enough |
-| Category-first implementation | Yes | Model-by-model | 10x less work, shared mappings |
+| Modality-first implementation | Yes | Model-by-model | 10x less work, per-binding param_map keeps bindings self-contained |
 | Fuzzy name matching | Yes | Strict exact match | Better UX, providers name things inconsistently |
 | `options` passthrough | Yes | Strict schema only | Escape hatch for model-specific params |
 | Arrays for outputs | Always array | Single item for single outputs | Consistent, no special cases |

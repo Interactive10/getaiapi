@@ -187,13 +187,13 @@ Models are automatically filtered to only show providers where you have a valid 
 ## Model Discovery
 
 ```typescript
-import { listModels, getModel } from 'getaiapi'
+import { listModels, resolveModel, deriveCategory } from 'getaiapi'
 
-// List all available models (filtered by your API keys)
+// List all models
 const all = listModels()
 
-// Filter by category
-const imageModels = listModels({ category: 'text-to-image' })
+// Filter by input/output modality
+const imageModels = listModels({ input: 'text', output: 'image' })
 
 // Filter by provider
 const falModels = listModels({ provider: 'fal-ai' })
@@ -201,36 +201,35 @@ const falModels = listModels({ provider: 'fal-ai' })
 // Search by name
 const fluxModels = listModels({ query: 'flux' })
 
-// Get details for a specific model
-const model = getModel('flux-schnell')
-// => { canonical_name, aliases, category, modality, providers }
+// Resolve a specific model
+const model = resolveModel('flux-schnell')
+// => { canonical_name, aliases, modality, providers }
+
+// Derive a display label from modality
+deriveCategory(model) // => "text-to-image"
 ```
 
-## Supported Categories
+## Modality
 
-| Category | Input | Output | Models |
-|---|---|---|---|
-| `text-to-image` | text | image | 743 |
-| `text-to-video` | text | video | 321 |
-| `image-edit` | image + text | image | 210 |
-| `image-to-video` | image + text | video | 165 |
-| `text-to-audio` | text | audio | 95 |
-| `text-generation` | text | text | 57 |
-| `upscale-image` | image | image | 57 |
-| `training` | images | model | 50 |
-| `image-to-image` | image + text | image | 43 |
-| `segmentation` | image/video | segmentation | 34 |
-| `image-to-3d` | image | 3d | 31 |
-| `audio-to-text` | audio | text | 25 |
-| `remove-background` | image/video | image/video | 24 |
-| `text-to-3d` | text | 3d | 19 |
-| `video-to-audio` | video | audio | 17 |
-| `upscale-video` | video | video | 15 |
-| `video-to-video` | video | video | 15 |
-| `moderation` | text/image/video | text | 12 |
-| `audio-to-video` | audio | video | 4 |
-| `audio-edit` | audio | audio | 2 |
-| `voice-clone` | audio | text | 1 |
+Models declare their input and output types via `modality`. There are no fixed categories — modality is the source of truth.
+
+**Input types:** `text`, `image`, `audio`, `video`
+
+**Output types:** `image`, `video`, `audio`, `text`, `3d`, `segmentation`
+
+Common combinations across 1,940+ models:
+
+| Inputs | Outputs | Example |
+|---|---|---|
+| text | image | `flux-schnell`, `ideogram-v3` |
+| text | video | `veo3.1`, `sora-2` |
+| image, text | image | `gpt-image-1.5-edit`, `flux-2-pro-edit` |
+| image, text | video | `kling-video-v3-pro`, `seedance-v1.5-pro` |
+| text | audio | `elevenlabs-v3`, `minimax-music-v2` |
+| text | text | `claude-sonnet-4-6`, `gpt-4o` |
+| image | image | `topaz-upscale-image`, `birefnet-v2` |
+| image | 3d | `trellis-image-to-3d` |
+| audio | text | `whisper` |
 
 ## Providers
 
@@ -241,9 +240,7 @@ const model = getModel('flux-schnell')
 | WaveSpeed | 66 | `WAVESPEED_API_KEY` | Native fetch |
 | OpenRouter | 10 | `OPENROUTER_API_KEY` | Native fetch |
 
-Zero external dependencies -- all provider communication uses native `fetch`.
-
-See the full [Model Directory](docs/MODELS.md) for all 1,940 models with provider availability.
+Zero external dependencies -- all provider communication uses native `fetch`. Works in Node.js, Vercel Edge, Cloudflare Workers, Deno, Bun, and any ESM runtime -- no `fs` or special bundler config needed.
 
 ## API Reference
 
@@ -256,6 +253,7 @@ The core function. Resolves the model, maps parameters, calls the provider, and 
 ```typescript
 interface GenerateRequest {
   model: string                                    // required - model name
+  provider?: ProviderName                          // preferred provider (optional)
   prompt?: string                                  // text prompt
   image?: string | File                            // input image (URL or File)
   images?: (string | File)[]                       // multiple reference images
@@ -306,15 +304,20 @@ interface OutputItem {
 
 ### `listModels(filters?: ListModelsFilters): ModelEntry[]`
 
-Returns all models the caller has API keys for. Accepts optional filters:
+Returns all models in the registry. Accepts optional filters:
 
-- `category` -- filter by model category (e.g. `'text-to-image'`)
+- `input` -- filter by input modality (e.g. `'text'`, `'image'`, `'audio'`, `'video'`)
+- `output` -- filter by output modality (e.g. `'image'`, `'video'`, `'text'`, `'3d'`)
 - `provider` -- filter by provider (e.g. `'fal-ai'`)
 - `query` -- search canonical names and aliases
 
-### `getModel(name: string): ModelEntry`
+### `resolveModel(name: string): ModelEntry`
 
-Resolves a model by name. Accepts canonical names, aliases, and normalized variants. Throws `ModelNotFoundError` if no match is found.
+Resolves a model by name. Accepts canonical names, aliases, and normalized variants. Throws if no match is found.
+
+### `deriveCategory(model: ModelEntry): string`
+
+Derives a display category label from a model's modality (e.g. `"text-to-image"`).
 
 ## R2 Storage (Asset Uploads)
 
@@ -513,6 +516,16 @@ try {
   }
 }
 ```
+
+## Migrating from v0.x
+
+v1.0.0 replaces the category-based architecture with a modality-first design. Key changes:
+
+- `getModel()` is now `resolveModel()`
+- `listModels({ category: '...' })` is now `listModels({ input: '...', output: '...' })`
+- No more `readFileSync` -- works in edge runtimes without any bundler config
+
+See the full [Migration Guide](docs/MIGRATION.md) for details.
 
 ## Documentation
 
