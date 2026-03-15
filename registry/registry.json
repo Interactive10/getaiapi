@@ -365,9 +365,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -379,7 +379,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "3d"
@@ -412,7 +413,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -536,9 +538,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -658,10 +660,10 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
-        "3d"
+        "image"
       ]
     },
     "providers": [
@@ -677,9 +679,9 @@
           "quality": "output_quality"
         },
         "output_map": {
-          "type": "3d",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "model/gltf-binary"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -691,7 +693,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "3d"
@@ -775,9 +777,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -1054,7 +1056,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -1094,7 +1097,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -1209,7 +1213,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -1540,10 +1545,11 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text",
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -1564,9 +1570,9 @@
           "safety": "disable_safety_checker"
         },
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -2053,10 +2059,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -2071,9 +2077,9 @@
           "quality": "output_quality"
         },
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -2374,6 +2380,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -3352,7 +3359,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -3390,7 +3398,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -3428,7 +3437,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -3466,7 +3476,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -3547,7 +3558,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -3586,7 +3598,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -3624,7 +3637,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -3663,7 +3677,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -3702,7 +3717,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "image"
@@ -3741,7 +3756,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "image"
@@ -5190,10 +5205,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -5208,9 +5223,9 @@
           "quality": "quality"
         },
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "data.outputs[]",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -5291,7 +5306,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -6133,10 +6149,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -6151,9 +6167,9 @@
           "quality": "output_quality"
         },
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -6198,7 +6214,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "video"
       ],
       "outputs": [
         "video"
@@ -6236,7 +6253,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "video"
@@ -6404,6 +6421,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -6481,6 +6499,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -6543,6 +6562,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -6893,7 +6913,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -7955,7 +7976,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -8201,7 +8223,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -8234,6 +8256,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -8325,9 +8348,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -8714,10 +8737,10 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -8731,9 +8754,9 @@
           "pages": "max_pages"
         },
         "output_map": {
-          "type": "text",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "text/plain"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -8784,7 +8807,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "text"
@@ -9047,7 +9070,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -9098,9 +9121,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -9333,7 +9356,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -10406,7 +10429,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -10465,7 +10488,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -10614,7 +10638,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -10692,9 +10717,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -10892,7 +10917,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -10929,10 +10955,11 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text",
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -10953,9 +10980,9 @@
           "safety": "enable_safety_checker"
         },
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
-          "content_type": "image/png"
+          "type": "video",
+          "extract_path": "video.url",
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -10967,10 +10994,11 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text",
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -10991,9 +11019,9 @@
           "safety": "enable_safety_checker"
         },
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
-          "content_type": "image/png"
+          "type": "video",
+          "extract_path": "video.url",
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -11005,10 +11033,11 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text",
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -11029,9 +11058,9 @@
           "safety": "enable_safety_checker"
         },
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
-          "content_type": "image/png"
+          "type": "video",
+          "extract_path": "video.url",
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -11043,7 +11072,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -11080,6 +11110,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -11117,7 +11148,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -11292,7 +11323,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -11627,6 +11658,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -11666,7 +11698,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -11854,10 +11887,11 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
-        "video"
+        "image"
       ]
     },
     "providers": [
@@ -11877,9 +11911,9 @@
           "safety": "disable_safety_checker"
         },
         "output_map": {
-          "type": "video",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "video/mp4"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -11891,7 +11925,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio",
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -11928,10 +11964,11 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text",
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -11952,9 +11989,9 @@
           "safety": "enable_safety_checker"
         },
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
-          "content_type": "image/png"
+          "type": "video",
+          "extract_path": "video.url",
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -11966,7 +12003,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -11999,6 +12036,8 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
+        "text",
         "video"
       ],
       "outputs": [
@@ -12486,7 +12525,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -12519,7 +12558,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -12600,7 +12640,7 @@
         "image"
       ],
       "outputs": [
-        "3d"
+        "image"
       ]
     },
     "providers": [
@@ -12616,9 +12656,9 @@
           "format": "output_format"
         },
         "output_map": {
-          "type": "3d",
+          "type": "image",
           "extract_path": "model_mesh.url",
-          "content_type": "model/gltf-binary"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -12663,7 +12703,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -12680,9 +12721,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -12772,6 +12813,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -12806,7 +12848,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -13051,6 +13094,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -13088,6 +13132,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -13164,7 +13209,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -13240,7 +13286,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -13277,7 +13324,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -13354,7 +13402,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -13391,7 +13440,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -13468,6 +13518,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -13507,7 +13558,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -13544,7 +13596,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -13582,7 +13635,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -13619,7 +13673,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -13772,6 +13827,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -13815,7 +13871,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -13849,7 +13906,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -13887,7 +13945,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -13925,6 +13984,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -13968,6 +14028,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -14071,7 +14132,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
         "image"
@@ -14108,10 +14169,10 @@
     ],
     "modality": {
       "inputs": [
-        "video"
+        "audio"
       ],
       "outputs": [
-        "video"
+        "audio"
       ]
     },
     "providers": [
@@ -14131,9 +14192,9 @@
           "safety": "enable_safety_checker"
         },
         "output_map": {
-          "type": "video",
+          "type": "audio",
           "extract_path": "images[].url",
-          "content_type": "video/mp4"
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -14145,6 +14206,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -14182,10 +14244,10 @@
     ],
     "modality": {
       "inputs": [
-        "video"
+        "audio"
       ],
       "outputs": [
-        "video"
+        "audio"
       ]
     },
     "providers": [
@@ -14205,9 +14267,9 @@
           "safety": "enable_safety_checker"
         },
         "output_map": {
-          "type": "video",
+          "type": "audio",
           "extract_path": "images[].url",
-          "content_type": "video/mp4"
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -14320,7 +14382,7 @@
         "video"
       ],
       "outputs": [
-        "text"
+        "video"
       ]
     },
     "providers": [
@@ -14334,9 +14396,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "text",
+          "type": "video",
           "extract_path": "output[]",
-          "content_type": "text/plain"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -14351,7 +14413,7 @@
         "image"
       ],
       "outputs": [
-        "video"
+        "image"
       ]
     },
     "providers": [
@@ -14371,9 +14433,9 @@
           "safety": "enable_safety_checker"
         },
         "output_map": {
-          "type": "video",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "video/mp4"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -14422,7 +14484,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -14537,7 +14600,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -14576,7 +14640,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -14710,10 +14775,11 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -14727,9 +14793,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "text",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "text/plain"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -14744,7 +14810,7 @@
         "image"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -14758,9 +14824,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "text",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "text/plain"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -14837,7 +14903,7 @@
         "image"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -14851,9 +14917,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "text",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "text/plain"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -14899,7 +14965,7 @@
         "image"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -14913,9 +14979,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "text",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "text/plain"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -14927,10 +14993,11 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -14944,9 +15011,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "text",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "text/plain"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -14959,7 +15026,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -14976,9 +15044,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -14993,7 +15061,7 @@
         "image"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -15007,9 +15075,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "text",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "text/plain"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -15101,9 +15169,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -15115,7 +15183,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -15192,7 +15261,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -15305,7 +15375,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -15494,7 +15565,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -15570,7 +15642,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -15647,7 +15720,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -15724,7 +15798,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -15840,7 +15915,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -15878,7 +15954,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -15955,7 +16032,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -15985,7 +16062,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -16015,7 +16092,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -16131,7 +16209,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -16169,7 +16248,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -16246,7 +16326,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -16276,7 +16356,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -16306,7 +16386,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -16344,7 +16425,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -16421,7 +16503,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -16497,6 +16580,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -16690,7 +16774,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "image"
@@ -16846,7 +16930,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -16923,7 +17008,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -17000,7 +17086,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -17038,7 +17125,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -17068,7 +17155,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -17098,7 +17185,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -17128,7 +17215,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -17197,7 +17284,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -17235,6 +17323,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -17274,7 +17363,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -17311,6 +17401,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -17350,7 +17441,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -17453,7 +17545,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -17527,7 +17620,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -17604,7 +17698,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -17642,7 +17737,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -17679,7 +17775,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -17717,7 +17814,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -18021,7 +18119,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -18059,7 +18158,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -18097,7 +18197,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -18249,7 +18350,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text",
+        "video"
       ],
       "outputs": [
         "image"
@@ -18325,7 +18427,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -18363,7 +18466,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -18401,7 +18505,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -18478,7 +18583,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -18547,7 +18652,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -18623,7 +18729,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -18660,7 +18767,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -18774,7 +18882,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -18843,6 +18951,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -18882,7 +18991,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -18920,7 +19030,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -18988,7 +19098,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -19025,7 +19136,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -19063,7 +19175,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -19132,7 +19244,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -19170,7 +19283,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -19208,7 +19322,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -19285,7 +19400,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -19362,7 +19478,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -19400,7 +19517,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -19631,7 +19749,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -19831,7 +19950,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -19868,7 +19988,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -19938,7 +20059,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "video"
@@ -19979,7 +20100,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -20092,7 +20214,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -20167,6 +20290,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -20237,6 +20361,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -20279,6 +20404,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -20474,7 +20600,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
         "image"
@@ -20662,7 +20788,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -20699,7 +20826,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -20736,7 +20864,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -20773,6 +20902,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -20882,7 +21012,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -20959,7 +21090,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -21036,7 +21168,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -21074,7 +21207,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -21112,7 +21246,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -21369,7 +21504,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -21436,7 +21572,9 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image",
+        "text",
+        "video"
       ],
       "outputs": [
         "text"
@@ -21465,7 +21603,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -21572,7 +21711,10 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio",
+        "image",
+        "text",
+        "video"
       ],
       "outputs": [
         "text"
@@ -21601,7 +21743,10 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio",
+        "image",
+        "text",
+        "video"
       ],
       "outputs": [
         "text"
@@ -21630,7 +21775,10 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio",
+        "image",
+        "text",
+        "video"
       ],
       "outputs": [
         "text"
@@ -21908,7 +22056,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -22027,7 +22176,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -22088,7 +22238,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -22127,7 +22278,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -22277,6 +22429,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -22319,6 +22472,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -22361,6 +22515,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -22403,6 +22558,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -22445,6 +22601,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -22603,7 +22760,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -22707,7 +22865,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -22851,7 +23010,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -22889,7 +23049,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -22926,7 +23087,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -22980,9 +23142,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -23011,9 +23173,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -23180,6 +23342,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -23217,6 +23380,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -23525,7 +23689,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -23562,10 +23727,11 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
-        "3d"
+        "image"
       ]
     },
     "providers": [
@@ -23581,9 +23747,9 @@
           "format": "output_format"
         },
         "output_map": {
-          "type": "3d",
+          "type": "image",
           "extract_path": "model_mesh.url",
-          "content_type": "model/gltf-binary"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -23595,7 +23761,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "3d"
@@ -23645,9 +23812,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "model_mesh.url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -23826,6 +23993,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -23863,7 +24031,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -23941,7 +24110,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -24142,9 +24312,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "model_mesh.url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -24156,6 +24326,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "video"
       ],
       "outputs": [
@@ -24258,6 +24429,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -24304,7 +24476,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -24341,7 +24514,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -24416,7 +24590,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -24446,6 +24620,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -24485,7 +24660,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -24560,6 +24736,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -24862,7 +25039,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "3d"
@@ -24928,7 +25106,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "3d"
@@ -24978,7 +25157,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "3d"
@@ -25291,7 +25470,8 @@
     ],
     "modality": {
       "inputs": [
-        "audio"
+        "audio",
+        "text"
       ],
       "outputs": [
         "text"
@@ -25321,7 +25501,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -25352,7 +25533,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -25407,9 +25589,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -25548,6 +25730,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -25613,7 +25796,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -25651,7 +25835,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -25787,7 +25972,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -25825,7 +26011,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -25928,7 +26115,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -25966,7 +26154,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -26069,7 +26258,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -26172,7 +26362,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -26248,7 +26439,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -26324,7 +26516,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -26361,7 +26554,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -26399,7 +26593,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -26474,7 +26669,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -26664,7 +26860,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -28226,9 +28423,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -28839,6 +29036,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -28872,7 +29070,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio",
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -28909,7 +29109,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -28946,6 +29147,8 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
+        "text",
         "video"
       ],
       "outputs": [
@@ -29022,7 +29225,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -29060,7 +29264,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -29209,6 +29414,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -29281,7 +29487,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -29318,7 +29525,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -29355,7 +29563,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -29392,7 +29601,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -29429,7 +29639,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -29466,7 +29677,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -29503,7 +29715,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -29540,7 +29753,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -29656,7 +29870,7 @@
         "image"
       ],
       "outputs": [
-        "3d"
+        "image"
       ]
     },
     "providers": [
@@ -29672,9 +29886,9 @@
           "format": "output_format"
         },
         "output_map": {
-          "type": "3d",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "model/gltf-binary"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -29802,9 +30016,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -29817,7 +30031,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -29969,7 +30184,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -30007,7 +30223,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -30084,7 +30301,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -30234,6 +30452,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -30271,6 +30490,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -30308,7 +30528,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio"
       ],
       "outputs": [
         "text"
@@ -30338,6 +30558,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -30376,6 +30597,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -30414,7 +30636,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -30451,7 +30674,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "video"
@@ -30489,7 +30712,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -30526,7 +30750,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "video"
@@ -30563,6 +30787,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -30600,6 +30825,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -30637,6 +30863,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -30674,6 +30901,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -30825,6 +31053,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -30862,6 +31091,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -30976,6 +31206,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -31013,6 +31244,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -31050,6 +31282,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -31087,6 +31320,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -31163,7 +31397,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -31310,7 +31545,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -31423,7 +31659,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -31461,7 +31698,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -31574,7 +31812,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -31612,7 +31851,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -31688,7 +31928,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -31764,7 +32005,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -31840,7 +32082,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -31878,7 +32121,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -31916,7 +32160,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -31992,7 +32237,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -32030,7 +32276,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -32068,6 +32315,8 @@
     ],
     "modality": {
       "inputs": [
+        "image",
+        "text",
         "video"
       ],
       "outputs": [
@@ -32164,6 +32413,8 @@
     ],
     "modality": {
       "inputs": [
+        "image",
+        "text",
         "video"
       ],
       "outputs": [
@@ -32241,6 +32492,8 @@
     ],
     "modality": {
       "inputs": [
+        "image",
+        "text",
         "video"
       ],
       "outputs": [
@@ -32377,6 +32630,8 @@
     ],
     "modality": {
       "inputs": [
+        "image",
+        "text",
         "video"
       ],
       "outputs": [
@@ -32840,7 +33095,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -32916,6 +33172,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -32953,6 +33210,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -33009,6 +33267,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -33046,6 +33305,8 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
+        "text",
         "video"
       ],
       "outputs": [
@@ -33083,6 +33344,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -33124,6 +33386,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -33165,7 +33428,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -33202,6 +33466,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -33243,6 +33508,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -33285,6 +33551,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -33327,7 +33594,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -33364,6 +33632,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -33405,6 +33674,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -33446,7 +33716,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -33484,6 +33755,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -33525,6 +33797,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -33566,6 +33839,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -33639,6 +33913,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -33676,10 +33951,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio"
       ],
       "outputs": [
-        "image"
+        "audio"
       ]
     },
     "providers": [
@@ -33695,9 +33970,9 @@
           "quality": "quality"
         },
         "output_map": {
-          "type": "image",
+          "type": "audio",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -33787,7 +34062,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -33940,6 +34216,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -34062,7 +34339,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio"
       ],
       "outputs": [
         "video"
@@ -34099,6 +34376,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -34140,6 +34418,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -34181,6 +34460,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -34222,6 +34502,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -34259,6 +34540,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -34300,6 +34582,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -34341,6 +34624,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -34382,6 +34666,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -34497,7 +34782,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio",
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -34534,7 +34821,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "video"
       ],
       "outputs": [
         "video"
@@ -34640,7 +34928,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -34711,7 +35000,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -34786,7 +35076,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "video"
@@ -34824,7 +35114,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio",
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -35200,7 +35492,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -35237,7 +35530,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -35275,6 +35569,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -35313,6 +35608,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -35351,6 +35647,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -35389,6 +35686,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -35427,6 +35725,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -35464,6 +35763,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -35502,7 +35802,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -35539,7 +35840,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -35652,6 +35954,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -35689,6 +35992,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -35726,6 +36030,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -35763,6 +36068,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -35801,7 +36107,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -35838,7 +36145,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -35951,6 +36259,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -35988,6 +36297,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -36025,7 +36335,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "video"
@@ -36101,7 +36411,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -36138,7 +36449,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -36175,6 +36487,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -36288,7 +36601,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "video"
@@ -36364,7 +36677,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -36401,7 +36715,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -36438,6 +36753,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -36552,6 +36868,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -36653,6 +36970,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -36690,7 +37008,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -36803,6 +37122,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -36840,7 +37160,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -36915,7 +37236,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -36953,7 +37275,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -37096,6 +37419,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -37269,6 +37593,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -37306,7 +37631,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -37831,7 +38157,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -37868,7 +38195,7 @@
         "video"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -37882,9 +38209,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "text",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "text/plain"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -37897,7 +38224,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "text"
@@ -37973,6 +38300,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -38198,7 +38526,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "text"
@@ -38271,7 +38599,7 @@
         "audio"
       ],
       "outputs": [
-        "text"
+        "audio"
       ]
     },
     "providers": [
@@ -38284,9 +38612,9 @@
           "audio": "audio"
         },
         "output_map": {
-          "type": "text",
+          "type": "audio",
           "extract_path": "output[]",
-          "content_type": "text/plain"
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -38328,7 +38656,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -38360,7 +38689,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -38610,7 +38940,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "video"
       ],
       "outputs": [
         "text"
@@ -38748,10 +39079,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -38766,9 +39097,9 @@
           "quality": "output_quality"
         },
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -38814,6 +39145,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -38857,7 +39189,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -39107,7 +39439,7 @@
         "video"
       ],
       "outputs": [
-        "video"
+        "image"
       ]
     },
     "providers": [
@@ -39127,9 +39459,9 @@
           "safety": "enable_safety_checker"
         },
         "output_map": {
-          "type": "video",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "video/mp4"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -39142,6 +39474,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -39256,6 +39589,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -39288,6 +39622,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -39326,7 +39661,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -39359,6 +39694,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -39474,7 +39810,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "video"
@@ -39585,7 +39921,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "video"
@@ -39696,6 +40032,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -40503,6 +40840,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -40540,7 +40878,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -40577,6 +40916,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -40614,7 +40954,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -41344,7 +41685,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "text"
@@ -41378,7 +41719,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "text"
@@ -41557,7 +41898,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "text"
@@ -41642,9 +41983,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -41657,7 +41998,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
         "image"
@@ -41674,9 +42015,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -41876,6 +42217,7 @@
     "aliases": [],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -41920,7 +42262,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -41958,7 +42301,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -41998,7 +42342,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -42077,7 +42422,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -42196,6 +42542,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -42240,7 +42587,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -42280,7 +42628,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -42320,7 +42669,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -42399,7 +42749,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -42542,6 +42893,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -42582,6 +42934,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -43321,7 +43674,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -43359,7 +43713,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -43397,7 +43752,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -43456,7 +43812,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -43494,6 +43851,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -43533,10 +43891,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio"
       ],
       "outputs": [
-        "text"
+        "audio"
       ]
     },
     "providers": [
@@ -43549,9 +43907,9 @@
           "image": "images_data_url"
         },
         "output_map": {
-          "type": "text",
+          "type": "audio",
           "extract_path": "audio.url",
-          "content_type": "text/plain"
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -43564,7 +43922,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "text"
@@ -43730,6 +44088,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -43927,10 +44286,11 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
-        "audio"
+        "video"
       ]
     },
     "providers": [
@@ -43944,9 +44304,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "audio",
+          "type": "video",
           "extract_path": "audio.url",
-          "content_type": "audio/mpeg"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -44029,7 +44389,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -44060,7 +44421,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -44091,7 +44453,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -44122,7 +44485,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -44200,7 +44564,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -44231,7 +44596,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -44262,7 +44628,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -44324,7 +44691,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -44355,7 +44723,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -44386,7 +44755,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -44417,7 +44787,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -44434,9 +44805,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -44504,7 +44875,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -44541,6 +44913,8 @@
     ],
     "modality": {
       "inputs": [
+        "image",
+        "text",
         "video"
       ],
       "outputs": [
@@ -44578,6 +44952,8 @@
     ],
     "modality": {
       "inputs": [
+        "image",
+        "text",
         "video"
       ],
       "outputs": [
@@ -44691,6 +45067,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -44728,7 +45105,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -44890,9 +45268,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -44905,6 +45283,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -44971,6 +45350,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -45037,7 +45417,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -45098,7 +45479,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -45159,6 +45541,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -45224,7 +45607,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -45387,7 +45770,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -45528,10 +45912,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio"
       ],
       "outputs": [
-        "image"
+        "audio"
       ]
     },
     "providers": [
@@ -45547,9 +45931,9 @@
           "quality": "quality"
         },
         "output_map": {
-          "type": "image",
+          "type": "audio",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -45635,7 +46019,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -45749,7 +46134,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -45786,6 +46172,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -45825,6 +46212,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -45897,6 +46285,8 @@
     ],
     "modality": {
       "inputs": [
+        "image",
+        "text",
         "video"
       ],
       "outputs": [
@@ -45934,6 +46324,8 @@
     ],
     "modality": {
       "inputs": [
+        "image",
+        "text",
         "video"
       ],
       "outputs": [
@@ -46009,7 +46401,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -46700,6 +47093,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -46728,6 +47122,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -46770,6 +47165,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -46839,7 +47235,8 @@
     ],
     "modality": {
       "inputs": [
-        "audio"
+        "audio",
+        "text"
       ],
       "outputs": [
         "text"
@@ -46953,6 +47350,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -46984,6 +47382,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -47015,7 +47414,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -47046,7 +47446,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -47155,7 +47556,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -47323,7 +47725,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -47354,7 +47757,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -47385,7 +47789,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -47416,7 +47821,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -47449,7 +47854,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -47482,7 +47887,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -47584,6 +47990,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -47762,6 +48169,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "video"
       ],
       "outputs": [
@@ -47800,7 +48208,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -47877,7 +48286,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -47954,7 +48364,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -48028,7 +48439,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -48142,6 +48554,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -48179,6 +48592,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -48216,6 +48630,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -48275,6 +48690,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -48316,6 +48732,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -48358,6 +48775,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -48399,6 +48817,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -48441,6 +48860,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -48485,7 +48905,7 @@
         "video"
       ],
       "outputs": [
-        "audio"
+        "video"
       ]
     },
     "providers": [
@@ -48499,9 +48919,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "audio",
+          "type": "video",
           "extract_path": "audio.url",
-          "content_type": "audio/mpeg"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -48513,6 +48933,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "video"
       ],
       "outputs": [
@@ -48589,7 +49010,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -48626,7 +49048,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -48739,7 +49162,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -48814,7 +49238,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -48851,7 +49276,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -49003,7 +49429,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -49040,7 +49467,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -49153,7 +49581,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -49228,7 +49657,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -49303,7 +49733,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -49379,7 +49810,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -49454,7 +49886,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -49493,7 +49926,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -49568,7 +50002,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -49606,6 +50041,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -49678,7 +50114,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -49715,7 +50152,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -49753,6 +50191,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -49865,6 +50304,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -50532,7 +50972,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -50772,7 +51213,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -50810,7 +51252,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -50890,7 +51333,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -50920,6 +51363,8 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
+        "image",
         "text"
       ],
       "outputs": [
@@ -51003,7 +51448,9 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image",
+        "text",
+        "video"
       ],
       "outputs": [
         "video"
@@ -51044,7 +51491,9 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image",
+        "text",
+        "video"
       ],
       "outputs": [
         "video"
@@ -51127,7 +51576,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -51194,7 +51643,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -51284,7 +51734,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "text"
@@ -51318,10 +51768,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio"
       ],
       "outputs": [
-        "text"
+        "audio"
       ]
     },
     "providers": [
@@ -51334,9 +51784,9 @@
           "image": "images_data_url"
         },
         "output_map": {
-          "type": "text",
+          "type": "audio",
           "extract_path": "audio.url",
-          "content_type": "text/plain"
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -51349,10 +51799,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio"
       ],
       "outputs": [
-        "text"
+        "audio"
       ]
     },
     "providers": [
@@ -51365,9 +51815,9 @@
           "image": "images_data_url"
         },
         "output_map": {
-          "type": "text",
+          "type": "audio",
           "extract_path": "audio.url",
-          "content_type": "text/plain"
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -51482,7 +51932,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -51521,7 +51972,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -51560,7 +52012,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -51599,7 +52052,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -51638,7 +52092,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -51677,7 +52132,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -51713,6 +52169,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -51779,7 +52236,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -51818,7 +52276,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -51942,6 +52401,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -52048,7 +52508,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -52079,7 +52539,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -52113,7 +52573,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -52174,7 +52635,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -52213,7 +52675,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -52642,7 +53105,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -52674,7 +53137,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -52735,7 +53199,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -52813,7 +53278,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -52844,7 +53309,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -52883,7 +53349,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -52922,7 +53389,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -52962,7 +53430,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -53025,7 +53494,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -53498,7 +53968,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -53529,7 +53999,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -53560,7 +54030,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -53599,7 +54070,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -53696,7 +54168,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -53727,7 +54199,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -53808,7 +54281,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -53839,7 +54312,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -53870,7 +54343,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -53908,6 +54382,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -53950,6 +54425,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -53996,7 +54472,7 @@
         "text"
       ],
       "outputs": [
-        "text"
+        "image"
       ]
     },
     "providers": [
@@ -54009,9 +54485,9 @@
           "image": "input_images"
         },
         "output_map": {
-          "type": "text",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "text/plain"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -54053,6 +54529,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -54711,7 +55188,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -55088,7 +55566,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "text"
@@ -55118,6 +55596,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -55151,6 +55630,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -55217,6 +55697,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -55250,7 +55731,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -55353,6 +55834,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -55395,6 +55877,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -55437,6 +55920,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -55479,6 +55963,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -55563,7 +56048,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -55601,7 +56087,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -55639,6 +56126,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -55827,7 +56315,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -55942,7 +56431,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -56019,7 +56509,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -56095,6 +56586,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -56136,6 +56628,8 @@
     ],
     "modality": {
       "inputs": [
+        "image",
+        "text",
         "video"
       ],
       "outputs": [
@@ -56173,6 +56667,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -56215,6 +56710,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -56257,7 +56753,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -56294,7 +56791,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -56311,9 +56809,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -56325,7 +56823,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text",
+        "video"
       ],
       "outputs": [
         "image"
@@ -56342,9 +56841,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -56356,7 +56855,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -56373,9 +56873,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -56387,7 +56887,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text",
+        "video"
       ],
       "outputs": [
         "image"
@@ -56404,9 +56905,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -56448,6 +56949,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -56485,7 +56987,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio",
+        "image",
+        "video"
       ],
       "outputs": [
         "video"
@@ -56523,6 +57027,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -56557,6 +57062,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -56591,6 +57097,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -56740,9 +57247,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -56802,9 +57309,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -56816,10 +57323,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -56833,9 +57340,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "video",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -56847,10 +57354,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -56864,9 +57371,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "video",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -56878,6 +57385,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -56911,7 +57419,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -56944,7 +57452,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "video"
       ],
       "outputs": [
         "audio"
@@ -56994,9 +57502,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -57025,9 +57533,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -57039,10 +57547,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -57056,9 +57564,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "video",
           "extract_path": "images[].url",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -57291,7 +57799,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text",
+        "video"
       ],
       "outputs": [
         "video"
@@ -57328,7 +57838,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -57345,9 +57856,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -57392,7 +57903,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -57429,6 +57941,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -57510,7 +58023,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -57547,7 +58061,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -57687,6 +58202,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -57797,7 +58313,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -57956,7 +58473,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -57989,6 +58506,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -58056,7 +58574,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -58093,7 +58612,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -58206,7 +58726,7 @@
     ],
     "modality": {
       "inputs": [
-        "video"
+        "text"
       ],
       "outputs": [
         "video"
@@ -58243,6 +58763,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -58285,6 +58806,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -58481,6 +59003,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -58601,6 +59124,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -58644,6 +59168,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -58687,6 +59212,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -58730,6 +59256,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -58834,6 +59361,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -58867,6 +59395,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -58934,7 +59463,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio",
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -59127,7 +59658,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -59316,7 +59848,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "video"
       ],
       "outputs": [
         "video"
@@ -59354,7 +59887,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -59414,7 +59948,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -59452,6 +59987,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -59628,6 +60164,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -59665,6 +60202,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -59702,6 +60240,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -59739,6 +60278,8 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
+        "text",
         "video"
       ],
       "outputs": [
@@ -59776,6 +60317,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -59813,6 +60355,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -59850,6 +60393,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -59925,10 +60469,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -59943,9 +60487,9 @@
           "quality": "output_quality"
         },
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -59958,6 +60502,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -60174,7 +60719,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -60280,7 +60826,7 @@
         "video"
       ],
       "outputs": [
-        "audio"
+        "video"
       ]
     },
     "providers": [
@@ -60294,9 +60840,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "audio",
+          "type": "video",
           "extract_path": "video.url",
-          "content_type": "audio/mpeg"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -60369,6 +60915,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -60880,6 +61427,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -60922,7 +61470,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -60985,7 +61533,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -61023,7 +61572,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -61060,6 +61610,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -61236,6 +61787,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -61294,6 +61846,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -61331,7 +61884,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -61368,6 +61922,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "video"
       ],
       "outputs": [
@@ -61405,10 +61960,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -61423,9 +61978,9 @@
           "quality": "quality"
         },
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
-          "content_type": "image/png"
+          "type": "video",
+          "extract_path": "video.url",
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -61437,10 +61992,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -61455,9 +62010,9 @@
           "quality": "quality"
         },
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
-          "content_type": "image/png"
+          "type": "video",
+          "extract_path": "video.url",
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -61469,10 +62024,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -61487,9 +62042,9 @@
           "quality": "quality"
         },
         "output_map": {
-          "type": "image",
-          "extract_path": "images[].url",
-          "content_type": "image/png"
+          "type": "video",
+          "extract_path": "video.url",
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -61539,7 +62094,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -61652,7 +62208,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -61689,7 +62246,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -61764,6 +62322,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -61839,6 +62398,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -61876,7 +62436,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -61915,7 +62476,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -61973,7 +62535,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -62010,7 +62573,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -62047,7 +62611,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -62213,6 +62778,8 @@
     ],
     "modality": {
       "inputs": [
+        "image",
+        "text",
         "video"
       ],
       "outputs": [
@@ -62278,6 +62845,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -62341,7 +62909,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -62379,7 +62948,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -62416,7 +62986,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -62453,7 +63024,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -62528,7 +63100,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -62565,7 +63138,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -62602,7 +63176,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -62639,6 +63214,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -62943,7 +63519,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -62980,7 +63557,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -63017,7 +63595,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -63181,6 +63760,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -63218,6 +63798,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -63255,6 +63836,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -63292,6 +63874,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -63367,7 +63950,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -63404,7 +63988,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -63556,7 +64141,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -63593,7 +64179,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -63630,7 +64217,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -63667,6 +64255,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -63704,7 +64293,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -63741,7 +64331,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -63778,7 +64369,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "video"
       ],
       "outputs": [
         "video"
@@ -63815,7 +64407,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -63853,7 +64446,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -64154,7 +64748,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "video"
       ],
       "outputs": [
         "video"
@@ -64192,6 +64787,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "video"
       ],
       "outputs": [
@@ -64250,7 +64846,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio",
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -64288,7 +64886,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -64479,7 +65078,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -64516,7 +65116,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -64553,7 +65154,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -64590,7 +65192,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -64819,6 +65422,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -64858,7 +65462,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -64895,7 +65500,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -64932,7 +65538,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -64969,6 +65576,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -65121,7 +65729,7 @@
     ],
     "modality": {
       "inputs": [
-        "video"
+        "text"
       ],
       "outputs": [
         "video"
@@ -65234,6 +65842,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -65271,6 +65880,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -65308,6 +65918,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -65345,6 +65956,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -65456,6 +66068,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -65534,6 +66147,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -65575,6 +66189,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "video"
       ],
       "outputs": [
@@ -65612,7 +66227,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -65649,7 +66265,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -65686,7 +66303,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio",
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -65764,7 +66383,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio",
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -65801,7 +66422,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio",
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -65838,6 +66461,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -65879,6 +66503,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -65920,7 +66545,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio",
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -65957,6 +66584,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -65998,6 +66626,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -66039,7 +66668,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "audio",
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -66207,6 +66838,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -66245,6 +66877,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -66419,7 +67052,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "text"
@@ -66453,7 +67086,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
         "text"
@@ -66487,7 +67120,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -66568,7 +67202,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -66665,9 +67300,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "data.outputs[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -66697,9 +67332,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "data.outputs[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -66729,9 +67364,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "data.outputs[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -66778,6 +67413,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -66816,6 +67452,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -66920,10 +67557,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -66938,9 +67575,9 @@
           "quality": "quality"
         },
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "data.outputs[]",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -66985,7 +67622,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -67061,7 +67699,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -67099,7 +67738,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -67129,7 +67768,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -67167,7 +67807,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -67198,7 +67838,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -67267,7 +67907,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -67304,7 +67945,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -67468,7 +68110,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "image"
       ],
       "outputs": [
         "text"
@@ -67529,7 +68171,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -67639,7 +68281,7 @@
         "video"
       ],
       "outputs": [
-        "video"
+        "image"
       ]
     },
     "providers": [
@@ -67659,9 +68301,9 @@
           "safety": "enable_safety_checker"
         },
         "output_map": {
-          "type": "video",
+          "type": "image",
           "extract_path": "images[].url",
-          "content_type": "video/mp4"
+          "content_type": "image/jpeg"
         }
       }
     ]
@@ -67673,7 +68315,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -67887,6 +68529,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -67990,6 +68633,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -68056,7 +68700,7 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "text"
       ],
       "outputs": [
         "image"
@@ -68092,7 +68736,9 @@
     "aliases": [],
     "modality": {
       "inputs": [
-        "text"
+        "image",
+        "text",
+        "video"
       ],
       "outputs": [
         "video"
@@ -68133,6 +68779,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -68171,7 +68818,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "video"
@@ -68316,7 +68964,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -68347,7 +68996,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -68378,7 +69028,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "text"
@@ -68409,7 +69060,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "video"
       ],
       "outputs": [
         "video"
@@ -68683,6 +69335,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -68722,6 +69375,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -68761,7 +69415,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -68798,7 +69453,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -68835,7 +69491,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -68873,7 +69530,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -69004,6 +69662,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -69079,7 +69738,8 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "text",
+        "video"
       ],
       "outputs": [
         "video"
@@ -69262,6 +69922,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "text"
       ],
       "outputs": [
@@ -69368,7 +70029,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -69440,6 +70102,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -69478,7 +70141,8 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text"
       ],
       "outputs": [
         "image"
@@ -69554,6 +70218,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -69583,6 +70248,7 @@
     ],
     "modality": {
       "inputs": [
+        "text",
         "video"
       ],
       "outputs": [
@@ -69615,6 +70281,7 @@
     ],
     "modality": {
       "inputs": [
+        "audio",
         "image"
       ],
       "outputs": [
@@ -69653,6 +70320,7 @@
     ],
     "modality": {
       "inputs": [
+        "image",
         "text"
       ],
       "outputs": [
@@ -69695,7 +70363,7 @@
     ],
     "modality": {
       "inputs": [
-        "text"
+        "audio"
       ],
       "outputs": [
         "audio"
@@ -69729,10 +70397,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -69746,9 +70414,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "video",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -69761,10 +70429,10 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "video"
       ],
       "outputs": [
-        "image"
+        "video"
       ]
     },
     "providers": [
@@ -69780,9 +70448,9 @@
           "quality": "output_quality"
         },
         "output_map": {
-          "type": "image",
+          "type": "video",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "video/mp4"
         }
       }
     ]
@@ -69907,9 +70575,9 @@
           "prompt": "prompt"
         },
         "output_map": {
-          "type": "segmentation",
+          "type": "image",
           "extract_path": "output[]",
-          "content_type": "image/png"
+          "content_type": "image/jpeg"
         }
       }
     ]
