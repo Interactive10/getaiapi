@@ -446,7 +446,7 @@
 | fal-ai-kling-video-v2.6-pro-motion-control                        | video, image, text        | video       | fal-ai    | 95%        |
 | fal-ai-kling-video-v2.6-pro-text-to-video                         | text                      | video       | fal-ai    | 95%        |
 | fal-ai-kling-video-v2.6-standard-motion-control                   | video, image, text        | video       | fal-ai    | 95%        |
-| fal-ai-kling-video-v3-pro-motion-control                          | video, image, text        | video       | fal-ai    | 95%        |
+| fal-ai-kling-video-v3-pro-motion-control                          | video, image, text        | video       | fal-ai    | 100%       |
 | fal-ai-kling-video-v3-pro-text-to-video                           | text                      | video       | fal-ai    | 80%        |
 | fal-ai-kling-video-v3-standard-image-to-video                     | image                     | video       | fal-ai    | 90%        |
 | fal-ai-kling-video-v3-standard-motion-control                     | video, image, text        | video       | fal-ai    | 95%        |
@@ -647,8 +647,8 @@
 | fal-ai-nafnet-deblur                                              | image                     | image       | fal-ai    | 95%        |
 | fal-ai-nafnet-denoise                                             | image                     | image       | fal-ai    | 95%        |
 | fal-ai-nano-banana                                                | text                      | image       | fal-ai    | 95%        |
-| fal-ai-nano-banana-2                                              | text                      | image       | fal-ai    | 95%        |
-| fal-ai-nano-banana-2-edit                                         | text, image               | image       | fal-ai    | 95%        |
+| fal-ai-nano-banana-2                                              | text, image               | image       | fal-ai    | 100%       |
+| fal-ai-nano-banana-2-edit                                         | text, image               | image       | fal-ai    | 100%       |
 | fal-ai-nano-banana-edit                                           | text, image               | image       | fal-ai    | 95%        |
 | fal-ai-nano-banana-pro                                            | text                      | image       | fal-ai    | 95%        |
 | fal-ai-nano-banana-pro-edit                                       | text, image               | image       | fal-ai    | 95%        |
@@ -698,9 +698,9 @@
 | fal-ai-pixart-sigma                                               | text                      | image       | fal-ai    | 95%        |
 | fal-ai-pixverse-extend                                            | text, video               | video       | fal-ai    | 95%        |
 | fal-ai-pixverse-extend-fast                                       | text, video               | video       | fal-ai    | 95%        |
-| fal-ai-pixverse-lipsync                                           | video, audio              | video       | fal-ai    | 90%        |
+| fal-ai-pixverse-lipsync                                           | video, audio, text        | video       | fal-ai    | 100%       |
 | fal-ai-pixverse-sound-effects                                     | video                     | video       | fal-ai    | 95%        |
-| fal-ai-pixverse-swap                                              | video, image              | video       | fal-ai    | 95%        |
+| fal-ai-pixverse-swap                                              | video, image              | video       | fal-ai    | 100%       |
 | fal-ai-pixverse-v3.5-effects                                      | image                     | video       | fal-ai    | 95%        |
 | fal-ai-pixverse-v3.5-image-to-video                               | text, image               | video       | fal-ai    | 95%        |
 | fal-ai-pixverse-v3.5-image-to-video-fast                          | text, image               | video       | fal-ai    | 95%        |
@@ -1003,8 +1003,8 @@
 | fal-ai-wan-trainer-i2v-720p                                       | data                      | data        | fal-ai    | 85%        |
 | fal-ai-wan-trainer-t2v                                            | data                      | data        | fal-ai    | 85%        |
 | fal-ai-wan-trainer-t2v-14b                                        | data                      | data        | fal-ai    | 85%        |
-| fal-ai-wan-v2.2-14b-animate-move                                  | video, image              | video       | fal-ai    | 95%        |
-| fal-ai-wan-v2.2-14b-animate-replace                               | video, image              | video       | fal-ai    | 95%        |
+| fal-ai-wan-v2.2-14b-animate-move                                  | video, image              | video       | fal-ai    | 100%       |
+| fal-ai-wan-v2.2-14b-animate-replace                               | video, image              | video       | fal-ai    | 100%       |
 | fal-ai-wan-v2.2-14b-speech-to-video                               | text, image, audio        | video       | fal-ai    | 95%        |
 | fal-ai-wan-v2.2-5b-image-to-video                                 | text, image               | video       | fal-ai    | 95%        |
 | fal-ai-wan-v2.2-5b-text-to-image                                  | text                      | image       | fal-ai    | 95%        |

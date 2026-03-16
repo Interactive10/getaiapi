@@ -63,3 +63,44 @@ Record of mistakes and the rules created to prevent them from recurring.
 **Mistake**: When asked to do a task, discovered a related issue and jumped ahead to fix it without informing the user or asking for input.
 
 **Rule**: When you discover an issue while working on a task, STOP and report it to the user. Do NOT fix it on your own. Describe what you found and ask for input on how to proceed. The user decides what gets fixed and when.
+
+## 2026-03-16: Phantom params from copy-paste templates
+
+**Mistake**: pixverse-swap had `prompt`, `guidance`, `steps`, and `safety` in its param_map — none of which exist on the actual model. They were copied from a generic template without verifying against the real schema.
+
+**Rule**: When adding or auditing a model's param_map, ALWAYS verify every param against the actual SKILL.md schema. Remove any params that don't exist on the model. Generic templates are starting points, not final truth.
+
+## 2026-03-16: Track unique unified param names for future unification
+
+**Mistake**: New unified param names (`mode`, `keyframe`) were introduced for pixverse-swap without documenting them, making it hard to connect the dots when other models need similar params later.
+
+**Rule**: When introducing a unified param name that currently maps to only one model, document it here so future work can find and reuse or consolidate these names. Current unique unified params:
+- `mode` → pixverse-swap (`mode` = person/object/background swap mode), kling-video-v3-pro-motion-control/replicate (`mode` = std/pro quality mode)
+- `keyframe` → pixverse-swap (`keyframe_id` = frame ID for face/object mapping)
+- `keep_audio` → pixverse-swap (`original_sound_switch`), wan-v2.2-14b-animate-replace/replicate (`merge_audio`), also used across kling-video models (`keep_audio`, `keep_original_sound`) — ready for cross-model unification.
+- `shift` → wan-v2.2-14b-animate-replace/fal-ai (`shift` = classifier shift value 1.0-10.0)
+- `video_write_mode` → wan-v2.2-14b-animate-replace/fal-ai (`video_write_mode` = fast/balanced/small)
+- `video_quality` → wan-v2.2-14b-animate-replace/fal-ai (`video_quality` = low/medium/high/maximum)
+- `turbo` → wan-v2.2-14b-animate-replace: fal-ai (`use_turbo`), replicate (`go_fast`) — cross-provider unification already done.
+- `output_safety` → wan-v2.2-14b-animate-replace/fal-ai (`enable_output_safety_checker` = post-generation safety check)
+- `return_frames_zip` → wan-v2.2-14b-animate-replace/fal-ai (`return_frames_zip` = also return frame archive)
+- `character_orientation` → kling-video-v3-pro-motion-control: fal-ai + replicate (`character_orientation` = image/video orientation matching)
+- `elements` → kling-video-v3-pro-motion-control/fal-ai (`elements` = facial consistency binding elements)
+- `safety_tolerance` → nano-banana-2/fal-ai (`safety_tolerance` = 1-6 content moderation level)
+- `web_search` → nano-banana-2: fal-ai (`enable_web_search`), replicate (`google_search`) — cross-provider unification done.
+- `image_search` → nano-banana-2/replicate (`image_search` = Google Image Search grounding)
+- `thinking_level` → nano-banana-2/fal-ai (`thinking_level` = minimal/high model thinking)
+- `aspect_ratio` → nano-banana-2: fal-ai + replicate (`aspect_ratio`) — direct passthrough on both.
+- `voice_id` → pixverse-lipsync/fal-ai (`voice_id` = TTS voice selection, 15 options)
+- `text` → pixverse-lipsync/fal-ai (`text` = TTS text content when no audio provided)
+
+## 2026-03-16: Multi-provider unified naming — audit results and known gaps
+
+**Context**: Audited all 86 multi-provider models. 80/86 have perfectly matching unified keys across providers. The convention is working well.
+
+**Known gaps to fix when capacity allows**:
+1. **5 LLM models** (claude-haiku-4-5, claude-opus-4-6, deepseek-v3, gpt-4o, gpt-4o-mini) — Replicate has empty `{}` param_maps while OpenRouter has `prompt`. Needs investigation into how replicate text-generation is handled.
+2. **Replicate `safety` semantics** — 346 models use `disable_safety_checker` (correct, mapper inverts), but 36 models use `enable_safety_checker` which would get double-inverted. Needs audit.
+3. **Replicate `strength` overloading** — maps to `strength`, `prompt_strength`, or `scale` depending on model type. Consider splitting into `strength` (editing) vs `upscale_factor` (upscaling) in future.
+
+**Rule**: When adding a new multi-provider model, always ensure the same set of unified keys appears on every provider entry. If a param only exists on one provider, that's fine — just don't put phantom params on the provider that doesn't support it. Same concept, same unified key, different provider values.
