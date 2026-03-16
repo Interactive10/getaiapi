@@ -6,6 +6,21 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **pixverse-swap**: Removed 4 phantom params (`prompt`, `guidance`, `steps`, `safety`), added real params (`mode`, `keep_audio`, `keyframe`)
+- **pixverse-lipsync**: Removed 7 phantom params per provider, added missing `audio` input (critical — was unmapped on both fal-ai and replicate), added TTS params (`text`, `voice_id`), added `text` to modality inputs
+- **wan-v2.2-14b-animate-replace**: Removed phantom `prompt` from both providers, removed 4 phantoms from replicate. Added `shift`, `video_write_mode`, `video_quality`, `turbo`, `output_safety`, `return_frames_zip` (fal-ai) and `keep_audio`, `turbo` (replicate)
+- **wan-v2.2-14b-animate-move**: Removed 3 phantom params (`prompt`, `negative_prompt`, `format`), added missing `video` input (critical — required but unmapped), added `resolution`, `shift`, `video_write_mode`, `video_quality`, `turbo`, `output_safety`, `return_frames_zip`
+- **kling-video-v3-pro-motion-control**: Removed 5 phantom params per provider, fixed replicate `image` mapping (was incorrectly mapped to `character_image`), added `character_orientation` (required on fal-ai but was missing), `keep_audio`, `elements` (fal-ai) and `mode` (replicate)
+- **nano-banana-2**: Removed 6 phantom params per provider, added `images`, `resolution`, `aspect_ratio`, `safety_tolerance`, `web_search`, `thinking_level` (fal-ai) and `images`, `resolution`, `aspect_ratio`, `web_search`, `image_search` (replicate), corrected input modality to include `image`
+- **nano-banana-2-edit**: Removed 5 phantom params per provider (generic image-edit template), added `count`, `resolution`, `aspect_ratio`, `safety_tolerance`, `web_search`, `thinking_level` (fal-ai), fixed wavespeed `image` mapping
+
+### Added
+
+- Model-specific param mapping tests for: pixverse-swap, pixverse-lipsync, wan-v2.2-14b-animate-replace, wan-v2.2-14b-animate-move, kling-video-v3-pro-motion-control, nano-banana-2, nano-banana-2-edit
+- Cross-provider unified param names: `keep_audio`, `turbo`, `web_search`, `character_orientation`, `mode` — same user-facing key maps to different provider-specific param names
+
 ## [1.0.0-alpha.1] - 2026-03-14
 
 ### Fixed

@@ -32510,11 +32510,9 @@
           "video": "video_url",
           "image": "image_url",
           "prompt": "prompt",
-          "resolution": "resolution",
-          "seed": "seed",
-          "guidance": "guidance_scale",
-          "steps": "num_inference_steps",
-          "safety": "enable_safety_checker"
+          "character_orientation": "character_orientation",
+          "keep_audio": "keep_original_sound",
+          "elements": "elements"
         },
         "output_map": {
           "type": "video",
@@ -32529,13 +32527,11 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {
           "video": "video",
-          "image": "character_image",
+          "image": "image",
           "prompt": "prompt",
-          "resolution": "resolution",
-          "seed": "seed",
-          "guidance": "guidance_scale",
-          "steps": "num_inference_steps",
-          "safety": "enable_safety_checker"
+          "character_orientation": "character_orientation",
+          "mode": "mode",
+          "keep_audio": "keep_original_sound"
         },
         "output_map": {
           "type": "video",
@@ -45365,15 +45361,15 @@
         "auth_env": "FAL_KEY",
         "param_map": {
           "prompt": "prompt",
-          "negative_prompt": "negative_prompt",
+          "images": "image_urls",
           "count": "num_images",
-          "size": "image_size",
-          "guidance": "guidance_scale",
-          "steps": "num_inference_steps",
           "seed": "seed",
+          "resolution": "resolution",
+          "aspect_ratio": "aspect_ratio",
           "format": "output_format",
-          "quality": "quality",
-          "safety": "enable_safety_checker"
+          "safety_tolerance": "safety_tolerance",
+          "web_search": "enable_web_search",
+          "thinking_level": "thinking_level"
         },
         "output_map": {
           "type": "image",
@@ -45388,18 +45384,12 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {
           "prompt": "prompt",
-          "negative_prompt": "negative_prompt",
-          "count": "num_outputs",
-          "size": [
-            "width",
-            "height"
-          ],
-          "guidance": "guidance",
-          "steps": "num_inference_steps",
-          "seed": "seed",
+          "images": "image_input",
+          "resolution": "resolution",
+          "aspect_ratio": "aspect_ratio",
           "format": "output_format",
-          "quality": "output_quality",
-          "safety": "disable_safety_checker"
+          "web_search": "google_search",
+          "image_search": "image_search"
         },
         "output_map": {
           "type": "image",
@@ -45431,15 +45421,16 @@
         "endpoint": "fal-ai/nano-banana-2/edit",
         "auth_env": "FAL_KEY",
         "param_map": {
-          "image": "image_url",
-          "images": "image_urls",
           "prompt": "prompt",
-          "strength": "strength",
-          "mask": "mask_url",
+          "images": "image_urls",
+          "count": "num_images",
           "seed": "seed",
+          "resolution": "resolution",
+          "aspect_ratio": "aspect_ratio",
           "format": "output_format",
-          "quality": "quality",
-          "safety": "enable_safety_checker"
+          "safety_tolerance": "safety_tolerance",
+          "web_search": "enable_web_search",
+          "thinking_level": "thinking_level"
         },
         "output_map": {
           "type": "image",
@@ -45453,15 +45444,11 @@
         "endpoint": "google/nano-banana-2/edit",
         "auth_env": "WAVESPEED_API_KEY",
         "param_map": {
-          "image": "image_url",
-          "images": "image_urls",
           "prompt": "prompt",
-          "strength": "strength",
-          "mask": "mask_url",
+          "image": "image",
+          "images": "image_urls",
           "seed": "seed",
-          "format": "output_format",
-          "quality": "quality",
-          "safety": "enable_safety_checker"
+          "format": "output_format"
         },
         "output_map": {
           "type": "image",
@@ -48631,6 +48618,7 @@
     "modality": {
       "inputs": [
         "audio",
+        "text",
         "video"
       ],
       "outputs": [
@@ -48645,13 +48633,9 @@
         "auth_env": "FAL_KEY",
         "param_map": {
           "video": "video_url",
-          "image": "image_url",
-          "prompt": "prompt",
-          "resolution": "resolution",
-          "seed": "seed",
-          "guidance": "guidance_scale",
-          "steps": "num_inference_steps",
-          "safety": "enable_safety_checker"
+          "audio": "audio_url",
+          "text": "text",
+          "voice_id": "voice_id"
         },
         "output_map": {
           "type": "video",
@@ -48666,13 +48650,7 @@
         "auth_env": "REPLICATE_API_TOKEN",
         "param_map": {
           "video": "video",
-          "image": "character_image",
-          "prompt": "prompt",
-          "resolution": "resolution",
-          "seed": "seed",
-          "guidance": "guidance_scale",
-          "steps": "num_inference_steps",
-          "safety": "enable_safety_checker"
+          "audio": "audio"
         },
         "output_map": {
           "type": "video",
@@ -48949,12 +48927,11 @@
         "param_map": {
           "video": "video_url",
           "image": "image_url",
-          "prompt": "prompt",
           "resolution": "resolution",
           "seed": "seed",
-          "guidance": "guidance_scale",
-          "steps": "num_inference_steps",
-          "safety": "enable_safety_checker"
+          "mode": "mode",
+          "keep_audio": "original_sound_switch",
+          "keyframe": "keyframe_id"
         },
         "output_map": {
           "type": "video",
@@ -64762,14 +64739,19 @@
         "endpoint": "fal-ai/wan/v2.2-14b/animate/move",
         "auth_env": "FAL_KEY",
         "param_map": {
+          "video": "video_url",
           "image": "image_url",
-          "prompt": "prompt",
-          "negative_prompt": "negative_prompt",
+          "resolution": "resolution",
           "seed": "seed",
           "guidance": "guidance_scale",
           "steps": "num_inference_steps",
-          "format": "output_format",
-          "safety": "enable_safety_checker"
+          "safety": "enable_safety_checker",
+          "shift": "shift",
+          "video_write_mode": "video_write_mode",
+          "video_quality": "video_quality",
+          "turbo": "use_turbo",
+          "output_safety": "enable_output_safety_checker",
+          "return_frames_zip": "return_frames_zip"
         },
         "output_map": {
           "type": "video",
@@ -64803,12 +64785,17 @@
         "param_map": {
           "video": "video_url",
           "image": "image_url",
-          "prompt": "prompt",
           "resolution": "resolution",
           "seed": "seed",
           "guidance": "guidance_scale",
           "steps": "num_inference_steps",
-          "safety": "enable_safety_checker"
+          "safety": "enable_safety_checker",
+          "shift": "shift",
+          "video_write_mode": "video_write_mode",
+          "video_quality": "video_quality",
+          "turbo": "use_turbo",
+          "output_safety": "enable_output_safety_checker",
+          "return_frames_zip": "return_frames_zip"
         },
         "output_map": {
           "type": "video",
@@ -64824,12 +64811,10 @@
         "param_map": {
           "video": "video",
           "image": "character_image",
-          "prompt": "prompt",
           "resolution": "resolution",
           "seed": "seed",
-          "guidance": "guidance_scale",
-          "steps": "num_inference_steps",
-          "safety": "enable_safety_checker"
+          "keep_audio": "merge_audio",
+          "turbo": "go_fast"
         },
         "output_map": {
           "type": "video",
