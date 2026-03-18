@@ -6,6 +6,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **Async job submission & polling API**: New `submit()` function submits a job and returns immediately with the provider's task ID, model, provider, and endpoint — no blocking poll. New `poll()` function checks job status once and returns mapped outputs when completed. New `submitAndPoll()` alias for existing `generate()` behavior. New `SubmitResponse` and `PollResponse` types exported from the package. Synchronous providers (OpenRouter) return `status: 'completed'` from `submit()` immediately — check status before calling `poll()`.
+- **Integration tests**: 6 new tests covering `submit()`, `poll()` (processing/completed/failed states), and `submitAndPoll()` backward compatibility.
+
+### Changed
+
+- **Gateway refactor**: Extracted shared validation/auth/resolve/map/upload logic into internal `_prepare()` helper, shared by `submit()`, `poll()`, and `generate()`. No behavioral changes to `generate()`.
+
 ### Fixed
 
 - **pixverse-swap**: Removed 4 phantom params (`prompt`, `guidance`, `steps`, `safety`), added real params (`mode`, `keep_audio`, `keyframe`)

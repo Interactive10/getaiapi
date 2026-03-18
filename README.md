@@ -115,6 +115,48 @@ const cutout = await generate({
 })
 ```
 
+## Async Job Control
+
+For long-running jobs (video generation, training), you can submit a job and poll for status separately instead of blocking until completion.
+
+```typescript
+import { submit, poll } from 'getaiapi'
+
+// Submit — returns immediately with the provider's task ID
+const job = await submit({
+  model: 'veo3.1',
+  prompt: 'a timelapse of a flower blooming',
+})
+
+console.log(job.id)     // provider task ID
+console.log(job.status) // 'pending' | 'processing' | 'completed'
+
+// Poll — check status manually (call in a loop, on a timer, etc.)
+let result = await poll(job)
+
+while (result.status === 'pending' || result.status === 'processing') {
+  await new Promise(r => setTimeout(r, 2000))
+  result = await poll(job)
+}
+
+if (result.status === 'completed') {
+  console.log(result.outputs[0].url)
+}
+```
+
+Synchronous providers (like OpenRouter) return `status: 'completed'` from `submit()` immediately -- check status before polling.
+
+`submitAndPoll()` is an alias for `generate()` that makes the blocking behavior explicit:
+
+```typescript
+import { submitAndPoll } from 'getaiapi'
+
+const result = await submitAndPoll({
+  model: 'flux-schnell',
+  prompt: 'a cat in space',
+})
+```
+
 ## Configuration
 
 ### Option 1: Environment Variables
@@ -301,6 +343,40 @@ interface OutputItem {
   size_bytes?: number
 }
 ```
+
+### `submit(request: GenerateRequest): Promise<SubmitResponse>`
+
+Submits a job to the provider and returns immediately without waiting for completion. Returns the provider's task ID and enough context to poll later.
+
+```typescript
+interface SubmitResponse {
+  id: string              // provider's task/request ID
+  model: string           // canonical model name
+  provider: ProviderName  // which provider handled it
+  endpoint: string        // needed for polling
+  status: 'pending' | 'processing' | 'completed'
+}
+```
+
+### `poll(job: SubmitResponse): Promise<PollResponse>`
+
+Checks the status of a submitted job once. Returns current status, and includes mapped outputs and metadata when completed.
+
+```typescript
+interface PollResponse {
+  id: string
+  model: string
+  provider: ProviderName
+  status: 'completed' | 'failed' | 'processing' | 'pending'
+  outputs?: OutputItem[]                   // populated when completed
+  metadata?: GenerateResponse['metadata']  // populated when completed
+  error?: string                           // populated when failed
+}
+```
+
+### `submitAndPoll(request: GenerateRequest): Promise<GenerateResponse>`
+
+Alias for `generate()`. Submits a job and polls until completion. Use this when you want the blocking behavior but want to be explicit about it.
 
 ### `listModels(filters?: ListModelsFilters): ModelEntry[]`
 
