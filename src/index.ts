@@ -1,7 +1,7 @@
 // Public API — Modality-First Architecture
 
 // Generation
-export { generate } from './gateway.js'
+export { generate, submit, poll, submitAndPoll } from './gateway.js'
 
 // Configuration
 export { configure } from './configure.js'
@@ -24,6 +24,8 @@ export type {
   OutputMapping,
   GenerateRequest,
   GenerateResponse,
+  SubmitResponse,
+  PollResponse,
   OutputItem,
   ListModelsFilters,
   InputType,

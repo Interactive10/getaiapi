@@ -79,6 +79,26 @@ export interface OutputItem {
   size_bytes?: number
 }
 
+// === Async Job Submission & Polling ===
+
+export interface SubmitResponse {
+  id: string
+  model: string
+  provider: ProviderName
+  endpoint: string
+  status: 'pending' | 'processing' | 'completed'
+}
+
+export interface PollResponse {
+  id: string
+  model: string
+  provider: ProviderName
+  status: 'completed' | 'failed' | 'processing' | 'pending'
+  outputs?: OutputItem[]
+  metadata?: GenerateResponse['metadata']
+  error?: string
+}
+
 // === Discovery ===
 
 export interface ListModelsFilters {
