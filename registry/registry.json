@@ -30541,11 +30541,11 @@
         "endpoint": "fal-ai/kling-video/create-voice",
         "auth_env": "FAL_KEY",
         "param_map": {
-          "image": "images_data_url"
+          "voice_url": "voice_url"
         },
         "output_map": {
           "type": "text",
-          "extract_path": "video.url",
+          "extract_path": "voice_id",
           "content_type": "text/plain"
         }
       }
@@ -70670,6 +70670,356 @@
           "type": "image",
           "extract_path": "output[]",
           "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "gpt-5.4-pro",
+    "aliases": [
+      "gpt-5.4-pro",
+      "openai-gpt-5.4-pro"
+    ],
+    "modality": {
+      "inputs": ["text"],
+      "outputs": ["text"]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-gpt-5.4-pro",
+        "endpoint": "openai/gpt-5.4-pro",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": { "prompt": "prompt" },
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "gpt-5.4",
+    "aliases": [
+      "gpt-5.4",
+      "openai-gpt-5.4"
+    ],
+    "modality": {
+      "inputs": ["text"],
+      "outputs": ["text"]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-gpt-5.4",
+        "endpoint": "openai/gpt-5.4",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": { "prompt": "prompt" },
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "gpt-5.4-mini",
+    "aliases": [
+      "gpt-5.4-mini",
+      "openai-gpt-5.4-mini"
+    ],
+    "modality": {
+      "inputs": ["text"],
+      "outputs": ["text"]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-gpt-5.4-mini",
+        "endpoint": "openai/gpt-5.4-mini",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": { "prompt": "prompt" },
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "gemini-3.1-pro",
+    "aliases": [
+      "gemini-3.1-pro",
+      "google-gemini-3.1-pro"
+    ],
+    "modality": {
+      "inputs": ["text"],
+      "outputs": ["text"]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-gemini-3.1-pro",
+        "endpoint": "google/gemini-3.1-pro-preview",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": { "prompt": "prompt" },
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "grok-4.20",
+    "aliases": [
+      "grok-4.20",
+      "xai-grok-4.20"
+    ],
+    "modality": {
+      "inputs": ["text"],
+      "outputs": ["text"]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-grok-4.20",
+        "endpoint": "x-ai/grok-4.20-beta",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": { "prompt": "prompt" },
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "palmyra-x5",
+    "aliases": [
+      "palmyra-x5",
+      "writer-palmyra-x5"
+    ],
+    "modality": {
+      "inputs": ["text"],
+      "outputs": ["text"]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-palmyra-x5",
+        "endpoint": "writer/palmyra-x5",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": { "prompt": "prompt" },
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "gpt-5.4-nano",
+    "aliases": [
+      "gpt-5.4-nano",
+      "openai-gpt-5.4-nano"
+    ],
+    "modality": {
+      "inputs": ["text"],
+      "outputs": ["text"]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-gpt-5.4-nano",
+        "endpoint": "openai/gpt-5.4-nano",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": { "prompt": "prompt" },
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "mimo-v2-pro",
+    "aliases": [
+      "mimo-v2-pro",
+      "xiaomi-mimo-v2-pro"
+    ],
+    "modality": {
+      "inputs": ["text"],
+      "outputs": ["text"]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-mimo-v2-pro",
+        "endpoint": "xiaomi/mimo-v2-pro",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": { "prompt": "prompt" },
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "mimo-v2-omni",
+    "aliases": [
+      "mimo-v2-omni",
+      "xiaomi-mimo-v2-omni"
+    ],
+    "modality": {
+      "inputs": ["text"],
+      "outputs": ["text"]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-mimo-v2-omni",
+        "endpoint": "xiaomi/mimo-v2-omni",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": { "prompt": "prompt" },
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "mistral-small-4",
+    "aliases": [
+      "mistral-small-4",
+      "mistralai-mistral-small-4"
+    ],
+    "modality": {
+      "inputs": ["text"],
+      "outputs": ["text"]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-mistral-small-4",
+        "endpoint": "mistralai/mistral-small-2603",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": { "prompt": "prompt" },
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "minimax-m2.7",
+    "aliases": [
+      "minimax-m2.7",
+      "minimax-m27"
+    ],
+    "modality": {
+      "inputs": ["text"],
+      "outputs": ["text"]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-minimax-m2.7",
+        "endpoint": "minimax/minimax-m2.7",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": { "prompt": "prompt" },
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "nemotron-3-super",
+    "aliases": [
+      "nemotron-3-super",
+      "nvidia-nemotron-3-super"
+    ],
+    "modality": {
+      "inputs": ["text"],
+      "outputs": ["text"]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-nemotron-3-super",
+        "endpoint": "nvidia/nemotron-3-super-120b-a12b",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": { "prompt": "prompt" },
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "qwen-3.5-72b",
+    "aliases": [
+      "qwen-3.5-72b",
+      "qwen-35-72b"
+    ],
+    "modality": {
+      "inputs": ["text"],
+      "outputs": ["text"]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-qwen-3.5-72b",
+        "endpoint": "qwen/qwen3.5-9b",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": { "prompt": "prompt" },
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "glm-5-turbo",
+    "aliases": [
+      "glm-5-turbo",
+      "z-ai-glm-5-turbo"
+    ],
+    "modality": {
+      "inputs": ["text"],
+      "outputs": ["text"]
+    },
+    "providers": [
+      {
+        "provider": "openrouter",
+        "skill_id": "openrouter-glm-5-turbo",
+        "endpoint": "z-ai/glm-5-turbo",
+        "auth_env": "OPENROUTER_API_KEY",
+        "param_map": { "prompt": "prompt" },
+        "output_map": {
+          "type": "text",
+          "extract_path": "choices[0].message.content",
+          "content_type": "text/plain"
         }
       }
     ]
