@@ -32467,14 +32467,16 @@
         "endpoint": "fal-ai/kling-video/v3/pro/image-to-video",
         "auth_env": "FAL_KEY",
         "param_map": {
-          "image": "image_url",
+          "image": "start_image_url",
           "prompt": "prompt",
           "negative_prompt": "negative_prompt",
-          "seed": "seed",
-          "guidance": "guidance_scale",
-          "steps": "num_inference_steps",
-          "format": "output_format",
-          "safety": "enable_safety_checker"
+          "duration": "duration",
+          "generate_audio": "generate_audio",
+          "end_image_url": "end_image_url",
+          "voice_ids": "voice_ids",
+          "elements": "elements",
+          "aspect_ratio": "aspect_ratio",
+          "cfg_scale": "cfg_scale"
         },
         "output_map": {
           "type": "video",

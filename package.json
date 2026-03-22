@@ -1,6 +1,6 @@
 {
   "name": "getaiapi",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "Unified AI API Gateway - one function to call any AI model",
   "main": "./dist/index.js",
