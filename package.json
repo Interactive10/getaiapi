@@ -53,7 +53,8 @@
     "catalog": "tsx scripts/catalog.ts",
     "generate-registry": "tsx scripts/generate-registry.ts",
     "generate-models": "node scripts/generate-models-md.js",
-    "validate-registry": "node scripts/validate-registry.js"
+    "validate-registry": "node scripts/validate-registry.js",
+    "claude": "bash kiani/start.sh"
   },
   "devDependencies": {
     "@fal-ai/client": "^1.9.4",
