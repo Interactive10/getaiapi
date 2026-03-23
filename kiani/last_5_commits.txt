@@ -1,0 +1,92 @@
+=== Last 5 Commits ===
+
+--- Commit: 0bd39f8 ---
+Date: 2026-03-18 00:45:12 +0400
+Author: arash
+Message: fix: revert broad resolveAssetUrl change, target uploadedImageKey in JobProcessor
+
+The previous resolveAssetUrl change re-signed all R2 URLs globally,
+which caused character images to resolve incorrectly across characters.
+Now extractR2Key is only used in processCharacterVisual to normalize
+the uploadedImageKey before resolution.
+
+
+--- Commit: 4e3b634 ---
+Date: 2026-03-18 00:35:40 +0400
+Author: arash
+Message: fix: extract storage key from presigned R2 URLs in resolveAssetUrl
+
+Presigned R2 URLs stored in the DB (from before the page fix) were
+passed through as-is, causing 422 errors when they expired. Now
+resolveAssetUrl detects R2 presigned URLs and re-signs them fresh.
+
+
+--- Commit: 692f23a ---
+Date: 2026-03-18 00:27:27 +0400
+Author: arash
+Message: fix: add missing gender and clothing fields to character PATCH schema
+
+These fields were accepted by the UI but stripped by Zod validation
+in the PATCH endpoint, causing values to silently disappear on save.
+
+
+--- Commit: 224bad5 ---
+Date: 2026-03-18 00:05:10 +0400
+Author: arash
+Message: fix: preserve storage key for character uploadedImageUrl to prevent expired presigned URL
+
+The character page was resolving uploadedImageUrl to a presigned URL (4h TTL),
+which the component then sent back to generate-visual on regenerate. By job
+processing time the URL had expired, causing fal-ai 422 errors.
+
+
+--- Commit: 8f9e9d5 ---
+Date: 2026-03-17 22:43:34 +0400
+Author: arash
+Message: feat: Shorts Analyzer V2 — multi-video cart, 3 story options, direction input
+
+- Cart UI: add/remove YouTube URLs with thumbnail previews, duplicate/invalid detection (max 10)
+- API accepts { urls: string[] } with parallel fetch, backwards-compat with { url: string }
+- New multi-video prompt returns 3 story options with recommended pick + cross-video patterns
+- Direction textarea lets user guide the analysis (e.g. "focus on tech, not the company")
+- Extract extractVideoId to youtubeUtils.ts for client-side use (no server deps)
+- Mock mode returns 3 mock options; max_tokens bumped to 4000
+
+
+=== Diffs ===
+
+--- 0bd39f8: fix: revert broad resolveAssetUrl change, target uploadedImageKey in JobProcessor ---
+ src/libs/JobProcessor.ts | 12 +++++++-----
+ src/libs/Storage.ts      | 14 +-------------
+ 2 files changed, 8 insertions(+), 18 deletions(-)
+
+--- 4e3b634: fix: extract storage key from presigned R2 URLs in resolveAssetUrl ---
+ src/libs/Storage.ts | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+--- 692f23a: fix: add missing gender and clothing fields to character PATCH schema ---
+ src/app/[locale]/api/characters/[id]/route.ts | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- 224bad5: fix: preserve storage key for character uploadedImageUrl to prevent expired presigned URL ---
+ src/app/[locale]/(auth)/(app)/characters/[id]/page.tsx | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- 8f9e9d5: feat: Shorts Analyzer V2 — multi-video cart, 3 story options, direction input ---
+ .env.example                                       |   4 +
+ infra/Pulumi.production.yaml                       |   2 +
+ infra/index.ts                                     |   1 +
+ package-lock.json                                  |  15 +
+ package.json                                       |   1 +
+ .../(auth)/(app)/admin/shorts-analyzer/page.tsx    |  18 +
+ .../[locale]/api/admin/shorts-analyzer/route.ts    | 165 ++++++++
+ src/components/AdminDashboardClient.tsx            |  10 +-
+ src/components/ShortsAnalyzerClient.tsx            | 418 +++++++++++++++++++++
+ src/libs/Env.ts                                    |   2 +
+ src/libs/prompts/shortsAnalyzerPrompt.ts           | 188 +++++++++
+ src/libs/youtube.ts                                | 114 ++++++
+ src/libs/youtubeUtils.ts                           |  25 ++
+ tasks/TASKS.md                                     |  14 +-
+ tasks/task-86.md                                   |  26 ++
+ tasks/task-87.md                                   | 123 ++++++
+ 16 files changed, 1116 insertions(+), 10 deletions(-)

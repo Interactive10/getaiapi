@@ -1,6 +1,6 @@
 {
   "name": "getaiapi",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.2",
   "type": "module",
   "description": "Unified AI API Gateway - one function to call any AI model",
   "main": "./dist/index.js",
@@ -53,7 +53,8 @@
     "catalog": "tsx scripts/catalog.ts",
     "generate-registry": "tsx scripts/generate-registry.ts",
     "generate-models": "node scripts/generate-models-md.js",
-    "validate-registry": "node scripts/validate-registry.js"
+    "validate-registry": "node scripts/validate-registry.js",
+    "claude": "bash kiani/start.sh"
   },
   "devDependencies": {
     "@fal-ai/client": "^1.9.4",

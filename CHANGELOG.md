@@ -8,6 +8,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- **14 new OpenRouter text-generation models**: 6 flagship (gpt-5.4-pro, gpt-5.4, gpt-5.4-mini, gemini-3.1-pro, grok-4.20, palmyra-x5) and 8 notable (gpt-5.4-nano, mimo-v2-pro, mimo-v2-omni, mistral-small-4, minimax-m2.7, nemotron-3-super, qwen-3.5-72b, glm-5-turbo). OpenRouter now has 24 total models in the registry.
 - **Async job submission & polling API**: New `submit()` function submits a job and returns immediately with the provider's task ID, model, provider, and endpoint — no blocking poll. New `poll()` function checks job status once and returns mapped outputs when completed. New `submitAndPoll()` alias for existing `generate()` behavior. New `SubmitResponse` and `PollResponse` types exported from the package. Synchronous providers (OpenRouter) return `status: 'completed'` from `submit()` immediately — check status before calling `poll()`.
 - **Integration tests**: 6 new tests covering `submit()`, `poll()` (processing/completed/failed states), and `submitAndPoll()` backward compatibility.
 
@@ -17,6 +18,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- **kling-video-create-voice**: Fixed wrong `output_map.extract_path` (`video.url` → `voice_id`) — endpoint returns `{ voice_id: "..." }`, not `{ video: { url: "..." } }`. Fixed `param_map` (`image` → `voice_url`) to match actual API input schema.
+- **kling-video-v3-pro-image-to-video**: Fixed `image` mapping (`image_url` → `start_image_url`) — fal.ai endpoint requires `start_image_url`, causing `input_value_error` on the required field. Removed 4 phantom params (`seed`, `guidance`, `steps`, `format`, `safety`), added real params (`duration`, `generate_audio`, `end_image_url`, `voice_ids`, `elements`, `aspect_ratio`, `cfg_scale`).
 - **pixverse-swap**: Removed 4 phantom params (`prompt`, `guidance`, `steps`, `safety`), added real params (`mode`, `keep_audio`, `keyframe`)
 - **pixverse-lipsync**: Removed 7 phantom params per provider, added missing `audio` input (critical — was unmapped on both fal-ai and replicate), added TTS params (`text`, `voice_id`), added `text` to modality inputs
 - **wan-v2.2-14b-animate-replace**: Removed phantom `prompt` from both providers, removed 4 phantoms from replicate. Added `shift`, `video_write_mode`, `video_quality`, `turbo`, `output_safety`, `return_frames_zip` (fal-ai) and `keep_audio`, `turbo` (replicate)
