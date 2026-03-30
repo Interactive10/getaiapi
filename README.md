@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue.svg)](https://www.typescriptlang.org/)
 
-A unified TypeScript library that wraps 1,940+ AI models across 4 providers into a single `generate()` function. One input shape. One output shape. Any model.
+A unified TypeScript library that wraps 1,890+ AI models across 4 providers into a single `generate()` function. One input shape. One output shape. Any model.
 
 ## Install
 
@@ -173,7 +173,7 @@ export REPLICATE_API_TOKEN="your-replicate-token"
 # WaveSpeed (66 models)
 export WAVESPEED_API_KEY="your-wavespeed-key"
 
-# OpenRouter (10+ LLM models — Claude, GPT, Gemini, Llama, etc.)
+# OpenRouter (24 LLM models — Claude, GPT, Gemini, Llama, etc.)
 export OPENROUTER_API_KEY="your-openrouter-key"
 ```
 
@@ -259,7 +259,7 @@ Models declare their input and output types via `modality`. There are no fixed c
 
 **Output types:** `image`, `video`, `audio`, `text`, `3d`, `segmentation`
 
-Common combinations across 1,940+ models:
+Common combinations across 1,890+ models:
 
 | Inputs | Outputs | Example |
 |---|---|---|
@@ -280,7 +280,7 @@ Common combinations across 1,940+ models:
 | fal-ai | 1,201 | `FAL_KEY` | Native fetch |
 | Replicate | 687 | `REPLICATE_API_TOKEN` | Native fetch |
 | WaveSpeed | 66 | `WAVESPEED_API_KEY` | Native fetch |
-| OpenRouter | 10 | `OPENROUTER_API_KEY` | Native fetch |
+| OpenRouter | 24 | `OPENROUTER_API_KEY` | Native fetch |
 
 Zero external dependencies -- all provider communication uses native `fetch`. Works in Node.js, Vercel Edge, Cloudflare Workers, Deno, Bun, and any ESM runtime -- no `fs` or special bundler config needed.
 

@@ -638,6 +638,8 @@ def main():
                         help="Show detailed progress")
     parser.add_argument("--endpoint", type=str, default=None,
                         help="Process a single specific endpoint ID")
+    parser.add_argument("--force", action="store_true",
+                        help="Overwrite existing SKILL.md files")
 
     args = parser.parse_args()
 
@@ -649,8 +651,8 @@ def main():
     # 2. Single endpoint mode
     if args.endpoint:
         endpoint = args.endpoint
-        if endpoint in existing:
-            print(f"Skill already exists for {endpoint}, skipping.")
+        if endpoint in existing and not args.force:
+            print(f"Skill already exists for {endpoint}, skipping. Use --force to overwrite.")
             return
 
         print(f"Processing single endpoint: {endpoint}")
@@ -696,7 +698,7 @@ def main():
             if args.verbose:
                 print(f"  Skipping model with no endpoint: {m.get('title', m.get('name', '?'))}")
             continue
-        if endpoint in existing:
+        if endpoint in existing and not args.force:
             if args.verbose:
                 print(f"  Already have: {endpoint}")
             continue

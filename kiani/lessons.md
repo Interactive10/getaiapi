@@ -1,4 +1,4 @@
-# Lessons Learned
+# Lessons
 
 Record of mistakes and the rules created to prevent them from recurring.
 
@@ -75,6 +75,7 @@ Record of mistakes and the rules created to prevent them from recurring.
 **Mistake**: New unified param names (`mode`, `keyframe`) were introduced for pixverse-swap without documenting them, making it hard to connect the dots when other models need similar params later.
 
 **Rule**: When introducing a unified param name that currently maps to only one model, document it here so future work can find and reuse or consolidate these names. Current unique unified params:
+
 - `mode` → pixverse-swap (`mode` = person/object/background swap mode), kling-video-v3-pro-motion-control/replicate (`mode` = std/pro quality mode)
 - `keyframe` → pixverse-swap (`keyframe_id` = frame ID for face/object mapping)
 - `keep_audio` → pixverse-swap (`original_sound_switch`), wan-v2.2-14b-animate-replace/replicate (`merge_audio`), also used across kling-video models (`keep_audio`, `keep_original_sound`) — ready for cross-model unification.
@@ -99,8 +100,13 @@ Record of mistakes and the rules created to prevent them from recurring.
 **Context**: Audited all 86 multi-provider models. 80/86 have perfectly matching unified keys across providers. The convention is working well.
 
 **Known gaps to fix when capacity allows**:
+
 1. **5 LLM models** (claude-haiku-4-5, claude-opus-4-6, deepseek-v3, gpt-4o, gpt-4o-mini) — Replicate has empty `{}` param_maps while OpenRouter has `prompt`. Needs investigation into how replicate text-generation is handled.
 2. **Replicate `safety` semantics** — 346 models use `disable_safety_checker` (correct, mapper inverts), but 36 models use `enable_safety_checker` which would get double-inverted. Needs audit.
 3. **Replicate `strength` overloading** — maps to `strength`, `prompt_strength`, or `scale` depending on model type. Consider splitting into `strength` (editing) vs `upscale_factor` (upscaling) in future.
 
 **Rule**: When adding a new multi-provider model, always ensure the same set of unified keys appears on every provider entry. If a param only exists on one provider, that's fine — just don't put phantom params on the provider that doesn't support it. Same concept, same unified key, different provider values.
+
+<!-- Self-improvement loop: document mistakes as rules to prevent repeats -->
+<!-- Format: ### N. Title (Severity: High|Medium|Low) -->
+<!-- Description of what went wrong and the rule to prevent it -->

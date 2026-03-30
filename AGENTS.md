@@ -1,42 +1,67 @@
-# Agent System
+# AGENTS
 
-This project uses specialized agent personas. Each agent has deep expertise in their domain and operates with that lens when activated.
+## Principles
+- Clarity and consistency over cleverness. Minimal changes. Match existing patterns.
+- Keep components/functions short; break down when it improves structure.
+- TypeScript everywhere; no `any` unless isolated and necessary.
+- No unnecessary `try/catch`. Avoid casting; use narrowing.
+- Named exports only (no default exports, except Next.js pages).
+- Absolute imports via `@/` unless same directory.
+- Follow existing ESLint setup; don't reformat unrelated code.
+- Zod type-only: `import type * as z from 'zod';`.
+- Let compiler infer return types unless annotation adds clarity.
+- Options object for 3+ params, optional flags, or ambiguous args.
+- Hypothesis-driven debugging: 1-3 causes, validate most likely first.
 
-## How to Use Agents
+## Token efficiency
+- Skip recaps unless the result is ambiguous or you need more input.
 
-1. Agents are defined in the `/agents/` directory, one file per role.
-2. When the user says **"Think like a [role]"**, read the corresponding agent file and adopt that persona.
-3. Agents can be combined: "Think like an architect and security engineer" loads both perspectives.
-4. Always state which agent persona you are operating under before responding.
+## Commands
+Only these `bun run` scripts: `build-local`, `lint`, `check:types`, `check:deps`, `check:i18n`, `test`, `test:e2e`.
 
-## Available Agents
+## Database
+- Schema lives in `src/models/Schema.ts` (and co-located `*Schema.ts` files). Drizzle config: `drizzle.config.ts`.
+- After ANY schema change: run `db:generate` to create a migration, then `db:migrate` to apply it.
+- `dev` script auto-migrates on start (via `db-server:file`). Production `build` also runs `db:migrate` first.
+- Never use `drizzle-kit push` — always use the migration workflow (`db:generate` → `db:migrate`).
 
-| Agent | File | Trigger |
-|---|---|---|
-| Architect | `/agents/architect.md` | "Think like an architect" |
-| Frontend Engineer | `/agents/frontend-engineer.md` | "Think like a frontend engineer" |
-| Backend Engineer | `/agents/backend-engineer.md` | "Think like a backend engineer" |
-| SEO Specialist | `/agents/seo.md` | "Think like an SEO specialist" |
-| CEO | `/agents/ceo.md` | "Think like a CEO" |
-| CFO | `/agents/cfo.md` | "Think like a CFO" |
-| Product Manager | `/agents/product-manager.md` | "Think like a product manager" |
-| Product Owner | `/agents/product-owner.md` | "Think like a product owner" |
-| DevOps Engineer | `/agents/devops.md` | "Think like a DevOps engineer" |
-| Security Engineer | `/agents/security.md` | "Think like a security engineer" |
-| QA Engineer | `/agents/qa.md` | "Think like a QA engineer" |
+## Git Commits
+Conventional Commits: `type: summary` without scope. The summary should be a short, specific sentence that explains what changed and where or why, not a vague phrase. Types: `feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert`. `BREAKING CHANGE:` footer when needed.
 
-## Agent Collaboration
+## Env
+All env vars validated in `Env.ts`; never read `process.env` directly.
 
-For complex decisions, use multiple agents sequentially:
-1. **Architect** defines the approach
-2. **Domain engineer** (frontend/backend) implements
-3. **QA** verifies
-4. **Security** audits
+## Styling
+Tailwind v4 utility classes. Reuse shared components. Responsive. No unnecessary classes.
 
-## Trigger Commands
+## React
+- No `useMemo`/`useCallback` (React compiler handles it). Avoid `useEffect`.
+- Single `props` param with inline type; access as `props.foo` (no destructuring).
+- Use `React.ReactNode`, not `ReactNode`.
+- Inline short event handlers; extract only when complex.
 
-- **"Question"**: Respond directly without code changes.
-- **"Error [message]"**: Create a bug task in `tasks/TASKS.md` and plan the fix.
-- **"Think like a [role]"**: Load the agent persona from `/agents/` and respond through that lens.
-- **"Plan this out"**: Create a step-by-step plan in `tasks/TASKS.md`. Don't code until approved.
-- **"Run the next task"**: Execute the task workflow (check TASKS.md, pick next, execute, verify, mark done).
+## Pages
+- Default export name ends with `Page`. Props alias (if reused) ends with `PageProps`.
+- Locale pages: `props: { params: Promise<{ locale: string }> }` → `await props.params` → `setRequestLocale(locale)`.
+- Escape glob chars in shell commands for Next.js paths.
+- Dashboard pages (sit behind auth); define meta once in layout, not in each page.
+
+## i18n (next-intl)
+- Never hard-code user-visible strings. Page namespaces end with `Page`.
+- Server: `getTranslations`; Client: `useTranslations`.
+- Context-specific keys (`card_title`, `meta_description`). Use `t.rich(...)` for markup.
+- Use sentence case for translations.
+- Error messages: short, no "try again" variants.
+
+## JSDoc
+- Start each block with `/**` directly above the symbol.
+- Short, sentence-case, present-tense description of intent.
+- Order: description → `@param` → `@returns` → `@throws` (only if it can throw).
+
+## Tests
+- `*.test.ts` for unit tests; `*.spec.ts` for integration tests; `*.e2e.ts` for Playwright tests.
+- `*.test.ts` co-located with implementation; `*.spec.ts` and `*.e2e.ts` in `tests/` directory.
+- Top `describe` = subject; nested `describe` to group scenarios or contexts.
+- `it` titles: short, third-person present, `verb + object + context`. Sentence case, no period.
+- Omit "should/works/handles/checks/validates". State what, not how.
+- Avoid mocking unless necessary.
