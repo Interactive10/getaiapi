@@ -30466,6 +30466,7 @@
         "endpoint": "fal-ai/kling-video/ai-avatar/v2/pro",
         "auth_env": "FAL_KEY",
         "param_map": {
+          "audio": "audio_url",
           "image": "image_url",
           "prompt": "prompt",
           "negative_prompt": "negative_prompt",
