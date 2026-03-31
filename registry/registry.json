@@ -23305,7 +23305,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text",
+        "audio"
       ],
       "outputs": [
         "video"
@@ -23320,12 +23322,12 @@
         "param_map": {
           "image": "image_url",
           "prompt": "prompt",
-          "negative_prompt": "negative_prompt",
-          "seed": "seed",
-          "guidance": "guidance_scale",
-          "steps": "num_inference_steps",
-          "format": "output_format",
-          "safety": "enable_safety_checker"
+          "audio": "audio_url",
+          "voice": "voice",
+          "resolution": "resolution",
+          "caption": "caption",
+          "talking_style": "talking_style",
+          "expression": "expression"
         },
         "output_map": {
           "type": "video",
