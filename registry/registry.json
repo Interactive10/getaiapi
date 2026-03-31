@@ -60167,13 +60167,9 @@
         "auth_env": "FAL_KEY",
         "param_map": {
           "video": "video_url",
-          "image": "image_url",
-          "prompt": "prompt",
-          "resolution": "resolution",
-          "seed": "seed",
-          "guidance": "guidance_scale",
-          "steps": "num_inference_steps",
-          "safety": "enable_safety_checker"
+          "audio": "audio_url",
+          "model": "model",
+          "sync_mode": "sync_mode"
         },
         "output_map": {
           "type": "video",
