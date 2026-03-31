@@ -43892,7 +43892,8 @@
     ],
     "modality": {
       "inputs": [
-        "audio"
+        "audio",
+        "text"
       ],
       "outputs": [
         "audio"
@@ -43905,7 +43906,12 @@
         "endpoint": "fal-ai/minimax/voice-clone",
         "auth_env": "FAL_KEY",
         "param_map": {
-          "image": "images_data_url"
+          "audio": "audio_url",
+          "prompt": "text",
+          "model": "model",
+          "accuracy": "accuracy",
+          "noise_reduction": "noise_reduction",
+          "volume_normalization": "need_volume_normalization"
         },
         "output_map": {
           "type": "audio",
