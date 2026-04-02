@@ -37,7 +37,14 @@ export type {
   StorageConfig,
   UploadResult,
   UploadOptions,
+  KlingOptions,
+  KlingVideoModel,
+  KlingImageModel,
+  KlingCameraControl,
 } from './types.js'
+
+// Adapters
+export { klingAdapter } from './adapters/kling.js'
 
 // Errors
 export {

@@ -195,6 +195,7 @@ describe('Discovery API', () => {
         'replicate': 'REPLICATE_API_TOKEN',
         'wavespeed': 'WAVESPEED_API_KEY',
         'openrouter': 'OPENROUTER_API_KEY',
+        'kling': 'KLING_ACCESS_KEY',
       }
 
       for (const model of registry) {

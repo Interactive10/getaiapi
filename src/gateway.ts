@@ -6,6 +6,7 @@ import { falAiAdapter } from './adapters/fal-ai.js'
 import { replicateAdapter } from './adapters/replicate.js'
 import { wavespeedAdapter } from './adapters/wavespeed.js'
 import { openRouterAdapter } from './adapters/openrouter.js'
+import { klingAdapter } from './adapters/kling.js'
 import type {
   GenerateRequest, GenerateResponse, ProviderName, ProviderAdapter,
   ProviderBinding, SubmitResponse, PollResponse,
@@ -19,6 +20,7 @@ const adapters: Record<string, ProviderAdapter> = {
   'replicate': replicateAdapter,
   'wavespeed': wavespeedAdapter,
   'openrouter': openRouterAdapter,
+  'kling': klingAdapter,
 }
 
 const DEFAULT_TIMEOUT_MS = 120000

@@ -30180,6 +30180,111 @@
     ]
   },
   {
+    "canonical_name": "kling-v1-ai-multi-shot",
+    "aliases": [
+      "kling-multi-shot"
+    ],
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "kling",
+        "skill_id": "kling-ai-multi-shot",
+        "endpoint": "v1/images/ai-multi-shot",
+        "auth_env": "KLING_ACCESS_KEY",
+        "param_map": {
+          "prompt": "prompt",
+          "image": "element_frontal_image"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
+          "content_type": "image/png"
+        },
+        "defaults": {
+          "model_name": "kling-v1"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "kling-v1-extend-image",
+    "aliases": [
+      "kling-image-expansion"
+    ],
+    "modality": {
+      "inputs": [
+        "image",
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "kling",
+        "skill_id": "kling-extend-image",
+        "endpoint": "v1/images/image-expansion",
+        "auth_env": "KLING_ACCESS_KEY",
+        "param_map": {
+          "image": "image",
+          "prompt": "prompt"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
+          "content_type": "image/png"
+        },
+        "defaults": {
+          "model_name": "kling-v1"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "kling-v1-extend-video",
+    "aliases": [
+      "kling-video-extend"
+    ],
+    "modality": {
+      "inputs": [
+        "video",
+        "text"
+      ],
+      "outputs": [
+        "video"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "kling",
+        "skill_id": "kling-extend-video",
+        "endpoint": "v1/videos/video-extend",
+        "auth_env": "KLING_ACCESS_KEY",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "video": "video_id"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        },
+        "defaults": {
+          "model_name": "kling-v1"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "kling-image-o1",
     "aliases": [
       "kling-image-o1"
@@ -30194,6 +30299,26 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-image",
+        "endpoint": "v1/images/generations",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "count": "n"
+        },
+        "defaults": {
+          "model_name": "kling-image-o1"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
+          "content_type": "image/png"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-image-o1",
@@ -30234,6 +30359,25 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-image",
+        "endpoint": "v1/images/generations",
+        "param_map": {
+          "prompt": "prompt",
+          "image": "image",
+          "count": "n"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
+          "content_type": "image/png"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-image-o3-image-to-image",
         "endpoint": "fal-ai/kling-image/o3/image-to-image",
@@ -30271,6 +30415,25 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-image",
+        "endpoint": "v1/images/generations",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "count": "n"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
+          "content_type": "image/png"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-image-o3-text-to-image",
         "endpoint": "fal-ai/kling-image/o3/text-to-image",
@@ -30296,6 +30459,40 @@
     ]
   },
   {
+    "canonical_name": "kling-v1-image-recognize",
+    "aliases": [
+      "kling-image-understanding"
+    ],
+    "modality": {
+      "inputs": [
+        "image",
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "kling",
+        "skill_id": "kling-image-recognize",
+        "endpoint": "v1/images/image-recognize",
+        "auth_env": "KLING_ACCESS_KEY",
+        "param_map": {
+          "image": "image"
+        },
+        "output_map": {
+          "type": "text",
+          "extract_path": "task_result.text",
+          "content_type": "text/plain"
+        },
+        "defaults": {
+          "model_name": "kling-v1"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "kling-image-v3-image-to-image",
     "aliases": [
       "kling-image-v3-image-to-image",
@@ -30311,6 +30508,25 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-image",
+        "endpoint": "v1/images/generations",
+        "param_map": {
+          "prompt": "prompt",
+          "image": "image",
+          "count": "n"
+        },
+        "defaults": {
+          "model_name": "kling-v3"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
+          "content_type": "image/png"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-image-v3-image-to-image",
@@ -30349,6 +30565,25 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-image",
+        "endpoint": "v1/images/generations",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "count": "n"
+        },
+        "defaults": {
+          "model_name": "kling-v3"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
+          "content_type": "image/png"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-image-v3-text-to-image",
         "endpoint": "fal-ai/kling-image/v3/text-to-image",
@@ -30374,6 +30609,39 @@
     ]
   },
   {
+    "canonical_name": "kling-v1-text-to-audio",
+    "aliases": [
+      "kling-audio-generation"
+    ],
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "audio"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "kling",
+        "skill_id": "kling-text-to-audio",
+        "endpoint": "v1/audios/generation",
+        "auth_env": "KLING_ACCESS_KEY",
+        "param_map": {
+          "prompt": "prompt"
+        },
+        "output_map": {
+          "type": "audio",
+          "extract_path": "task_result.audios[].url",
+          "content_type": "audio/mpeg"
+        },
+        "defaults": {
+          "model_name": "kling-v1"
+        }
+      }
+    ]
+  },
+  {
     "canonical_name": "kling-v1-5-kolors-virtual-try-on",
     "aliases": [
       "kling-v1-5-kolors-virtual-try-on"
@@ -30387,6 +30655,23 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-virtual-try-on",
+        "endpoint": "v1/images/kolors-virtual-try-on",
+        "param_map": {
+          "image": "human_image"
+        },
+        "defaults": {
+          "model_name": "kolors-virtual-try-on"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
+          "content_type": "image/png"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-v1-5-kolors-virtual-try-on",
@@ -30463,6 +30748,26 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-avatar",
+        "endpoint": "v1/videos/avatar",
+        "param_map": {
+          "image": "image",
+          "prompt": "text",
+          "audio": "audio_url"
+        },
+        "defaults": {
+          "model_name": "kling-v1",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-ai-avatar-v2-pro",
         "endpoint": "fal-ai/kling-video/ai-avatar/v2/pro",
@@ -30502,6 +30807,26 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-avatar",
+        "endpoint": "v1/videos/avatar",
+        "param_map": {
+          "image": "image",
+          "prompt": "text",
+          "audio": "audio_url"
+        },
+        "defaults": {
+          "model_name": "kling-v1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-ai-avatar-v2-standard",
         "endpoint": "fal-ai/kling-video/ai-avatar/v2/standard",
@@ -30534,10 +30859,28 @@
         "audio"
       ],
       "outputs": [
-        "text"
+        "text",
+        "audio"
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-voice-clone",
+        "endpoint": "v1/audios/voice-clone",
+        "param_map": {
+          "audio": "voice_url"
+        },
+        "defaults": {
+          "model_name": "kling-v1"
+        },
+        "output_map": {
+          "type": "audio",
+          "extract_path": "task_result.audios[].url",
+          "content_type": "audio/mpeg"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-create-voice",
@@ -30569,6 +30912,25 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-lip-sync",
+        "endpoint": "v1/videos/lip-sync",
+        "param_map": {
+          "video": "video_url",
+          "prompt": "text",
+          "audio": "sound_file"
+        },
+        "defaults": {
+          "model_name": "kling-v1"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-lipsync-audio-to-video",
@@ -30609,6 +30971,25 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-lip-sync",
+        "endpoint": "v1/videos/lip-sync",
+        "param_map": {
+          "video": "video_url",
+          "prompt": "text",
+          "audio": "sound_file"
+        },
+        "defaults": {
+          "model_name": "kling-v1"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-lipsync-text-to-video",
         "endpoint": "fal-ai/kling-video/lipsync/text-to-video",
@@ -30648,6 +31029,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-video-o1",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-o1-image-to-video",
         "endpoint": "fal-ai/kling-video/o1/image-to-video",
@@ -30684,6 +31088,29 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-video-o1",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-o1-reference-to-video",
@@ -30724,6 +31151,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-video-o1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-o1-standard-image-to-video",
         "endpoint": "fal-ai/kling-video/o1/standard/image-to-video",
@@ -30760,6 +31210,29 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-video-o1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-o1-standard-reference-to-video",
@@ -30951,6 +31424,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-o3-pro-image-to-video",
         "endpoint": "fal-ai/kling-video/o3/pro/image-to-video",
@@ -30987,6 +31483,29 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-o3-pro-reference-to-video",
@@ -31025,6 +31544,28 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-o3-pro-text-to-video",
@@ -31140,6 +31681,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-o3-standard-reference-to-video",
         "endpoint": "fal-ai/kling-video/o3/standard/reference-to-video",
@@ -31178,6 +31742,28 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-o3-standard-text-to-video",
@@ -31294,6 +31880,26 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-avatar",
+        "endpoint": "v1/videos/avatar",
+        "param_map": {
+          "image": "image",
+          "prompt": "text",
+          "audio": "audio_url"
+        },
+        "defaults": {
+          "model_name": "kling-v1",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1-pro-ai-avatar",
         "endpoint": "fal-ai/kling-video/v1/pro/ai-avatar",
@@ -31332,6 +31938,26 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-avatar",
+        "endpoint": "v1/videos/avatar",
+        "param_map": {
+          "image": "image",
+          "prompt": "text",
+          "audio": "audio_url"
+        },
+        "defaults": {
+          "model_name": "kling-v1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1-standard-ai-avatar",
         "endpoint": "fal-ai/kling-video/v1/standard/ai-avatar",
@@ -31368,6 +31994,24 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-effects",
+        "endpoint": "v1/videos/effects",
+        "param_map": {
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1-standard-effects",
@@ -31409,6 +32053,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1-standard-image-to-video",
         "endpoint": "fal-ai/kling-video/v1/standard/image-to-video",
@@ -31445,6 +32112,28 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1-standard-text-to-video",
@@ -31484,6 +32173,23 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-tts",
+        "endpoint": "v1/audios/tts",
+        "param_map": {
+          "prompt": "text"
+        },
+        "defaults": {
+          "model_name": "kling-v1"
+        },
+        "output_map": {
+          "type": "audio",
+          "extract_path": "task_result.audios[].url",
+          "content_type": "audio/mpeg"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1-tts",
         "endpoint": "fal-ai/kling-video/v1/tts",
@@ -31516,6 +32222,24 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-effects",
+        "endpoint": "v1/videos/effects",
+        "param_map": {
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v1-5",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1.5-pro-effects",
@@ -31557,6 +32281,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v1-5",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1.5-pro-image-to-video",
         "endpoint": "fal-ai/kling-video/v1.5/pro/image-to-video",
@@ -31593,6 +32340,28 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v1-5",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1.5-pro-text-to-video",
@@ -31631,6 +32400,24 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-effects",
+        "endpoint": "v1/videos/effects",
+        "param_map": {
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v1-6",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1.6-pro-effects",
@@ -31671,6 +32458,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v1-6",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1.6-pro-elements",
         "endpoint": "fal-ai/kling-video/v1.6/pro/elements",
@@ -31710,6 +32520,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v1-6",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1.6-pro-image-to-video",
         "endpoint": "fal-ai/kling-video/v1.6/pro/image-to-video",
@@ -31746,6 +32579,28 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v1-6",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1.6-pro-text-to-video",
@@ -31784,6 +32639,24 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-effects",
+        "endpoint": "v1/videos/effects",
+        "param_map": {
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v1-6",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1.6-standard-effects",
@@ -31824,6 +32697,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v1-6",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1.6-standard-elements",
         "endpoint": "fal-ai/kling-video/v1.6/standard/elements",
@@ -31863,6 +32759,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v1-6",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1.6-standard-image-to-video",
         "endpoint": "fal-ai/kling-video/v1.6/standard/image-to-video",
@@ -31899,6 +32818,28 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v1-6",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v1.6-standard-text-to-video",
@@ -31940,6 +32881,28 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-master"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v2-master-image-to-video",
         "endpoint": "fal-ai/kling-video/v2/master/image-to-video",
@@ -31976,6 +32939,27 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-master"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v2-master-text-to-video",
@@ -32017,6 +33001,28 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-1-master"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v2.1-master-image-to-video",
         "endpoint": "fal-ai/kling-video/v2.1/master/image-to-video",
@@ -32053,6 +33059,27 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-1-master"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v2.1-master-text-to-video",
@@ -32094,6 +33121,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-1",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v2.1-pro-image-to-video",
         "endpoint": "fal-ai/kling-video/v2.1/pro/image-to-video",
@@ -32132,6 +33182,29 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v2.1-standard-image-to-video",
@@ -32172,6 +33245,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-5-turbo",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v2.5-turbo-pro-image-to-video",
         "endpoint": "fal-ai/kling-video/v2.5-turbo/pro/image-to-video",
@@ -32208,6 +33304,28 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-5-turbo",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v2.5-turbo-pro-text-to-video",
@@ -32249,6 +33367,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-5-turbo",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v2.5-turbo-standard-image-to-video",
         "endpoint": "fal-ai/kling-video/v2.5-turbo/standard/image-to-video",
@@ -32287,6 +33428,29 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-6",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v2.6-pro-image-to-video",
@@ -32327,6 +33491,29 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-6",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v2.6-pro-motion-control",
@@ -32386,6 +33573,28 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-6",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v2.6-pro-text-to-video",
         "endpoint": "fal-ai/kling-video/v2.6/pro/text-to-video",
@@ -32426,6 +33635,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-6",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v2.6-standard-motion-control",
         "endpoint": "fal-ai/kling-video/v2.6/standard/motion-control",
@@ -32464,6 +33696,29 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v3",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-pro",
@@ -32506,6 +33761,29 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v3",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v3-pro-motion-control",
@@ -32562,6 +33840,28 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v3",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v3-pro-text-to-video",
         "endpoint": "fal-ai/kling-video/v3/pro/text-to-video",
@@ -32600,6 +33900,29 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v3",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v3-standard-image-to-video",
@@ -32640,6 +33963,29 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v3",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v3-standard-motion-control",
@@ -32699,6 +34045,28 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v3",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-v3-standard-text-to-video",
         "endpoint": "fal-ai/kling-video/v3/standard/text-to-video",
@@ -32736,6 +34104,24 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-to-audio",
+        "endpoint": "v1/audios/video2audio",
+        "param_map": {
+          "video": "video_url",
+          "prompt": "prompt"
+        },
+        "defaults": {
+          "model_name": "kling-v1"
+        },
+        "output_map": {
+          "type": "audio",
+          "extract_path": "task_result.audios[].url",
+          "content_type": "audio/mpeg"
+        }
+      },
       {
         "provider": "fal-ai",
         "skill_id": "fal-ai-kling-video-video-to-audio",
@@ -33277,6 +34663,26 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-avatar",
+        "endpoint": "v1/videos/avatar",
+        "param_map": {
+          "image": "image",
+          "prompt": "text",
+          "audio": "audio_url"
+        },
+        "defaults": {
+          "model_name": "kling-v1",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-avatar-v2",
         "endpoint": "kwaivgi/kling-avatar-v2",
@@ -33316,6 +34722,25 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-lip-sync",
+        "endpoint": "v1/videos/lip-sync",
+        "param_map": {
+          "video": "video_url",
+          "prompt": "text",
+          "audio": "sound_file"
+        },
+        "defaults": {
+          "model_name": "kling-v1"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-lip-sync",
         "endpoint": "kwaivgi/kling-lip-sync",
@@ -33353,6 +34778,29 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-video-o1",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-o1",
@@ -33396,6 +34844,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v1-5",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-v1.5-pro",
         "endpoint": "kwaivgi/kling-v1.5-pro",
@@ -33438,6 +34909,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v1-5",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-v1.5-standard",
         "endpoint": "kwaivgi/kling-v1.5-standard",
@@ -33475,6 +34969,29 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v1-6",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-v1.6-pro",
@@ -33517,6 +35034,29 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v1-6",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-v1.6-standard",
@@ -33561,6 +35101,28 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-master"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-v2.0",
         "endpoint": "kwaivgi/kling-v2.0",
@@ -33604,6 +35166,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-1",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-v2.1",
         "endpoint": "kwaivgi/kling-v2.1",
@@ -33641,6 +35226,28 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-1-master"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-v2.1-master",
@@ -33684,6 +35291,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-5-turbo",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-v2.5-turbo-pro",
         "endpoint": "kwaivgi/kling-v2.5-turbo-pro",
@@ -33726,6 +35356,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-5-turbo",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "wavespeed",
         "skill_id": "wavespeed-kwaivgi-kling-v2.5-turbo-pro-image-to-video",
         "endpoint": "kwaivgi/kling-v2.5-turbo-pro/image-to-video",
@@ -33764,6 +35417,29 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v2-6",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
       {
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-v2.6",
@@ -33807,6 +35483,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-v3-omni-video",
         "endpoint": "kwaivgi/kling-v3-omni-video",
@@ -33849,6 +35548,29 @@
     },
     "providers": [
       {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-to-video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "image": "image",
+          "duration": "duration",
+          "size": "aspect_ratio",
+          "guidance": "cfg_scale"
+        },
+        "defaults": {
+          "model_name": "kling-v3",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
         "provider": "replicate",
         "skill_id": "replicate-kwaivgi-kling-v3-video",
         "endpoint": "kwaivgi/kling-v3-video",
@@ -33890,6 +35612,24 @@
       ]
     },
     "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-to-audio",
+        "endpoint": "v1/audios/video2audio",
+        "param_map": {
+          "video": "video_url",
+          "prompt": "prompt"
+        },
+        "defaults": {
+          "model_name": "kling-v1"
+        },
+        "output_map": {
+          "type": "audio",
+          "extract_path": "task_result.audios[].url",
+          "content_type": "audio/mpeg"
+        }
+      },
       {
         "provider": "wavespeed",
         "skill_id": "wavespeed-kwaivgi-kling-video-to-audio",
@@ -70688,8 +72428,12 @@
       "openai-gpt-5.4-pro"
     ],
     "modality": {
-      "inputs": ["text"],
-      "outputs": ["text"]
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
     },
     "providers": [
       {
@@ -70697,7 +72441,9 @@
         "skill_id": "openrouter-gpt-5.4-pro",
         "endpoint": "openai/gpt-5.4-pro",
         "auth_env": "OPENROUTER_API_KEY",
-        "param_map": { "prompt": "prompt" },
+        "param_map": {
+          "prompt": "prompt"
+        },
         "output_map": {
           "type": "text",
           "extract_path": "choices[0].message.content",
@@ -70713,8 +72459,12 @@
       "openai-gpt-5.4"
     ],
     "modality": {
-      "inputs": ["text"],
-      "outputs": ["text"]
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
     },
     "providers": [
       {
@@ -70722,7 +72472,9 @@
         "skill_id": "openrouter-gpt-5.4",
         "endpoint": "openai/gpt-5.4",
         "auth_env": "OPENROUTER_API_KEY",
-        "param_map": { "prompt": "prompt" },
+        "param_map": {
+          "prompt": "prompt"
+        },
         "output_map": {
           "type": "text",
           "extract_path": "choices[0].message.content",
@@ -70738,8 +72490,12 @@
       "openai-gpt-5.4-mini"
     ],
     "modality": {
-      "inputs": ["text"],
-      "outputs": ["text"]
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
     },
     "providers": [
       {
@@ -70747,7 +72503,9 @@
         "skill_id": "openrouter-gpt-5.4-mini",
         "endpoint": "openai/gpt-5.4-mini",
         "auth_env": "OPENROUTER_API_KEY",
-        "param_map": { "prompt": "prompt" },
+        "param_map": {
+          "prompt": "prompt"
+        },
         "output_map": {
           "type": "text",
           "extract_path": "choices[0].message.content",
@@ -70763,8 +72521,12 @@
       "google-gemini-3.1-pro"
     ],
     "modality": {
-      "inputs": ["text"],
-      "outputs": ["text"]
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
     },
     "providers": [
       {
@@ -70772,7 +72534,9 @@
         "skill_id": "openrouter-gemini-3.1-pro",
         "endpoint": "google/gemini-3.1-pro-preview",
         "auth_env": "OPENROUTER_API_KEY",
-        "param_map": { "prompt": "prompt" },
+        "param_map": {
+          "prompt": "prompt"
+        },
         "output_map": {
           "type": "text",
           "extract_path": "choices[0].message.content",
@@ -70788,8 +72552,12 @@
       "xai-grok-4.20"
     ],
     "modality": {
-      "inputs": ["text"],
-      "outputs": ["text"]
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
     },
     "providers": [
       {
@@ -70797,7 +72565,9 @@
         "skill_id": "openrouter-grok-4.20",
         "endpoint": "x-ai/grok-4.20-beta",
         "auth_env": "OPENROUTER_API_KEY",
-        "param_map": { "prompt": "prompt" },
+        "param_map": {
+          "prompt": "prompt"
+        },
         "output_map": {
           "type": "text",
           "extract_path": "choices[0].message.content",
@@ -70813,8 +72583,12 @@
       "writer-palmyra-x5"
     ],
     "modality": {
-      "inputs": ["text"],
-      "outputs": ["text"]
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
     },
     "providers": [
       {
@@ -70822,7 +72596,9 @@
         "skill_id": "openrouter-palmyra-x5",
         "endpoint": "writer/palmyra-x5",
         "auth_env": "OPENROUTER_API_KEY",
-        "param_map": { "prompt": "prompt" },
+        "param_map": {
+          "prompt": "prompt"
+        },
         "output_map": {
           "type": "text",
           "extract_path": "choices[0].message.content",
@@ -70838,8 +72614,12 @@
       "openai-gpt-5.4-nano"
     ],
     "modality": {
-      "inputs": ["text"],
-      "outputs": ["text"]
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
     },
     "providers": [
       {
@@ -70847,7 +72627,9 @@
         "skill_id": "openrouter-gpt-5.4-nano",
         "endpoint": "openai/gpt-5.4-nano",
         "auth_env": "OPENROUTER_API_KEY",
-        "param_map": { "prompt": "prompt" },
+        "param_map": {
+          "prompt": "prompt"
+        },
         "output_map": {
           "type": "text",
           "extract_path": "choices[0].message.content",
@@ -70863,8 +72645,12 @@
       "xiaomi-mimo-v2-pro"
     ],
     "modality": {
-      "inputs": ["text"],
-      "outputs": ["text"]
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
     },
     "providers": [
       {
@@ -70872,7 +72658,9 @@
         "skill_id": "openrouter-mimo-v2-pro",
         "endpoint": "xiaomi/mimo-v2-pro",
         "auth_env": "OPENROUTER_API_KEY",
-        "param_map": { "prompt": "prompt" },
+        "param_map": {
+          "prompt": "prompt"
+        },
         "output_map": {
           "type": "text",
           "extract_path": "choices[0].message.content",
@@ -70888,8 +72676,12 @@
       "xiaomi-mimo-v2-omni"
     ],
     "modality": {
-      "inputs": ["text"],
-      "outputs": ["text"]
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
     },
     "providers": [
       {
@@ -70897,7 +72689,9 @@
         "skill_id": "openrouter-mimo-v2-omni",
         "endpoint": "xiaomi/mimo-v2-omni",
         "auth_env": "OPENROUTER_API_KEY",
-        "param_map": { "prompt": "prompt" },
+        "param_map": {
+          "prompt": "prompt"
+        },
         "output_map": {
           "type": "text",
           "extract_path": "choices[0].message.content",
@@ -70913,8 +72707,12 @@
       "mistralai-mistral-small-4"
     ],
     "modality": {
-      "inputs": ["text"],
-      "outputs": ["text"]
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
     },
     "providers": [
       {
@@ -70922,7 +72720,9 @@
         "skill_id": "openrouter-mistral-small-4",
         "endpoint": "mistralai/mistral-small-2603",
         "auth_env": "OPENROUTER_API_KEY",
-        "param_map": { "prompt": "prompt" },
+        "param_map": {
+          "prompt": "prompt"
+        },
         "output_map": {
           "type": "text",
           "extract_path": "choices[0].message.content",
@@ -70938,8 +72738,12 @@
       "minimax-m27"
     ],
     "modality": {
-      "inputs": ["text"],
-      "outputs": ["text"]
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
     },
     "providers": [
       {
@@ -70947,7 +72751,9 @@
         "skill_id": "openrouter-minimax-m2.7",
         "endpoint": "minimax/minimax-m2.7",
         "auth_env": "OPENROUTER_API_KEY",
-        "param_map": { "prompt": "prompt" },
+        "param_map": {
+          "prompt": "prompt"
+        },
         "output_map": {
           "type": "text",
           "extract_path": "choices[0].message.content",
@@ -70963,8 +72769,12 @@
       "nvidia-nemotron-3-super"
     ],
     "modality": {
-      "inputs": ["text"],
-      "outputs": ["text"]
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
     },
     "providers": [
       {
@@ -70972,7 +72782,9 @@
         "skill_id": "openrouter-nemotron-3-super",
         "endpoint": "nvidia/nemotron-3-super-120b-a12b",
         "auth_env": "OPENROUTER_API_KEY",
-        "param_map": { "prompt": "prompt" },
+        "param_map": {
+          "prompt": "prompt"
+        },
         "output_map": {
           "type": "text",
           "extract_path": "choices[0].message.content",
@@ -70988,8 +72800,12 @@
       "qwen-35-72b"
     ],
     "modality": {
-      "inputs": ["text"],
-      "outputs": ["text"]
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
     },
     "providers": [
       {
@@ -70997,7 +72813,9 @@
         "skill_id": "openrouter-qwen-3.5-72b",
         "endpoint": "qwen/qwen3.5-9b",
         "auth_env": "OPENROUTER_API_KEY",
-        "param_map": { "prompt": "prompt" },
+        "param_map": {
+          "prompt": "prompt"
+        },
         "output_map": {
           "type": "text",
           "extract_path": "choices[0].message.content",
@@ -71013,8 +72831,12 @@
       "z-ai-glm-5-turbo"
     ],
     "modality": {
-      "inputs": ["text"],
-      "outputs": ["text"]
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "text"
+      ]
     },
     "providers": [
       {
@@ -71022,7 +72844,9 @@
         "skill_id": "openrouter-glm-5-turbo",
         "endpoint": "z-ai/glm-5-turbo",
         "auth_env": "OPENROUTER_API_KEY",
-        "param_map": { "prompt": "prompt" },
+        "param_map": {
+          "prompt": "prompt"
+        },
         "output_map": {
           "type": "text",
           "extract_path": "choices[0].message.content",

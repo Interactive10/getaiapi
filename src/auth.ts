@@ -6,6 +6,7 @@ const ENV_MAP: Record<ProviderName, string> = {
   replicate: 'REPLICATE_API_TOKEN',
   wavespeed: 'WAVESPEED_API_KEY',
   openrouter: 'OPENROUTER_API_KEY',
+  kling: 'KLING_ACCESS_KEY',
 }
 
 // Module-level overrides set via configureAuth()
@@ -34,8 +35,14 @@ export class AuthManager {
     }
     for (const [provider, envVar] of Object.entries(ENV_MAP)) {
       if (!this.keys.has(provider)) {
-        const key = process.env[envVar]?.trim()
-        if (key) this.keys.set(provider, key)
+        if (provider === 'kling') {
+          const ak = process.env.KLING_ACCESS_KEY?.trim()
+          const sk = process.env.KLING_SECRET_KEY?.trim()
+          if (ak && sk) this.keys.set('kling', `${ak}:${sk}`)
+        } else {
+          const key = process.env[envVar]?.trim()
+          if (key) this.keys.set(provider, key)
+        }
       }
     }
   }

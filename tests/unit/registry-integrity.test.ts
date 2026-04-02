@@ -5,7 +5,7 @@ import * as path from 'node:path'
 const REGISTRY_FILE = path.resolve(import.meta.dirname ?? __dirname, '..', '..', 'registry', 'registry.json')
 const registry: any[] = JSON.parse(fs.readFileSync(REGISTRY_FILE, 'utf-8'))
 
-const VALID_PROVIDERS = ['fal-ai', 'replicate', 'wavespeed', 'openrouter']
+const VALID_PROVIDERS = ['fal-ai', 'replicate', 'wavespeed', 'openrouter', 'kling']
 const VALID_OUTPUT_TYPES = ['image', 'video', 'audio', 'text', '3d', 'segmentation']
 const VALID_INPUT_TYPES = ['text', 'image', 'audio', 'video']
 

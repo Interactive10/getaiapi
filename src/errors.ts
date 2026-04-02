@@ -52,6 +52,7 @@ export class NoProviderError extends GetAIApiError {
       replicate: "REPLICATE_API_TOKEN",
       wavespeed: "WAVESPEED_API_KEY",
       openrouter: "OPENROUTER_API_KEY",
+      kling: "KLING_ACCESS_KEY + KLING_SECRET_KEY",
     };
     const needed = requiredProviders
       .map((p) => `${p} (${envHints[p] || "unknown"})`)

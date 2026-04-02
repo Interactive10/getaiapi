@@ -38,7 +38,16 @@ export function mapInput(
     }
   }
 
-  // Merge options passthrough — skip internal keys
+  // Apply binding defaults (e.g., Kling model_name/mode per variant)
+  if (binding.defaults) {
+    for (const [key, val] of Object.entries(binding.defaults)) {
+      if (!(key in result)) {
+        result[key] = val
+      }
+    }
+  }
+
+  // Merge options passthrough — skip internal keys, override defaults
   const INTERNAL_KEYS = new Set(['timeout', 'reupload'])
   if (request.options) {
     for (const [key, val] of Object.entries(request.options)) {
@@ -84,7 +93,7 @@ function parseSizeForProvider(value: unknown, provider: ProviderName): unknown {
     }
     return value
   }
-  // wavespeed and others: pass through as-is
+  // kling, wavespeed, and others: pass through as-is (kling uses aspect_ratio strings like "16:9")
   return value
 }
 
