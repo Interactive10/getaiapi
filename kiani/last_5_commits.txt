@@ -1,92 +1,2441 @@
 === Last 5 Commits ===
 
---- Commit: 0bd39f8 ---
-Date: 2026-03-18 00:45:12 +0400
-Author: arash
-Message: fix: revert broad resolveAssetUrl change, target uploadedImageKey in JobProcessor
+--- Commit: b20130e ---
+Date: 2026-04-02 11:56:46 +0400
+Author: arash kiani
+Message: Fix/heygen avatar4 image to video param map (#9)
 
-The previous resolveAssetUrl change re-signed all R2 URLs globally,
-which caused character images to resolve incorrectly across characters.
-Now extractR2Key is only used in processCharacterVisual to normalize
-the uploadedImageKey before resolution.
+* fix: correct heygen-avatar4-image-to-video param_map and modality
 
+Remove bogus image-gen params (negative_prompt, seed, guidance_scale,
+num_inference_steps, output_format, enable_safety_checker) and add
+actual API params (audio_url, voice, resolution, caption, talking_style,
+expression). Update modality inputs to include text and audio.
 
---- Commit: 4e3b634 ---
-Date: 2026-03-18 00:35:40 +0400
-Author: arash
-Message: fix: extract storage key from presigned R2 URLs in resolveAssetUrl
+* fix: correct minimax-voice-clone param_map and modality
 
-Presigned R2 URLs stored in the DB (from before the page fix) were
-passed through as-is, causing 422 errors when they expired. Now
-resolveAssetUrl detects R2 presigned URLs and re-signs them fresh.
+Replace bogus image param with actual API params (audio_url, text,
+model, accuracy, noise_reduction, need_volume_normalization). Add text
+to modality inputs.
 
+* chore: update changelog for 1.0.4 and bump version
 
---- Commit: 692f23a ---
-Date: 2026-03-18 00:27:27 +0400
-Author: arash
-Message: fix: add missing gender and clothing fields to character PATCH schema
+* fix: correct sync-lipsync param_map
 
-These fields were accepted by the UI but stripped by Zod validation
-in the PATCH endpoint, causing values to silently disappear on save.
+Remove 6 phantom params (image_url, prompt, resolution, seed,
+guidance_scale, num_inference_steps, enable_safety_checker) and add
+actual API params (audio_url, model, sync_mode).
 
+* chore: update changelog for 1.0.5 and bump version
 
---- Commit: 224bad5 ---
-Date: 2026-03-18 00:05:10 +0400
-Author: arash
-Message: fix: preserve storage key for character uploadedImageUrl to prevent expired presigned URL
+--- Commit: c404d2f ---
+Date: 2026-03-30 23:26:33 +0400
+Author: arash kiani
+Message: feat(OpenRouter): Added model-specific test and tests for 14 new OpenRouter text-generation models. (#8)
 
-The character page was resolving uploadedImageUrl to a presigned URL (4h TTL),
-which the component then sent back to generate-visual on regenerate. By job
-processing time the URL had expired, causing fal-ai 422 errors.
+* fix(registry): correct kling-video-create-voice output_map and param_map
 
+The fal.ai endpoint returns { voice_id: "..." }, not { video: { url: "..." } }.
+Fixed extract_path from "video.url" to "voice_id" and param_map from
+"image" -> "images_data_url" to "voice_url" -> "voice_url" to match the
+actual API schema. Added model-specific test and tests for 14 new
+OpenRouter text-generation models.
 
---- Commit: 8f9e9d5 ---
-Date: 2026-03-17 22:43:34 +0400
-Author: arash
-Message: feat: Shorts Analyzer V2 — multi-video cart, 3 story options, direction input
+* chore: bump version to 1.0.1
 
-- Cart UI: add/remove YouTube URLs with thumbnail previews, duplicate/invalid detection (max 10)
-- API accepts { urls: string[] } with parallel fetch, backwards-compat with { url: string }
-- New multi-video prompt returns 3 story options with recommended pick + cross-video patterns
-- Direction textarea lets user guide the analysis (e.g. "focus on tech, not the company")
-- Extract extractVideoId to youtubeUtils.ts for client-side use (no server deps)
-- Mock mode returns 3 mock options; max_tokens bumped to 4000
+* fix(registry): correct kling-video-v3-pro-image-to-video param_map and update README
 
+Fix image mapping (image_url → start_image_url) that caused input_value_error
+on fal.ai. Removed 5 phantom params, added 7 real params (duration,
+generate_audio, end_image_url, voice_ids, elements, aspect_ratio, cfg_scale).
+Updated README model counts (1,890+) and OpenRouter count (10 → 24).
+
+* chore: migrate agents, skills, and docs into kiani directory structure
+
+Reorganize project files into kiani/ with new agent definitions,
+migration guide, and move old agents/skills/docs to kiani/not Migrated/.
+Update AGENTS.md and CLAUDE.md accordingly.
+
+* fix: add missing audio param_map to kling-video-ai-avatar-v2-pro and add --force flag to fal-skill-scraper
+
+* chore: update changelog for 1.0.2 and bump version to 1.0.3
+
+* chore: add @types/node dev dependency
+
+--- Commit: a5eb395 ---
+Date: 2026-03-19 22:04:40 +0400
+Author: arash kiani
+Message: feat(gateway): add async job submission and polling API (#7)
+
+Add submit() for non-blocking job submission, poll() for manual status
+checking, and submitAndPoll() alias for existing blocking behavior.
+Enables users to manage long-running job lifecycles (video generation,
+training) by submitting, storing the task ID, and polling separately.
+
+Extracts shared validation/auth/resolve/map logic into internal _prepare()
+helper. No breaking changes to generate().
+
+--- Commit: 27e5c46 ---
+Date: 2026-03-16 17:01:15 +0400
+Author: arash kiani
+Message: fix(registry): remove phantom params and add correct mappings for 7 models (#6)
+
+Fix param maps for pixverse-swap, pixverse-lipsync, wan-v2.2-14b-animate-replace,
+wan-v2.2-14b-animate-move, kling-video-v3-pro-motion-control, nano-banana-2, and
+nano-banana-2-edit. Removes generic template params that don't exist on these models
+and adds the real provider-specific parameters. Includes model-specific unit tests.
+
+Bump to v1.0.0-alpha.3.
+
+--- Commit: 9afca50 ---
+Date: 2026-03-15 15:37:03 +0400
+Author: arash kiani
+Message: feat(v2): add v2 registry, gateway, and discovery layer (#5)
+
+* feat(v1): add v2 registry, gateway, and discovery layer
+
+Resolve merge conflicts from stashed v2 work and add:
+- v2 registry format and migration script
+- v2 gateway, discovery, mapper, and types
+- Combined audit doc and updated tests
+- Updated categories, models, and changelog
+
+* feat!: remove v1 category-based architecture, promote v2 to default
+
+V2 modality-first architecture is now the only API. Categories are
+replaced by modality (inputs/outputs) on every model entry, and each
+provider binding carries its own param_map instead of sharing category
+templates.
+
+- Merge v2 types into src/types.ts, drop V2 suffixes
+- Move v2 source files (gateway, registry, discovery, mapper) to src/
+- Delete v1-only code: resolver, categories/, v2/ directory
+- Rewrite CLI for modality filters (--input/--output replaces --category)
+- Move registry/v2/registry.json to registry/registry.json
+- Remove ./v2 package export and tsup entry
+- Update all tests for new module paths and API shape
+- Delete v1-only and migration artifacts
+
+* docs: update README and CHANGELOG for modality-first API
+
+- Replace category-based discovery with modality filters (input/output)
+- Replace getModel() with resolveModel() and deriveCategory()
+- Add provider field to GenerateRequest docs
+- Replace Supported Categories table with Modality examples
+- Remove reference to deleted docs/MODELS.md
+- Clean up CHANGELOG removed section
+
+* fix: harden gateway, mapper, adapters and update stale docs
+
+- Add timeout + exponential backoff to gateway poll loop (was infinite)
+- Filter undefined URLs in mapper output instead of unsafe casts
+- Exclude internal keys (timeout, reupload) from options passthrough
+- Make OpenRouter poll() throw since it's synchronous-only
+- Validate CLI numeric args to reject NaN values
+- Pass actual provider/model to TimeoutError instead of "unknown"
+- Bundle registry.json via JSON import (no more readFileSync, works in
+  edge runtimes like Vercel Edge and Cloudflare Workers)
+- Remove registry/ from npm package files (bundled in dist now)
+- Update ARCHITECTURE.md and PRODUCT-SPEC.md to match v2 modality-first
+  API (removed all references to getModel, category field, templates)
+
+* docs: add migration guide, changelog, and edge runtime docs
+
+- Add docs/MIGRATION.md covering v0.x → v1.0.0 breaking changes and
+  edge runtime compatibility (no more readFileSync config needed)
+- Update CHANGELOG.md with all v1.0.0-alpha.1 changes
+- Add deployment FAQ section for Vercel Edge/Cloudflare Workers
+- Add migration section and edge runtime note to README
+- Bump version to 1.0.0-alpha.1
+
+* fix(registry): bulk-fix 751 model modality mismatches from audit
+
+Sync registry modality inputs/outputs with docs/combined-audit.md for
+751 models that had incorrect or incomplete modality data. Also fix 83
+output_map.type entries to stay consistent with updated modality outputs.
+
+Audit test failures reduced from 772 to 4.
 
 === Diffs ===
 
---- 0bd39f8: fix: revert broad resolveAssetUrl change, target uploadedImageKey in JobProcessor ---
- src/libs/JobProcessor.ts | 12 +++++++-----
- src/libs/Storage.ts      | 14 +-------------
- 2 files changed, 8 insertions(+), 18 deletions(-)
+--- b20130e: Fix/heygen avatar4 image to video param map (#9) ---
+ CHANGELOG.md           |  8 ++++++++
+ package-lock.json      |  4 ++--
+ package.json           |  2 +-
+ registry/registry.json | 36 ++++++++++++++++++++----------------
+ 4 files changed, 31 insertions(+), 19 deletions(-)
 
---- 4e3b634: fix: extract storage key from presigned R2 URLs in resolveAssetUrl ---
- src/libs/Storage.ts | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+--- c404d2f: feat(OpenRouter): Added model-specific test and tests for 14 new OpenRouter text-generation models. (#8) ---
+ AGENTS.md                                          | 109 +++---
+ CHANGELOG.md                                       |  11 +
+ CLAUDE.md                                          |  45 ---
+ README.md                                          |   8 +-
+ kiani/MIGRATE.md                                   | 308 +++++++++++++++++
+ kiani/agents/architect.md                          |  34 ++
+ kiani/agents/backend-engineer.md                   |  36 ++
+ kiani/agents/ceo.md                                |  33 ++
+ kiani/agents/cfo.md                                |  33 ++
+ kiani/agents/devops.md                             |  35 ++
+ kiani/agents/frontend-engineer.md                  |  35 ++
+ kiani/agents/product-manager.md                    |  34 ++
+ kiani/agents/product-owner.md                      |  40 +++
+ kiani/agents/qa.md                                 |  34 ++
+ kiani/agents/security.md                           |  42 +++
+ kiani/agents/seo.md                                |  38 +++
+ kiani/agents/ux.md                                 |  53 +++
+ kiani/brainstorm.md                                |  24 ++
+ kiani/last_5_commits.txt                           |  92 +++++
+ {tasks => kiani}/lessons.md                        |   8 +-
+ kiani/memory.sh                                    |  27 ++
+ kiani/not Migrated/AGENTS.md.bak                   |  42 +++
+ kiani/not Migrated/CLAUDE.md.bak                   |  46 +++
+ {agents => kiani/not Migrated/agents}/architect.md |   0
+ .../not Migrated/agents}/backend-engineer.md       |   0
+ {agents => kiani/not Migrated/agents}/ceo.md       |   0
+ {agents => kiani/not Migrated/agents}/cfo.md       |   0
+ {agents => kiani/not Migrated/agents}/devops.md    |   0
+ .../not Migrated/agents}/frontend-engineer.md      |   0
+ .../not Migrated/agents}/product-manager.md        |   0
+ .../not Migrated/agents}/product-owner.md          |   0
+ {agents => kiani/not Migrated/agents}/qa.md        |   0
+ {agents => kiani/not Migrated/agents}/security.md  |   0
+ {agents => kiani/not Migrated/agents}/seo.md       |   0
+ {docs => kiani/not Migrated/docs}/ARCHITECTURE.md  |   0
+ {docs => kiani/not Migrated/docs}/FAQ.md           |   0
+ {docs => kiani/not Migrated/docs}/MIGRATION.md     |   0
+ {docs => kiani/not Migrated/docs}/PRODUCT-SPEC.md  |   0
+ .../not Migrated/docs}/combined-audit.md           |   0
+ .../not Migrated/skills}/agent-roles/SKILL.md      |   0
+ .../not Migrated/skills}/cloudflare-r2/SKILL.md    |   0
+ .../skills}/fal-ai-ace-step-audio-inpaint/SKILL.md |   0
+ .../fal-ai-ace-step-audio-outpaint/SKILL.md        |   0
+ .../fal-ai-ace-step-audio-to-audio/SKILL.md        |   0
+ .../fal-ai-ace-step-prompt-to-audio/SKILL.md       |   0
+ .../not Migrated/skills}/fal-ai-ace-step/SKILL.md  |   0
+ .../skills}/fal-ai-ai-avatar-multi-text/SKILL.md   |   0
+ .../skills}/fal-ai-ai-avatar-multi/SKILL.md        |   0
+ .../skills}/fal-ai-ai-avatar-single-text/SKILL.md  |   0
+ .../not Migrated/skills}/fal-ai-ai-avatar/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-amt-interpolation/SKILL.md      |   0
+ .../fal-ai-animatediff-sparsectrl-lcm/SKILL.md     |   0
+ .../skills}/fal-ai-arbiter-image-image/SKILL.md    |   0
+ .../skills}/fal-ai-arbiter-image-text/SKILL.md     |   0
+ .../skills}/fal-ai-arbiter-image/SKILL.md          |   0
+ .../fal-ai-argil-avatars-audio-to-video/SKILL.md   |   0
+ .../fal-ai-argil-avatars-text-to-video/SKILL.md    |   0
+ .../skills}/fal-ai-audio-understanding/SKILL.md    |   0
+ .../not Migrated/skills}/fal-ai-aura-flow/SKILL.md |   0
+ .../not Migrated/skills}/fal-ai-aura-sr/SKILL.md   |   0
+ .../skills}/fal-ai-auto-caption/SKILL.md           |   0
+ .../skills}/fal-ai-bagel-edit/SKILL.md             |   0
+ .../skills}/fal-ai-bagel-understand/SKILL.md       |   0
+ .../not Migrated/skills}/fal-ai-bagel/SKILL.md     |   0
+ .../fal-ai-beatoven-music-generation/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-ben-v2-image/SKILL.md           |   0
+ .../skills}/fal-ai-ben-v2-video/SKILL.md           |   0
+ .../skills}/fal-ai-birefnet-v2-video/SKILL.md      |   0
+ .../skills}/fal-ai-birefnet-v2/SKILL.md            |   0
+ .../not Migrated/skills}/fal-ai-birefnet/SKILL.md  |   0
+ .../not Migrated/skills}/fal-ai-bitdance/SKILL.md  |   0
+ .../skills}/fal-ai-bria-background-remove/SKILL.md |   0
+ .../fal-ai-bria-background-replace/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-bria-embed-product/SKILL.md     |   0
+ .../skills}/fal-ai-bria-eraser/SKILL.md            |   0
+ .../skills}/fal-ai-bria-expand/SKILL.md            |   0
+ .../fal-ai-bria-fibo-bbq-preview-generate/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-bria-fibo-edit-blend/SKILL.md   |   0
+ .../fal-ai-bria-fibo-edit-colorize/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-bria-fibo-edit-edit/SKILL.md    |   0
+ .../fal-ai-bria-fibo-edit-erase_by_text/SKILL.md   |   0
+ .../skills}/fal-ai-bria-fibo-edit-relight/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-bria-fibo-edit-reseason/SKILL.md        |   0
+ .../skills}/fal-ai-bria-fibo-edit-restore/SKILL.md |   0
+ .../skills}/fal-ai-bria-fibo-edit-restyle/SKILL.md |   0
+ .../fal-ai-bria-fibo-edit-rewrite_text/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-bria-fibo-generate/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-bria-fibo-lite-generate/SKILL.md        |   0
+ .../skills}/fal-ai-bria-genfill/SKILL.md           |   0
+ .../skills}/fal-ai-bria-product-shot/SKILL.md      |   0
+ .../skills}/fal-ai-bria-reimagine-3.2/SKILL.md     |   0
+ .../skills}/fal-ai-bria-reimagine/SKILL.md         |   0
+ .../fal-ai-bria-replace-background/SKILL.md        |   0
+ .../skills}/fal-ai-bria-text-to-image-3.2/SKILL.md |   0
+ .../fal-ai-bria-text-to-image-base/SKILL.md        |   0
+ .../fal-ai-bria-text-to-image-fast/SKILL.md        |   0
+ .../skills}/fal-ai-bria-text-to-image-hd/SKILL.md  |   0
+ .../skills}/fal-ai-bria-upscale-creative/SKILL.md  |   0
+ .../fal-ai-bria-video-background-removal/SKILL.md  |   0
+ .../fal-ai-bria-video-erase-keypoints/SKILL.md     |   0
+ .../skills}/fal-ai-bria-video-erase-mask/SKILL.md  |   0
+ .../fal-ai-bria-video-erase-prompt/SKILL.md        |   0
+ .../fal-ai-bria-video-increase-resolution/SKILL.md |   0
+ .../fal-ai-bytedance-dreamactor-v2/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-bytedance-lynx/SKILL.md         |   0
+ .../fal-ai-bytedance-omnihuman-v1.5/SKILL.md       |   0
+ .../skills}/fal-ai-bytedance-omnihuman/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-bytedance-seedream-v4-edit/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-bytedance-seedream-v4.5-edit/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-bytedance-video-stylize/SKILL.md        |   0
+ .../skills}/fal-ai-calligrapher/SKILL.md           |   0
+ .../skills}/fal-ai-cartoonify/SKILL.md             |   0
+ .../fal-ai-cassetteai-music-generator/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../not Migrated/skills}/fal-ai-cat-vton/SKILL.md  |   0
+ .../not Migrated/skills}/fal-ai-ccsr/SKILL.md      |   0
+ .../skills}/fal-ai-chain-of-zoom/SKILL.md          |   0
+ .../fal-ai-chatterbox-speech-to-speech/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-chatterbox-text-to-speech/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-chrono-edit-lora/SKILL.md       |   0
+ .../skills}/fal-ai-chrono-edit/SKILL.md            |   0
+ .../skills}/fal-ai-clarity-upscaler/SKILL.md       |   0
+ .../fal-ai-clarityai-crystal-upscaler/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-codeformer/SKILL.md             |   0
+ .../fal-ai-cogvideox-5b-image-to-video/SKILL.md    |   0
+ .../fal-ai-cogvideox-5b-video-to-video/SKILL.md    |   0
+ .../skills}/fal-ai-cogvideox-5b/SKILL.md           |   0
+ .../not Migrated/skills}/fal-ai-cogview4/SKILL.md  |   0
+ .../skills}/fal-ai-controlnext/SKILL.md            |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-creatify-aurora/SKILL.md        |   0
+ .../skills}/fal-ai-creative-upscaler/SKILL.md      |   0
+ .../not Migrated/skills}/fal-ai-csm-1b/SKILL.md    |   0
+ .../not Migrated/skills}/fal-ai-ddcolor/SKILL.md   |   0
+ .../fal-ai-decart-lucy-5b-image-to-video/SKILL.md  |   0
+ .../skills}/fal-ai-decart-lucy-edit-dev/SKILL.md   |   0
+ .../skills}/fal-ai-decart-lucy-edit-fast/SKILL.md  |   0
+ .../skills}/fal-ai-decart-lucy-edit-pro/SKILL.md   |   0
+ .../skills}/fal-ai-decart-lucy-i2v/SKILL.md        |   0
+ .../skills}/fal-ai-decart-lucy-restyle/SKILL.md    |   0
+ .../skills}/fal-ai-deepfilternet3/SKILL.md         |   0
+ .../not Migrated/skills}/fal-ai-demucs/SKILL.md    |   0
+ .../skills}/fal-ai-depth-anything-video/SKILL.md   |   0
+ .../skills}/fal-ai-dia-tts-voice-clone/SKILL.md    |   0
+ .../not Migrated/skills}/fal-ai-dia-tts/SKILL.md   |   0
+ .../skills}/fal-ai-diffrhythm/SKILL.md             |   0
+ .../skills}/fal-ai-diffusion-edge/SKILL.md         |   0
+ .../skills}/fal-ai-docres-dewarp/SKILL.md          |   0
+ .../not Migrated/skills}/fal-ai-docres/SKILL.md    |   0
+ .../skills}/fal-ai-drct-super-resolution/SKILL.md  |   0
+ .../not Migrated/skills}/fal-ai-dreamo/SKILL.md    |   0
+ .../skills}/fal-ai-dreamomni2-edit/SKILL.md        |   0
+ .../skills}/fal-ai-dreamshaper/SKILL.md            |   0
+ .../not Migrated/skills}/fal-ai-dubbing/SKILL.md   |   0
+ .../skills}/fal-ai-dwpose-video/SKILL.md           |   0
+ .../not Migrated/skills}/fal-ai-dwpose/SKILL.md    |   0
+ .../skills}/fal-ai-echomimic-v3/SKILL.md           |   0
+ .../not Migrated/skills}/fal-ai-editto/SKILL.md    |   0
+ .../fal-ai-elevenlabs-audio-isolation/SKILL.md     |   0
+ .../skills}/fal-ai-elevenlabs-dubbing/SKILL.md     |   0
+ .../skills}/fal-ai-elevenlabs-music/SKILL.md       |   0
+ .../skills}/fal-ai-elevenlabs-sfx-v2/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-elevenlabs-speech-to-text/SKILL.md      |   0
+ .../fal-ai-elevenlabs-tts-eleven-v3/SKILL.md       |   0
+ .../fal-ai-elevenlabs-tts-multilingual-v2/SKILL.md |   0
+ .../fal-ai-elevenlabs-tts-turbo-v2.5/SKILL.md      |   0
+ .../fal-ai-elevenlabs-voice-changer/SKILL.md       |   0
+ .../fal-ai-emu-3.5-image-edit-image/SKILL.md       |   0
+ .../fal-ai-emu-3.5-image-text-to-image/SKILL.md    |   0
+ .../not Migrated/skills}/fal-ai-era-3d/SKILL.md    |   0
+ .../not Migrated/skills}/fal-ai-esrgan/SKILL.md    |   0
+ .../not Migrated/skills}/fal-ai-evf-sam/SKILL.md   |   0
+ .../skills}/fal-ai-f-lite-standard/SKILL.md        |   0
+ .../skills}/fal-ai-f-lite-texture/SKILL.md         |   0
+ .../not Migrated/skills}/fal-ai-f5-tts/SKILL.md    |   0
+ .../skills}/fal-ai-face-to-sticker/SKILL.md        |   0
+ .../skills}/fal-ai-fashn-tryon-v1.5/SKILL.md       |   0
+ .../skills}/fal-ai-fashn-tryon-v1.6/SKILL.md       |   0
+ .../fal-ai-fast-animatediff-text-to-video/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-fast-fooocus-sdxl/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-fast-lcm-diffusion-inpainting/SKILL.md  |   0
+ .../skills}/fal-ai-fast-lcm-diffusion/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-fast-lightning-sdxl-inpainting/SKILL.md |   0
+ .../skills}/fal-ai-fast-lightning-sdxl/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-fast-sdxl-controlnet-canny/SKILL.md     |   0
+ .../fal-ai-fast-sdxl-image-to-image/SKILL.md       |   0
+ .../skills}/fal-ai-fast-sdxl-inpainting/SKILL.md   |   0
+ .../not Migrated/skills}/fal-ai-fast-sdxl/SKILL.md |   0
+ .../fal-ai-fast-svd-lcm-text-to-video/SKILL.md     |   0
+ .../skills}/fal-ai-fast-svd-lcm/SKILL.md           |   0
+ .../skills}/fal-ai-fast-svd-text-to-video/SKILL.md |   0
+ .../skills}/fal-ai-ffmpeg-api-compose/SKILL.md     |   0
+ .../fal-ai-ffmpeg-api-extract-frame/SKILL.md       |   0
+ .../skills}/fal-ai-ffmpeg-api-loudnorm/SKILL.md    |   0
+ .../fal-ai-ffmpeg-api-merge-audio-video/SKILL.md   |   0
+ .../fal-ai-ffmpeg-api-merge-audios/SKILL.md        |   0
+ .../fal-ai-ffmpeg-api-merge-videos/SKILL.md        |   0
+ .../skills}/fal-ai-ffmpeg-api-metadata/SKILL.md    |   0
+ .../skills}/fal-ai-ffmpeg-api-waveform/SKILL.md    |   0
+ .../skills}/fal-ai-film-video/SKILL.md             |   0
+ .../not Migrated/skills}/fal-ai-film/SKILL.md      |   0
+ .../skills}/fal-ai-finegrain-eraser-bbox/SKILL.md  |   0
+ .../skills}/fal-ai-finegrain-eraser-mask/SKILL.md  |   0
+ .../skills}/fal-ai-finegrain-eraser/SKILL.md       |   0
+ .../fal-ai-firered-image-edit-v1.1/SKILL.md        |   0
+ .../skills}/fal-ai-firered-image-edit/SKILL.md     |   0
+ .../skills}/fal-ai-flashvsr-upscale-video/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-florence-2-large-caption/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-florence-2-large-ocr/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../not Migrated/skills}/fal-ai-flowedit/SKILL.md  |   0
+ .../fal-ai-flux-1-dev-image-to-image/SKILL.md      |   0
+ .../skills}/fal-ai-flux-1-dev-redux/SKILL.md       |   0
+ .../skills}/fal-ai-flux-1-dev/SKILL.md             |   0
+ .../fal-ai-flux-1-krea-image-to-image/SKILL.md     |   0
+ .../skills}/fal-ai-flux-1-krea-redux/SKILL.md      |   0
+ .../skills}/fal-ai-flux-1-krea/SKILL.md            |   0
+ .../skills}/fal-ai-flux-1-schnell-redux/SKILL.md   |   0
+ .../skills}/fal-ai-flux-1-schnell/SKILL.md         |   0
+ .../fal-ai-flux-1-srpo-image-to-image/SKILL.md     |   0
+ .../skills}/fal-ai-flux-1-srpo/SKILL.md            |   0
+ .../skills}/fal-ai-flux-2-edit/SKILL.md            |   0
+ .../skills}/fal-ai-flux-2-flash-edit/SKILL.md      |   0
+ .../skills}/fal-ai-flux-2-flash/SKILL.md           |   0
+ .../skills}/fal-ai-flux-2-flex-edit/SKILL.md       |   0
+ .../skills}/fal-ai-flux-2-flex/SKILL.md            |   0
+ .../fal-ai-flux-2-klein-4b-base-edit-lora/SKILL.md |   0
+ .../fal-ai-flux-2-klein-4b-base-edit/SKILL.md      |   0
+ .../fal-ai-flux-2-klein-4b-base-lora/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-flux-2-klein-4b-base-trainer/SKILL.md   |   0
+ .../skills}/fal-ai-flux-2-klein-4b-base/SKILL.md   |   0
+ .../skills}/fal-ai-flux-2-klein-4b-edit/SKILL.md   |   0
+ .../skills}/fal-ai-flux-2-klein-4b/SKILL.md        |   0
+ .../fal-ai-flux-2-klein-9b-base-edit-lora/SKILL.md |   0
+ .../fal-ai-flux-2-klein-9b-base-edit/SKILL.md      |   0
+ .../fal-ai-flux-2-klein-9b-base-lora/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-flux-2-klein-9b-base-trainer/SKILL.md   |   0
+ .../skills}/fal-ai-flux-2-klein-9b-base/SKILL.md   |   0
+ .../skills}/fal-ai-flux-2-klein-9b-edit/SKILL.md   |   0
+ .../skills}/fal-ai-flux-2-klein-9b/SKILL.md        |   0
+ .../skills}/fal-ai-flux-2-klein-realtime/SKILL.md  |   0
+ .../skills}/fal-ai-flux-2-lora-edit/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-flux-2-lora-gallery-hdr-style/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-flux-2-lora-gallery-realism/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-flux-2-lora/SKILL.md            |   0
+ .../skills}/fal-ai-flux-2-max-edit/SKILL.md        |   0
+ .../skills}/fal-ai-flux-2-max/SKILL.md             |   0
+ .../skills}/fal-ai-flux-2-pro-edit/SKILL.md        |   0
+ .../skills}/fal-ai-flux-2-pro/SKILL.md             |   0
+ .../skills}/fal-ai-flux-2-trainer-edit/SKILL.md    |   0
+ .../skills}/fal-ai-flux-2-trainer-v2-edit/SKILL.md |   0
+ .../skills}/fal-ai-flux-2-trainer-v2/SKILL.md      |   0
+ .../skills}/fal-ai-flux-2-trainer/SKILL.md         |   0
+ .../skills}/fal-ai-flux-2-turbo-edit/SKILL.md      |   0
+ .../skills}/fal-ai-flux-2-turbo/SKILL.md           |   0
+ .../not Migrated/skills}/fal-ai-flux-2/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-flux-control-lora-canny/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-flux-control-lora-depth/SKILL.md        |   0
+ .../fal-ai-flux-dev-image-to-image/SKILL.md        |   0
+ .../skills}/fal-ai-flux-dev-redux/SKILL.md         |   0
+ .../not Migrated/skills}/fal-ai-flux-dev/SKILL.md  |   0
+ .../fal-ai-flux-differential-diffusion/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-flux-general-image-to-image/SKILL.md    |   0
+ .../fal-ai-flux-general-inpainting/SKILL.md        |   0
+ .../fal-ai-flux-general-rf-inversion/SKILL.md      |   0
+ .../skills}/fal-ai-flux-general/SKILL.md           |   0
+ .../skills}/fal-ai-flux-kontext-dev/SKILL.md       |   0
+ .../fal-ai-flux-kontext-lora-inpaint/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-flux-kontext-lora/SKILL.md      |   0
+ .../skills}/fal-ai-flux-kontext-trainer/SKILL.md   |   0
+ .../fal-ai-flux-krea-image-to-image/SKILL.md       |   0
+ .../fal-ai-flux-krea-lora-image-to-image/SKILL.md  |   0
+ .../fal-ai-flux-krea-lora-inpainting/SKILL.md      |   0
+ .../skills}/fal-ai-flux-krea-lora-stream/SKILL.md  |   0
+ .../skills}/fal-ai-flux-krea-lora/SKILL.md         |   0
+ .../skills}/fal-ai-flux-krea-redux/SKILL.md        |   0
+ .../skills}/fal-ai-flux-krea-trainer/SKILL.md      |   0
+ .../not Migrated/skills}/fal-ai-flux-krea/SKILL.md |   0
+ .../skills}/fal-ai-flux-lora-canny/SKILL.md        |   0
+ .../skills}/fal-ai-flux-lora-depth/SKILL.md        |   0
+ .../fal-ai-flux-lora-fast-training/SKILL.md        |   0
+ .../skills}/fal-ai-flux-lora-fill/SKILL.md         |   0
+ .../fal-ai-flux-lora-image-to-image/SKILL.md       |   0
+ .../skills}/fal-ai-flux-lora-inpainting/SKILL.md   |   0
+ .../fal-ai-flux-lora-portrait-trainer/SKILL.md     |   0
+ .../skills}/fal-ai-flux-lora-stream/SKILL.md       |   0
+ .../not Migrated/skills}/fal-ai-flux-lora/SKILL.md |   0
+ .../fal-ai-flux-pro-kontext-max-multi/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-flux-pro-kontext-max/SKILL.md   |   0
+ .../skills}/fal-ai-flux-pro-kontext-multi/SKILL.md |   0
+ .../fal-ai-flux-pro-kontext-text-to-image/SKILL.md |   0
+ .../skills}/fal-ai-flux-pro-kontext/SKILL.md       |   0
+ .../fal-ai-flux-pro-v1-fill-finetuned/SKILL.md     |   0
+ .../skills}/fal-ai-flux-pro-v1-fill/SKILL.md       |   0
+ .../skills}/fal-ai-flux-pro-v1.1-redux/SKILL.md    |   0
+ .../fal-ai-flux-pro-v1.1-ultra-finetuned/SKILL.md  |   0
+ .../fal-ai-flux-pro-v1.1-ultra-redux/SKILL.md      |   0
+ .../skills}/fal-ai-flux-pro-v1.1-ultra/SKILL.md    |   0
+ .../skills}/fal-ai-flux-pro-v1.1/SKILL.md          |   0
+ .../skills}/fal-ai-flux-pulid/SKILL.md             |   0
+ .../skills}/fal-ai-flux-schnell-redux/SKILL.md     |   0
+ .../skills}/fal-ai-flux-schnell/SKILL.md           |   0
+ .../fal-ai-flux-srpo-image-to-image/SKILL.md       |   0
+ .../not Migrated/skills}/fal-ai-flux-srpo/SKILL.md |   0
+ .../skills}/fal-ai-flux-subject/SKILL.md           |   0
+ .../skills}/fal-ai-flux-vision-upscaler/SKILL.md   |   0
+ .../skills}/fal-ai-fooocus-image-prompt/SKILL.md   |   0
+ .../skills}/fal-ai-fooocus-inpaint/SKILL.md        |   0
+ .../fal-ai-fooocus-upscale-or-vary/SKILL.md        |   0
+ .../not Migrated/skills}/fal-ai-fooocus/SKILL.md   |   0
+ .../skills}/fal-ai-framepack-f1/SKILL.md           |   0
+ .../skills}/fal-ai-framepack-flf2v/SKILL.md        |   0
+ .../not Migrated/skills}/fal-ai-framepack/SKILL.md |   0
+ .../fal-ai-gemini-25-flash-image-edit/SKILL.md     |   0
+ .../skills}/fal-ai-gemini-25-flash-image/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-gemini-3-pro-image-preview/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-gemini-3.1-flash-image-preview/SKILL.md |   0
+ .../fal-ai-gemini-flash-edit-multi/SKILL.md        |   0
+ .../skills}/fal-ai-gemini-flash-edit/SKILL.md      |   0
+ .../skills}/fal-ai-genfocus-all-in-focus/SKILL.md  |   0
+ .../not Migrated/skills}/fal-ai-genfocus/SKILL.md  |   0
+ .../not Migrated/skills}/fal-ai-ghiblify/SKILL.md  |   0
+ .../fal-ai-glm-image-image-to-image/SKILL.md       |   0
+ .../not Migrated/skills}/fal-ai-glm-image/SKILL.md |   0
+ .../skills}/fal-ai-got-ocr-v2/SKILL.md             |   0
+ .../skills}/fal-ai-gpt-image-1-edit-image/SKILL.md |   0
+ .../skills}/fal-ai-gpt-image-1-mini-edit/SKILL.md  |   0
+ .../skills}/fal-ai-gpt-image-1-mini/SKILL.md       |   0
+ .../fal-ai-gpt-image-1-text-to-image/SKILL.md      |   0
+ .../skills}/fal-ai-gpt-image-1.5-edit/SKILL.md     |   0
+ .../skills}/fal-ai-gpt-image-1.5/SKILL.md          |   0
+ .../fal-ai-heygen-avatar3-digital-twin/SKILL.md    |   0
+ .../fal-ai-heygen-avatar4-digital-twin/SKILL.md    |   0
+ .../fal-ai-heygen-avatar4-image-to-video/SKILL.md  |   0
+ .../fal-ai-heygen-v2-translate-precision/SKILL.md  |   0
+ .../fal-ai-heygen-v2-translate-speed/SKILL.md      |   0
+ .../skills}/fal-ai-heygen-v2-video-agent/SKILL.md  |   0
+ .../skills}/fal-ai-hidream-e1-1/SKILL.md           |   0
+ .../skills}/fal-ai-hidream-i1-dev/SKILL.md         |   0
+ .../skills}/fal-ai-hidream-i1-fast/SKILL.md        |   0
+ .../fal-ai-hidream-i1-full-image-to-image/SKILL.md |   0
+ .../skills}/fal-ai-hidream-i1-full/SKILL.md        |   0
+ .../skills}/fal-ai-hunyuan-3d-v3.1-part/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-hunyuan-3d-v3.1-pro-text-to-3d/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-hunyuan-3d-v3.1-smart-topology/SKILL.md |   0
+ .../skills}/fal-ai-hunyuan-avatar/SKILL.md         |   0
+ .../skills}/fal-ai-hunyuan-custom/SKILL.md         |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-hunyuan-image-v3-instruct-edit/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-hunyuan-image-v3-text-to-image/SKILL.md |   0
+ .../skills}/fal-ai-hunyuan-motion-fast/SKILL.md    |   0
+ .../skills}/fal-ai-hunyuan-motion/SKILL.md         |   0
+ .../skills}/fal-ai-hunyuan-part/SKILL.md           |   0
+ .../skills}/fal-ai-hunyuan-portrait/SKILL.md       |   0
+ .../skills}/fal-ai-hunyuan-video-foley/SKILL.md    |   0
+ .../fal-ai-hunyuan-video-image-to-video/SKILL.md   |   0
+ .../fal-ai-hunyuan-video-img2vid-lora/SKILL.md     |   0
+ .../fal-ai-hunyuan-video-lora-training/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-hunyuan-video-lora/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-hunyuan-video-video-to-video/SKILL.md   |   0
+ .../skills}/fal-ai-hunyuan-video/SKILL.md          |   0
+ .../fal-ai-hunyuan3d-v2-mini-turbo/SKILL.md        |   0
+ .../skills}/fal-ai-hunyuan3d-v2-mini/SKILL.md      |   0
+ .../fal-ai-hunyuan3d-v2-multi-view-turbo/SKILL.md  |   0
+ .../fal-ai-hunyuan3d-v2-multi-view/SKILL.md        |   0
+ .../skills}/fal-ai-hunyuan3d-v2-turbo/SKILL.md     |   0
+ .../skills}/fal-ai-hunyuan3d-v2/SKILL.md           |   0
+ .../skills}/fal-ai-hunyuan3d-v21/SKILL.md          |   0
+ .../fal-ai-hunyuan3d-v3-image-to-3d/SKILL.md       |   0
+ .../fal-ai-hunyuan3d-v3-sketch-to-3d/SKILL.md      |   0
+ .../fal-ai-hunyuan3d-v3-text-to-3d/SKILL.md        |   0
+ .../fal-ai-hunyuan_world-image-to-world/SKILL.md   |   0
+ .../skills}/fal-ai-hunyuan_world/SKILL.md          |   0
+ .../skills}/fal-ai-hyper3d-rodin-v2/SKILL.md       |   0
+ .../skills}/fal-ai-hyper3d-rodin/SKILL.md          |   0
+ .../skills}/fal-ai-iclight-v2/SKILL.md             |   0
+ .../fal-ai-ideogram-character-edit/SKILL.md        |   0
+ .../fal-ai-ideogram-character-remix/SKILL.md       |   0
+ .../skills}/fal-ai-ideogram-character/SKILL.md     |   0
+ .../skills}/fal-ai-ideogram-upscale/SKILL.md       |   0
+ .../skills}/fal-ai-ideogram-v2-edit/SKILL.md       |   0
+ .../skills}/fal-ai-ideogram-v2-remix/SKILL.md      |   0
+ .../skills}/fal-ai-ideogram-v2-turbo-edit/SKILL.md |   0
+ .../fal-ai-ideogram-v2-turbo-remix/SKILL.md        |   0
+ .../skills}/fal-ai-ideogram-v2-turbo/SKILL.md      |   0
+ .../skills}/fal-ai-ideogram-v2/SKILL.md            |   0
+ .../skills}/fal-ai-ideogram-v2a-remix/SKILL.md     |   0
+ .../fal-ai-ideogram-v2a-turbo-remix/SKILL.md       |   0
+ .../skills}/fal-ai-ideogram-v2a-turbo/SKILL.md     |   0
+ .../skills}/fal-ai-ideogram-v2a/SKILL.md           |   0
+ .../skills}/fal-ai-ideogram-v3-edit/SKILL.md       |   0
+ .../skills}/fal-ai-ideogram-v3-reframe/SKILL.md    |   0
+ .../skills}/fal-ai-ideogram-v3-remix/SKILL.md      |   0
+ .../fal-ai-ideogram-v3-replace-background/SKILL.md |   0
+ .../skills}/fal-ai-ideogram-v3/SKILL.md            |   0
+ .../skills}/fal-ai-illusion-diffusion/SKILL.md     |   0
+ .../fal-ai-image-apps-v2-age-modify/SKILL.md       |   0
+ .../fal-ai-image-apps-v2-city-teleport/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-image-apps-v2-hair-change/SKILL.md      |   0
+ .../fal-ai-image-apps-v2-headshot-photo/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-image-apps-v2-object-removal/SKILL.md   |   0
+ .../skills}/fal-ai-image-apps-v2-outpaint/SKILL.md |   0
+ .../fal-ai-image-apps-v2-perspective/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-image-apps-v2-portrait-enhance/SKILL.md |   0
+ .../fal-ai-image-apps-v2-product-holding/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-image-apps-v2-relighting/SKILL.md       |   0
+ .../fal-ai-image-apps-v2-style-transfer/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-image-apps-v2-virtual-try-on/SKILL.md   |   0
+ .../fal-ai-image-editing-age-progression/SKILL.md  |   0
+ .../fal-ai-image-editing-baby-version/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-image-editing-broccoli-haircut/SKILL.md |   0
+ .../fal-ai-image-editing-cartoonify/SKILL.md       |   0
+ .../fal-ai-image-editing-color-correction/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-image-editing-face-enhancement/SKILL.md |   0
+ .../fal-ai-image-editing-hair-change/SKILL.md      |   0
+ .../fal-ai-image-editing-object-removal/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-image-editing-plushie-style/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-image-editing-realism/SKILL.md  |   0
+ .../skills}/fal-ai-image-editing-reframe/SKILL.md  |   0
+ .../skills}/fal-ai-image-editing-retouch/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-image-editing-style-transfer/SKILL.md   |   0
+ .../fal-ai-image-editing-text-removal/SKILL.md     |   0
+ .../fal-ai-image-editing-time-of-day/SKILL.md      |   0
+ .../fal-ai-image-editing-weather-effect/SKILL.md   |   0
+ .../fal-ai-image-editing-wojak-style/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-image-preprocessors-hed/SKILL.md        |   0
+ .../fal-ai-image-preprocessors-lineart/SKILL.md    |   0
+ .../fal-ai-image-preprocessors-midas/SKILL.md      |   0
+ .../fal-ai-image-preprocessors-mlsd/SKILL.md       |   0
+ .../fal-ai-image-preprocessors-pidi/SKILL.md       |   0
+ .../fal-ai-image-preprocessors-sam/SKILL.md        |   0
+ .../fal-ai-image-preprocessors-scribble/SKILL.md   |   0
+ .../fal-ai-image-preprocessors-teed/SKILL.md       |   0
+ .../fal-ai-image-preprocessors-zoe/SKILL.md        |   0
+ .../skills}/fal-ai-image2pixel/SKILL.md            |   0
+ .../not Migrated/skills}/fal-ai-image2svg/SKILL.md |   0
+ .../skills}/fal-ai-imagen3-fast/SKILL.md           |   0
+ .../not Migrated/skills}/fal-ai-imagen3/SKILL.md   |   0
+ .../skills}/fal-ai-imagen4-preview-fast/SKILL.md   |   0
+ .../skills}/fal-ai-imagen4-preview-ultra/SKILL.md  |   0
+ .../skills}/fal-ai-imagen4-preview/SKILL.md        |   0
+ .../skills}/fal-ai-imageutils-depth/SKILL.md       |   0
+ .../fal-ai-imageutils-marigold-depth/SKILL.md      |   0
+ .../skills}/fal-ai-imageutils-nsfw/SKILL.md        |   0
+ .../skills}/fal-ai-imageutils-rembg/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-index-tts-2-text-to-speech/SKILL.md     |   0
+ .../skills}/fal-ai-infinitalk-single-text/SKILL.md |   0
+ .../fal-ai-infinitalk-video-to-video/SKILL.md      |   0
+ .../skills}/fal-ai-infinitalk/SKILL.md             |   0
+ .../fal-ai-infinity-star-text-to-video/SKILL.md    |   0
+ .../not Migrated/skills}/fal-ai-inpaint/SKILL.md   |   0
+ .../skills}/fal-ai-instant-character/SKILL.md      |   0
+ .../skills}/fal-ai-invisible-watermark/SKILL.md    |   0
+ .../skills}/fal-ai-ip-adapter-face-id/SKILL.md     |   0
+ .../not Migrated/skills}/fal-ai-janus/SKILL.md     |   0
+ .../fal-ai-kandinsky5-pro-image-to-video/SKILL.md  |   0
+ .../fal-ai-kandinsky5-pro-text-to-video/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-kandinsky5-text-to-video/SKILL.md       |   0
+ .../skills}/fal-ai-kling-image-o1/SKILL.md         |   0
+ .../fal-ai-kling-image-o3-image-to-image/SKILL.md  |   0
+ .../fal-ai-kling-image-o3-text-to-image/SKILL.md   |   0
+ .../fal-ai-kling-image-v3-image-to-image/SKILL.md  |   0
+ .../fal-ai-kling-image-v3-text-to-image/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-kling-video-ai-avatar-v2-pro/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-kling-video-create-voice/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-kling-video-o1-image-to-video/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-kling-video-pro/SKILL.md        |   0
+ .../fal-ai-kling-video-v1-pro-ai-avatar/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-kling-video-v1-tts/SKILL.md     |   0
+ .../fal-ai-kling-video-v1.5-pro-effects/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-kling-video-v1.6-pro-effects/SKILL.md   |   0
+ .../fal-ai-kling-video-v1.6-pro-elements/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-kling-video-video-to-audio/SKILL.md     |   0
+ .../skills}/fal-ai-kling-video/SKILL.md            |   0
+ .../fal-ai-kokoro-american-english/SKILL.md        |   0
+ .../fal-ai-kokoro-brazilian-portuguese/SKILL.md    |   0
+ .../skills}/fal-ai-kokoro-british-english/SKILL.md |   0
+ .../skills}/fal-ai-kokoro-french/SKILL.md          |   0
+ .../skills}/fal-ai-kokoro-hindi/SKILL.md           |   0
+ .../skills}/fal-ai-kokoro-italian/SKILL.md         |   0
+ .../skills}/fal-ai-kokoro-japanese/SKILL.md        |   0
+ .../fal-ai-kokoro-mandarin-chinese/SKILL.md        |   0
+ .../skills}/fal-ai-kokoro-spanish/SKILL.md         |   0
+ .../skills}/fal-ai-kolors-image-to-image/SKILL.md  |   0
+ .../not Migrated/skills}/fal-ai-kolors/SKILL.md    |   0
+ .../fal-ai-krea-wan-14b-text-to-video/SKILL.md     |   0
+ .../fal-ai-krea-wan-14b-video-to-video/SKILL.md    |   0
+ .../skills}/fal-ai-latentsync/SKILL.md             |   0
+ .../not Migrated/skills}/fal-ai-lava-sr/SKILL.md   |   0
+ .../skills}/fal-ai-layer-diffusion/SKILL.md        |   0
+ .../skills}/fal-ai-lcm-sd15-i2i/SKILL.md           |   0
+ .../not Migrated/skills}/fal-ai-lcm/SKILL.md       |   0
+ .../skills}/fal-ai-leffa-pose-transfer/SKILL.md    |   0
+ .../skills}/fal-ai-leffa-virtual-tryon/SKILL.md    |   0
+ .../skills}/fal-ai-lightning-models/SKILL.md       |   0
+ .../skills}/fal-ai-lightx-recamera/SKILL.md        |   0
+ .../skills}/fal-ai-lightx-relight/SKILL.md         |   0
+ .../skills}/fal-ai-live-avatar/SKILL.md            |   0
+ .../skills}/fal-ai-live-portrait-image/SKILL.md    |   0
+ .../skills}/fal-ai-live-portrait/SKILL.md          |   0
+ .../skills}/fal-ai-llava-next/SKILL.md             |   0
+ .../skills}/fal-ai-longcat-image-edit/SKILL.md     |   0
+ .../skills}/fal-ai-longcat-image/SKILL.md          |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-lora-image-to-image/SKILL.md    |   0
+ .../skills}/fal-ai-lora-inpaint/SKILL.md           |   0
+ .../not Migrated/skills}/fal-ai-lora/SKILL.md      |   0
+ .../fal-ai-ltx-2-19b-audio-to-video-lora/SKILL.md  |   0
+ .../fal-ai-ltx-2-19b-audio-to-video/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-ltx-2-19b-extend-video-lora/SKILL.md    |   0
+ .../skills}/fal-ai-ltx-2-19b-extend-video/SKILL.md |   0
+ .../fal-ai-ltx-2-19b-image-to-video-lora/SKILL.md  |   0
+ .../fal-ai-ltx-2-19b-image-to-video/SKILL.md       |   0
+ .../fal-ai-ltx-2-19b-text-to-video-lora/SKILL.md   |   0
+ .../fal-ai-ltx-2-19b-text-to-video/SKILL.md        |   0
+ .../fal-ai-ltx-2-19b-video-to-video-lora/SKILL.md  |   0
+ .../fal-ai-ltx-2-19b-video-to-video/SKILL.md       |   0
+ .../skills}/fal-ai-ltx-2-audio-to-video/SKILL.md   |   0
+ .../skills}/fal-ai-ltx-2-extend-video/SKILL.md     |   0
+ .../fal-ai-ltx-2-image-to-video-fast/SKILL.md      |   0
+ .../skills}/fal-ai-ltx-2-image-to-video/SKILL.md   |   0
+ .../skills}/fal-ai-ltx-2-retake-video/SKILL.md     |   0
+ .../fal-ai-ltx-2-text-to-video-fast/SKILL.md       |   0
+ .../skills}/fal-ai-ltx-2-text-to-video/SKILL.md    |   0
+ .../skills}/fal-ai-ltx-2.3-audio-to-video/SKILL.md |   0
+ .../skills}/fal-ai-ltx-2.3-extend-video/SKILL.md   |   0
+ .../fal-ai-ltx-2.3-image-to-video-fast/SKILL.md    |   0
+ .../skills}/fal-ai-ltx-2.3-image-to-video/SKILL.md |   0
+ .../skills}/fal-ai-ltx-2.3-retake-video/SKILL.md   |   0
+ .../fal-ai-ltx-2.3-text-to-video-fast/SKILL.md     |   0
+ .../skills}/fal-ai-ltx-2.3-text-to-video/SKILL.md  |   0
+ .../fal-ai-ltx-video-13b-dev-extend/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-ltx-video-13b-dev/SKILL.md      |   0
+ .../fal-ai-ltx-video-13b-distilled-extend/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-ltx-video-13b-distilled/SKILL.md        |   0
+ .../fal-ai-ltx-video-image-to-video/SKILL.md       |   0
+ .../fal-ai-ltx-video-lora-image-to-video/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-ltx-video-trainer/SKILL.md      |   0
+ .../skills}/fal-ai-ltx-video-v095-extend/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-ltx-video-v095/SKILL.md         |   0
+ .../not Migrated/skills}/fal-ai-ltx-video/SKILL.md |   0
+ .../skills}/fal-ai-ltx2-v2v-trainer/SKILL.md       |   0
+ .../skills}/fal-ai-ltx2-video-trainer/SKILL.md     |   0
+ .../fal-ai-ltxv-13b-098-distilled-extend/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-ltxv-13b-098-distilled/SKILL.md |   0
+ .../not Migrated/skills}/fal-ai-lucidflux/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-luma-dream-machine-ray-2-flash/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-luma-dream-machine-ray-2/SKILL.md       |   0
+ .../fal-ai-luma-photon-flash-modify/SKILL.md       |   0
+ .../fal-ai-luma-photon-flash-reframe/SKILL.md      |   0
+ .../skills}/fal-ai-luma-photon-flash/SKILL.md      |   0
+ .../skills}/fal-ai-luma-photon-modify/SKILL.md     |   0
+ .../skills}/fal-ai-luma-photon-reframe/SKILL.md    |   0
+ .../skills}/fal-ai-luma-photon/SKILL.md            |   0
+ .../skills}/fal-ai-lumina-image-v2/SKILL.md        |   0
+ .../not Migrated/skills}/fal-ai-lyria2/SKILL.md    |   0
+ .../fal-ai-magi-distilled-extend-video/SKILL.md    |   0
+ .../fal-ai-magi-distilled-image-to-video/SKILL.md  |   0
+ .../skills}/fal-ai-magi-distilled/SKILL.md         |   0
+ .../skills}/fal-ai-magi-extend-video/SKILL.md      |   0
+ .../skills}/fal-ai-magi-image-to-video/SKILL.md    |   0
+ .../not Migrated/skills}/fal-ai-magi/SKILL.md      |   0
+ .../skills}/fal-ai-maya-batch/SKILL.md             |   0
+ .../skills}/fal-ai-maya-stream/SKILL.md            |   0
+ .../not Migrated/skills}/fal-ai-maya/SKILL.md      |   0
+ .../fal-ai-meshy-v5-multi-image-to-3d/SKILL.md     |   0
+ .../skills}/fal-ai-meshy-v5-remesh/SKILL.md        |   0
+ .../skills}/fal-ai-meshy-v5-retexture/SKILL.md     |   0
+ .../skills}/fal-ai-meshy-v6-image-to-3d/SKILL.md   |   0
+ .../fal-ai-meshy-v6-preview-image-to-3d/SKILL.md   |   0
+ .../fal-ai-meshy-v6-preview-text-to-3d/SKILL.md    |   0
+ .../skills}/fal-ai-meshy-v6-text-to-3d/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-minimax-image-01/SKILL.md       |   0
+ .../skills}/fal-ai-minimax-music-v1.5/SKILL.md     |   0
+ .../skills}/fal-ai-minimax-music-v2/SKILL.md       |   0
+ .../skills}/fal-ai-minimax-music/SKILL.md          |   0
+ .../fal-ai-minimax-preview-speech-2.5-hd/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-minimax-speech-02-hd/SKILL.md   |   0
+ .../fal-ai-minimax-speech-02-turbo/SKILL.md        |   0
+ .../skills}/fal-ai-minimax-speech-2.6-hd/SKILL.md  |   0
+ .../fal-ai-minimax-speech-2.6-turbo/SKILL.md       |   0
+ .../skills}/fal-ai-minimax-speech-2.8-hd/SKILL.md  |   0
+ .../fal-ai-minimax-speech-2.8-turbo/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-minimax-video-01-director/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-minimax-video-01-live/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-minimax-video-01/SKILL.md       |   0
+ .../skills}/fal-ai-minimax-voice-clone/SKILL.md    |   0
+ .../skills}/fal-ai-minimax-voice-design/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-mix-dehaze-net/SKILL.md         |   0
+ .../fal-ai-mmaudio-v2-text-to-audio/SKILL.md       |   0
+ .../skills}/fal-ai-mmaudio-v2/SKILL.md             |   0
+ .../not Migrated/skills}/fal-ai-mochi-v1/SKILL.md  |   0
+ .../skills}/fal-ai-moondream-batched/SKILL.md      |   0
+ .../skills}/fal-ai-moondream-next-batch/SKILL.md   |   0
+ .../fal-ai-moondream-next-detection/SKILL.md       |   0
+ .../skills}/fal-ai-moondream-next/SKILL.md         |   0
+ .../fal-ai-moondream2-object-detection/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-moondream2-visual-query/SKILL.md        |   0
+ .../skills}/fal-ai-moondream2/SKILL.md             |   0
+ .../fal-ai-moondream3-preview-caption/SKILL.md     |   0
+ .../fal-ai-moondream3-preview-detect/SKILL.md      |   0
+ .../fal-ai-moondream3-preview-point/SKILL.md       |   0
+ .../fal-ai-moondream3-preview-query/SKILL.md       |   0
+ .../fal-ai-moondream3-preview-segment/SKILL.md     |   0
+ .../skills}/fal-ai-moonvalley-marey-i2v/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-moonvalley-marey-pose-transfer/SKILL.md |   0
+ .../skills}/fal-ai-moonvalley-marey-t2v/SKILL.md   |   0
+ .../skills}/fal-ai-multishot-master/SKILL.md       |   0
+ .../not Migrated/skills}/fal-ai-musetalk/SKILL.md  |   0
+ .../skills}/fal-ai-nafnet-deblur/SKILL.md          |   0
+ .../skills}/fal-ai-nafnet-denoise/SKILL.md         |   0
+ .../skills}/fal-ai-nano-banana-2-edit/SKILL.md     |   0
+ .../skills}/fal-ai-nano-banana-2/SKILL.md          |   0
+ .../skills}/fal-ai-nano-banana-edit/SKILL.md       |   0
+ .../skills}/fal-ai-nano-banana-pro-edit/SKILL.md   |   0
+ .../skills}/fal-ai-nano-banana-pro/SKILL.md        |   0
+ .../skills}/fal-ai-nano-banana/SKILL.md            |   0
+ .../skills}/fal-ai-nemotron-asr-stream/SKILL.md    |   0
+ .../skills}/fal-ai-nemotron-asr/SKILL.md           |   0
+ .../skills}/fal-ai-nextstep-1/SKILL.md             |   0
+ .../not Migrated/skills}/fal-ai-nova-sr/SKILL.md   |   0
+ .../skills}/fal-ai-object-removal-bbox/SKILL.md    |   0
+ .../skills}/fal-ai-object-removal-mask/SKILL.md    |   0
+ .../skills}/fal-ai-object-removal/SKILL.md         |   0
+ .../not Migrated/skills}/fal-ai-omni-zero/SKILL.md |   0
+ .../skills}/fal-ai-omnigen-v1/SKILL.md             |   0
+ .../skills}/fal-ai-omnigen-v2/SKILL.md             |   0
+ .../not Migrated/skills}/fal-ai-omnipart/SKILL.md  |   0
+ .../fal-ai-one-to-all-animation-1.3b/SKILL.md      |   0
+ .../fal-ai-one-to-all-animation-14b/SKILL.md       |   0
+ .../not Migrated/skills}/fal-ai-onereward/SKILL.md |   0
+ .../fal-ai-openrouter-router-audio/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-openrouter-router-video/SKILL.md        |   0
+ .../fal-ai-openrouter-router-vision/SKILL.md       |   0
+ .../skills}/fal-ai-openrouter-router/SKILL.md      |   0
+ .../skills}/fal-ai-orpheus-tts/SKILL.md            |   0
+ .../skills}/fal-ai-ovi-image-to-video/SKILL.md     |   0
+ .../not Migrated/skills}/fal-ai-ovi/SKILL.md       |   0
+ .../skills}/fal-ai-ovis-image/SKILL.md             |   0
+ .../not Migrated/skills}/fal-ai-pasd/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-perceptron-isaac-01/SKILL.md    |   0
+ .../skills}/fal-ai-personaplex-realtime/SKILL.md   |   0
+ .../skills}/fal-ai-personaplex/SKILL.md            |   0
+ .../skills}/fal-ai-photomaker/SKILL.md             |   0
+ .../not Migrated/skills}/fal-ai-piflow/SKILL.md    |   0
+ .../skills}/fal-ai-pika-v1.5-pikaffects/SKILL.md   |   0
+ .../skills}/fal-ai-pika-v2-pikadditions/SKILL.md   |   0
+ .../fal-ai-pika-v2-turbo-image-to-video/SKILL.md   |   0
+ .../fal-ai-pika-v2-turbo-text-to-video/SKILL.md    |   0
+ .../fal-ai-pika-v2.1-image-to-video/SKILL.md       |   0
+ .../fal-ai-pika-v2.1-text-to-video/SKILL.md        |   0
+ .../fal-ai-pika-v2.2-image-to-video/SKILL.md       |   0
+ .../skills}/fal-ai-pika-v2.2-pikaframes/SKILL.md   |   0
+ .../skills}/fal-ai-pika-v2.2-pikascenes/SKILL.md   |   0
+ .../fal-ai-pika-v2.2-text-to-video/SKILL.md        |   0
+ .../skills}/fal-ai-pixart-sigma/SKILL.md           |   0
+ .../skills}/fal-ai-pixverse-extend-fast/SKILL.md   |   0
+ .../skills}/fal-ai-pixverse-extend/SKILL.md        |   0
+ .../skills}/fal-ai-pixverse-lipsync/SKILL.md       |   0
+ .../skills}/fal-ai-pixverse-sound-effects/SKILL.md |   0
+ .../skills}/fal-ai-pixverse-swap/SKILL.md          |   0
+ .../skills}/fal-ai-pixverse-v3.5-effects/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-pixverse-v3.5-image-to-video/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-pixverse-v3.5-text-to-video/SKILL.md    |   0
+ .../fal-ai-pixverse-v3.5-transition/SKILL.md       |   0
+ .../skills}/fal-ai-pixverse-v4-effects/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-pixverse-v4-image-to-video/SKILL.md     |   0
+ .../fal-ai-pixverse-v4-text-to-video-fast/SKILL.md |   0
+ .../fal-ai-pixverse-v4-text-to-video/SKILL.md      |   0
+ .../skills}/fal-ai-pixverse-v4.5-effects/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-pixverse-v4.5-image-to-video/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-pixverse-v4.5-text-to-video/SKILL.md    |   0
+ .../fal-ai-pixverse-v4.5-transition/SKILL.md       |   0
+ .../skills}/fal-ai-pixverse-v5-effects/SKILL.md    |   0
+ .../fal-ai-pixverse-v5-image-to-video/SKILL.md     |   0
+ .../fal-ai-pixverse-v5-text-to-video/SKILL.md      |   0
+ .../skills}/fal-ai-pixverse-v5-transition/SKILL.md |   0
+ .../skills}/fal-ai-pixverse-v5.5-effects/SKILL.md  |   0
+ .../fal-ai-pixverse-v5.5-image-to-video/SKILL.md   |   0
+ .../fal-ai-pixverse-v5.5-text-to-video/SKILL.md    |   0
+ .../fal-ai-pixverse-v5.5-transition/SKILL.md       |   0
+ .../fal-ai-pixverse-v5.6-image-to-video/SKILL.md   |   0
+ .../fal-ai-pixverse-v5.6-text-to-video/SKILL.md    |   0
+ .../fal-ai-pixverse-v5.6-transition/SKILL.md       |   0
+ .../fal-ai-playground-v25-image-to-image/SKILL.md  |   0
+ .../fal-ai-playground-v25-inpainting/SKILL.md      |   0
+ .../skills}/fal-ai-playground-v25/SKILL.md         |   0
+ .../not Migrated/skills}/fal-ai-plushify/SKILL.md  |   0
+ .../not Migrated/skills}/fal-ai-pony-v7/SKILL.md   |   0
+ .../skills}/fal-ai-post-processing-blur/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-post-processing-color-tint/SKILL.md     |   0
+ .../fal-ai-post-processing-desaturate/SKILL.md     |   0
+ .../fal-ai-post-processing-dissolve/SKILL.md       |   0
+ .../fal-ai-post-processing-dodge-burn/SKILL.md     |   0
+ .../skills}/fal-ai-post-processing-grain/SKILL.md  |   0
+ .../fal-ai-post-processing-parabolize/SKILL.md     |   0
+ .../fal-ai-post-processing-sharpen/SKILL.md        |   0
+ .../fal-ai-post-processing-solarize/SKILL.md       |   0
+ .../fal-ai-post-processing-vignette/SKILL.md       |   0
+ .../skills}/fal-ai-post-processing/SKILL.md        |   0
+ .../not Migrated/skills}/fal-ai-pshuman/SKILL.md   |   0
+ .../not Migrated/skills}/fal-ai-pulid/SKILL.md     |   0
+ .../skills}/fal-ai-qwen-3-guard/SKILL.md           |   0
+ .../fal-ai-qwen-3-tts-clone-voice-0.6b/SKILL.md    |   0
+ .../fal-ai-qwen-3-tts-clone-voice-1.7b/SKILL.md    |   0
+ .../fal-ai-qwen-3-tts-text-to-speech-0.6b/SKILL.md |   0
+ .../fal-ai-qwen-3-tts-text-to-speech-1.7b/SKILL.md |   0
+ .../fal-ai-qwen-3-tts-voice-design-1.7b/SKILL.md   |   0
+ .../skills}/fal-ai-qwen-image-2-edit/SKILL.md      |   0
+ .../skills}/fal-ai-qwen-image-2-pro-edit/SKILL.md  |   0
+ .../fal-ai-qwen-image-2-pro-text-to-image/SKILL.md |   0
+ .../fal-ai-qwen-image-2-text-to-image/SKILL.md     |   0
+ .../skills}/fal-ai-qwen-image-2512-lora/SKILL.md   |   0
+ .../fal-ai-qwen-image-2512-trainer-v2/SKILL.md     |   0
+ .../fal-ai-qwen-image-2512-trainer/SKILL.md        |   0
+ .../skills}/fal-ai-qwen-image-2512/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-qwen-image-edit-2509-lora/SKILL.md      |   0
+ .../fal-ai-qwen-image-edit-2509-trainer/SKILL.md   |   0
+ .../skills}/fal-ai-qwen-image-edit-2509/SKILL.md   |   0
+ .../fal-ai-qwen-image-edit-2511-lora/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-qwen-image-edit-2511-trainer/SKILL.md   |   0
+ .../skills}/fal-ai-qwen-image-edit-2511/SKILL.md   |   0
+ .../fal-ai-qwen-image-edit-image-to-image/SKILL.md |   0
+ .../fal-ai-qwen-image-edit-inpaint/SKILL.md        |   0
+ .../skills}/fal-ai-qwen-image-edit-lora/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-qwen-image-edit-plus-lora/SKILL.md      |   0
+ .../fal-ai-qwen-image-edit-plus-trainer/SKILL.md   |   0
+ .../skills}/fal-ai-qwen-image-edit-plus/SKILL.md   |   0
+ .../fal-ai-qwen-image-edit-trainer/SKILL.md        |   0
+ .../skills}/fal-ai-qwen-image-edit/SKILL.md        |   0
+ .../fal-ai-qwen-image-image-to-image/SKILL.md      |   0
+ .../fal-ai-qwen-image-layered-lora/SKILL.md        |   0
+ .../fal-ai-qwen-image-layered-trainer/SKILL.md     |   0
+ .../skills}/fal-ai-qwen-image-layered/SKILL.md     |   0
+ .../skills}/fal-ai-qwen-image-max-edit/SKILL.md    |   0
+ .../fal-ai-qwen-image-max-text-to-image/SKILL.md   |   0
+ .../skills}/fal-ai-qwen-image-trainer-v2/SKILL.md  |   0
+ .../skills}/fal-ai-qwen-image-trainer/SKILL.md     |   0
+ .../skills}/fal-ai-qwen-image/SKILL.md             |   0
+ .../skills}/fal-ai-realistic-vision/SKILL.md       |   0
+ .../skills}/fal-ai-recraft-20b/SKILL.md            |   0
+ .../fal-ai-recraft-upscale-creative/SKILL.md       |   0
+ .../skills}/fal-ai-recraft-upscale-crisp/SKILL.md  |   0
+ .../fal-ai-recraft-v3-create-style/SKILL.md        |   0
+ .../fal-ai-recraft-v3-image-to-image/SKILL.md      |   0
+ .../fal-ai-recraft-v3-text-to-image/SKILL.md       |   0
+ .../fal-ai-recraft-v4-pro-text-to-image/SKILL.md   |   0
+ .../fal-ai-recraft-v4-pro-text-to-vector/SKILL.md  |   0
+ .../fal-ai-recraft-v4-text-to-image/SKILL.md       |   0
+ .../fal-ai-recraft-v4-text-to-vector/SKILL.md      |   0
+ .../skills}/fal-ai-recraft-vectorize/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../not Migrated/skills}/fal-ai-retoucher/SKILL.md |   0
+ .../skills}/fal-ai-rife-video/SKILL.md             |   0
+ .../not Migrated/skills}/fal-ai-rife/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-sa2va-4b-image/SKILL.md         |   0
+ .../skills}/fal-ai-sa2va-4b-video/SKILL.md         |   0
+ .../skills}/fal-ai-sa2va-8b-image/SKILL.md         |   0
+ .../skills}/fal-ai-sa2va-8b-video/SKILL.md         |   0
+ .../skills}/fal-ai-sadtalker-reference/SKILL.md    |   0
+ .../not Migrated/skills}/fal-ai-sadtalker/SKILL.md |   0
+ .../skills}/fal-ai-sam-3-3d-align/SKILL.md         |   0
+ .../skills}/fal-ai-sam-3-3d-body/SKILL.md          |   0
+ .../skills}/fal-ai-sam-3-3d-objects/SKILL.md       |   0
+ .../skills}/fal-ai-sam-3-image-embed/SKILL.md      |   0
+ .../skills}/fal-ai-sam-3-image-rle/SKILL.md        |   0
+ .../skills}/fal-ai-sam-3-image/SKILL.md            |   0
+ .../skills}/fal-ai-sam-3-video-rle/SKILL.md        |   0
+ .../skills}/fal-ai-sam-3-video/SKILL.md            |   0
+ .../skills}/fal-ai-sam-audio-separate/SKILL.md     |   0
+ .../fal-ai-sam-audio-span-separate/SKILL.md        |   0
+ .../fal-ai-sam-audio-visual-separate/SKILL.md      |   0
+ .../skills}/fal-ai-sam2-auto-segment/SKILL.md      |   0
+ .../skills}/fal-ai-sam2-image/SKILL.md             |   0
+ .../skills}/fal-ai-sam2-video/SKILL.md             |   0
+ .../skills}/fal-ai-sana-sprint/SKILL.md            |   0
+ .../skills}/fal-ai-sana-v1.5-1.6b/SKILL.md         |   0
+ .../skills}/fal-ai-sana-v1.5-4.8b/SKILL.md         |   0
+ .../skills}/fal-ai-sana-video/SKILL.md             |   0
+ .../not Migrated/skills}/fal-ai-sana/SKILL.md      |   0
+ .../not Migrated/skills}/fal-ai-scail/SKILL.md     |   0
+ .../skills}/fal-ai-sd15-depth-controlnet/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-sdxl-controlnet-union/SKILL.md  |   0
+ .../skills}/fal-ai-seedvr-upscale-image/SKILL.md   |   0
+ .../skills}/fal-ai-seedvr-upscale-video/SKILL.md   |   0
+ .../skills}/fal-ai-silero-vad/SKILL.md             |   0
+ .../skills}/fal-ai-sky-raccoon/SKILL.md            |   0
+ .../skills}/fal-ai-skyreels-i2v/SKILL.md           |   0
+ .../skills}/fal-ai-smart-turn/SKILL.md             |   0
+ .../fal-ai-smoretalk-ai-rembg-enhance/SKILL.md     |   0
+ .../skills}/fal-ai-sonauto-v2-extend/SKILL.md      |   0
+ .../skills}/fal-ai-sonauto-v2-inpaint/SKILL.md     |   0
+ .../fal-ai-sonauto-v2-text-to-music/SKILL.md       |   0
+ .../fal-ai-sora-2-image-to-video-pro/SKILL.md      |   0
+ .../skills}/fal-ai-sora-2-image-to-video/SKILL.md  |   0
+ .../fal-ai-sora-2-text-to-video-pro/SKILL.md       |   0
+ .../skills}/fal-ai-sora-2-text-to-video/SKILL.md   |   0
+ .../fal-ai-sora-2-video-to-video-remix/SKILL.md    |   0
+ .../skills}/fal-ai-speech-to-text-stream/SKILL.md  |   0
+ .../fal-ai-speech-to-text-turbo-stream/SKILL.md    |   0
+ .../skills}/fal-ai-speech-to-text-turbo/SKILL.md   |   0
+ .../skills}/fal-ai-speech-to-text/SKILL.md         |   0
+ .../fal-ai-stable-audio-25-audio-to-audio/SKILL.md |   0
+ .../fal-ai-stable-audio-25-inpaint/SKILL.md        |   0
+ .../fal-ai-stable-audio-25-text-to-audio/SKILL.md  |   0
+ .../skills}/fal-ai-stable-audio/SKILL.md           |   0
+ .../skills}/fal-ai-stable-avatar/SKILL.md          |   0
+ .../fal-ai-stable-cascade-sote-diffusion/SKILL.md  |   0
+ .../skills}/fal-ai-stable-cascade/SKILL.md         |   0
+ .../skills}/fal-ai-stable-diffusion-v15/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-stable-diffusion-v3-medium/SKILL.md     |   0
+ .../fal-ai-stable-diffusion-v35-large/SKILL.md     |   0
+ .../fal-ai-stable-diffusion-v35-medium/SKILL.md    |   0
+ .../skills}/fal-ai-stable-video/SKILL.md           |   0
+ .../skills}/fal-ai-star-vector/SKILL.md            |   0
+ .../skills}/fal-ai-steady-dancer/SKILL.md          |   0
+ .../skills}/fal-ai-step1x-edit/SKILL.md            |   0
+ .../skills}/fal-ai-stepx-edit2/SKILL.md            |   0
+ .../not Migrated/skills}/fal-ai-swin2sr/SKILL.md   |   0
+ .../skills}/fal-ai-switti-512/SKILL.md             |   0
+ .../not Migrated/skills}/fal-ai-switti/SKILL.md    |   0
+ .../skills}/fal-ai-sync-lipsync-react-1/SKILL.md   |   0
+ .../skills}/fal-ai-sync-lipsync-v2-pro/SKILL.md    |   0
+ .../skills}/fal-ai-sync-lipsync-v2/SKILL.md        |   0
+ .../skills}/fal-ai-sync-lipsync/SKILL.md           |   0
+ .../not Migrated/skills}/fal-ai-t2v-turbo/SKILL.md |   0
+ .../not Migrated/skills}/fal-ai-thera/SKILL.md     |   0
+ .../skills}/fal-ai-thinksound-audio/SKILL.md       |   0
+ .../skills}/fal-ai-thinksound/SKILL.md             |   0
+ .../skills}/fal-ai-topaz-upscale-image/SKILL.md    |   0
+ .../skills}/fal-ai-topaz-upscale-video/SKILL.md    |   0
+ .../skills}/fal-ai-transpixar/SKILL.md             |   0
+ .../skills}/fal-ai-trellis-2-retexture/SKILL.md    |   0
+ .../not Migrated/skills}/fal-ai-trellis-2/SKILL.md |   0
+ .../skills}/fal-ai-trellis-multi/SKILL.md          |   0
+ .../not Migrated/skills}/fal-ai-trellis/SKILL.md   |   0
+ .../fal-ai-tripo3d-tripo-v2.5-image-to-3d/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../not Migrated/skills}/fal-ai-triposr/SKILL.md   |   0
+ .../skills}/fal-ai-turbo-flux-trainer/SKILL.md     |   0
+ .../skills}/fal-ai-ultrashape/SKILL.md             |   0
+ .../not Migrated/skills}/fal-ai-uno/SKILL.md       |   0
+ .../not Migrated/skills}/fal-ai-uso/SKILL.md       |   0
+ .../fal-ai-veed-avatars-audio-to-video/SKILL.md    |   0
+ .../fal-ai-veed-avatars-text-to-video/SKILL.md     |   0
+ .../skills}/fal-ai-veed-fabric-1.0-fast/SKILL.md   |   0
+ .../skills}/fal-ai-veed-fabric-1.0-text/SKILL.md   |   0
+ .../skills}/fal-ai-veed-fabric-1.0/SKILL.md        |   0
+ .../skills}/fal-ai-veed-lipsync/SKILL.md           |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-veed-video-background-removal/SKILL.md  |   0
+ .../skills}/fal-ai-veo2-image-to-video/SKILL.md    |   0
+ .../not Migrated/skills}/fal-ai-veo2/SKILL.md      |   0
+ .../fal-ai-veo3-fast-image-to-video/SKILL.md       |   0
+ .../not Migrated/skills}/fal-ai-veo3-fast/SKILL.md |   0
+ .../skills}/fal-ai-veo3-image-to-video/SKILL.md    |   0
+ .../skills}/fal-ai-veo3.1-extend-video/SKILL.md    |   0
+ .../fal-ai-veo3.1-fast-extend-video/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-veo3.1-fast-image-to-video/SKILL.md     |   0
+ .../skills}/fal-ai-veo3.1-fast/SKILL.md            |   0
+ .../SKILL.md                                       |   0
+ .../skills}/fal-ai-veo3.1-image-to-video/SKILL.md  |   0
+ .../fal-ai-veo3.1-reference-to-video/SKILL.md      |   0
+ .../not Migrated/skills}/fal-ai-veo3.1/SKILL.md    |   0
+ .../not Migrated/skills}/fal-ai-veo3/SKILL.md      |   0
+ .../skills}/fal-ai-vibevoice-0.5b/SKILL.md         |   0
+ .../skills}/fal-ai-vibevoice-7b/SKILL.md           |   0
+ .../not Migrated/skills}/fal-ai-vibevoice/SKILL.md |   0
+ .../skills}/fal-ai-video-as-prompt/SKILL.md        |   0
+ .../skills}/fal-ai-video-prompt-generator/SKILL.md |   0
+ .../skills}/fal-ai-video-understanding/SKILL.md    |   0
+ .../skills}/fal-ai-video-upscaler/SKILL.md         |   0
+ .../skills}/fal-ai-vidu-image-to-video/SKILL.md    |   0
+ .../skills}/fal-ai-vidu-q1-image-to-video/SKILL.md |   0
+ .../fal-ai-vidu-q1-reference-to-video/SKILL.md     |   0
+ .../fal-ai-vidu-q1-start-end-to-video/SKILL.md     |   0
+ .../skills}/fal-ai-vidu-q1-text-to-video/SKILL.md  |   0
+ .../fal-ai-vidu-q2-image-to-video-pro/SKILL.md     |   0
+ .../fal-ai-vidu-q2-image-to-video-turbo/SKILL.md   |   0
+ .../fal-ai-vidu-q2-reference-to-image/SKILL.md     |   0
+ .../fal-ai-vidu-q2-reference-to-video-pro/SKILL.md |   0
+ .../skills}/fal-ai-vidu-q2-text-to-image/SKILL.md  |   0
+ .../skills}/fal-ai-vidu-q2-text-to-video/SKILL.md  |   0
+ .../fal-ai-vidu-q2-video-extension-pro/SKILL.md    |   0
+ .../fal-ai-vidu-q3-image-to-video-turbo/SKILL.md   |   0
+ .../skills}/fal-ai-vidu-q3-image-to-video/SKILL.md |   0
+ .../fal-ai-vidu-q3-text-to-video-turbo/SKILL.md    |   0
+ .../skills}/fal-ai-vidu-q3-text-to-video/SKILL.md  |   0
+ .../fal-ai-vidu-reference-to-image/SKILL.md        |   0
+ .../fal-ai-vidu-reference-to-video/SKILL.md        |   0
+ .../fal-ai-vidu-start-end-to-video/SKILL.md        |   0
+ .../skills}/fal-ai-vidu-template-to-video/SKILL.md |   0
+ .../skills}/fal-ai-wan-22-image-trainer/SKILL.md   |   0
+ .../fal-ai-wan-22-trainer-i2v-a14b/SKILL.md        |   0
+ .../fal-ai-wan-22-trainer-t2v-a14b/SKILL.md        |   0
+ .../fal-ai-wan-22-vace-fun-a14b-depth/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-wan-22-vace-fun-a14b-pose/SKILL.md      |   0
+ .../fal-ai-wan-22-vace-fun-a14b-reframe/SKILL.md   |   0
+ .../fal-ai-wan-25-preview-image-to-image/SKILL.md  |   0
+ .../fal-ai-wan-25-preview-image-to-video/SKILL.md  |   0
+ .../fal-ai-wan-25-preview-text-to-image/SKILL.md   |   0
+ .../fal-ai-wan-25-preview-text-to-video/SKILL.md   |   0
+ .../not Migrated/skills}/fal-ai-wan-alpha/SKILL.md |   0
+ .../not Migrated/skills}/fal-ai-wan-ati/SKILL.md   |   0
+ .../skills}/fal-ai-wan-effects/SKILL.md            |   0
+ .../not Migrated/skills}/fal-ai-wan-flf2v/SKILL.md |   0
+ .../skills}/fal-ai-wan-fun-control/SKILL.md        |   0
+ .../skills}/fal-ai-wan-i2v-lora/SKILL.md           |   0
+ .../not Migrated/skills}/fal-ai-wan-i2v/SKILL.md   |   0
+ .../skills}/fal-ai-wan-motion/SKILL.md             |   0
+ .../not Migrated/skills}/fal-ai-wan-move/SKILL.md  |   0
+ .../skills}/fal-ai-wan-pro-image-to-video/SKILL.md |   0
+ .../skills}/fal-ai-wan-pro-text-to-video/SKILL.md  |   0
+ .../skills}/fal-ai-wan-t2v-lora/SKILL.md           |   0
+ .../not Migrated/skills}/fal-ai-wan-t2v/SKILL.md   |   0
+ .../skills}/fal-ai-wan-trainer-flf2v-720p/SKILL.md |   0
+ .../skills}/fal-ai-wan-trainer-i2v-720p/SKILL.md   |   0
+ .../skills}/fal-ai-wan-trainer-t2v-14b/SKILL.md    |   0
+ .../skills}/fal-ai-wan-trainer-t2v/SKILL.md        |   0
+ .../skills}/fal-ai-wan-trainer/SKILL.md            |   0
+ .../fal-ai-wan-v2.2-14b-animate-move/SKILL.md      |   0
+ .../fal-ai-wan-v2.2-14b-animate-replace/SKILL.md   |   0
+ .../fal-ai-wan-v2.2-14b-speech-to-video/SKILL.md   |   0
+ .../fal-ai-wan-v2.2-5b-image-to-video/SKILL.md     |   0
+ .../fal-ai-wan-v2.2-5b-text-to-image/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-wan-v2.2-5b-text-to-video/SKILL.md      |   0
+ .../fal-ai-wan-v2.2-a14b-image-to-image/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-wan-v2.2-a14b-image-to-video/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-wan-v2.2-a14b-text-to-image/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-wan-v2.2-a14b-text-to-video/SKILL.md    |   0
+ .../fal-ai-wan-v2.2-a14b-video-to-video/SKILL.md   |   0
+ .../fal-ai-wan-v2.6-image-to-image/SKILL.md        |   0
+ .../fal-ai-wan-v2.6-image-to-video-flash/SKILL.md  |   0
+ .../fal-ai-wan-v2.6-image-to-video/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-wan-v2.6-reference-to-video/SKILL.md    |   0
+ .../skills}/fal-ai-wan-v2.6-text-to-image/SKILL.md |   0
+ .../skills}/fal-ai-wan-v2.6-text-to-video/SKILL.md |   0
+ .../skills}/fal-ai-wan-vace-1-3b/SKILL.md          |   0
+ .../skills}/fal-ai-wan-vace-14b-depth/SKILL.md     |   0
+ .../fal-ai-wan-vace-14b-inpainting/SKILL.md        |   0
+ .../fal-ai-wan-vace-14b-outpainting/SKILL.md       |   0
+ .../skills}/fal-ai-wan-vace-14b-pose/SKILL.md      |   0
+ .../skills}/fal-ai-wan-vace-14b-reframe/SKILL.md   |   0
+ .../skills}/fal-ai-wan-vace-14b/SKILL.md           |   0
+ .../fal-ai-wan-vace-apps-long-reframe/SKILL.md     |   0
+ .../fal-ai-wan-vace-apps-video-edit/SKILL.md       |   0
+ .../not Migrated/skills}/fal-ai-wan-vace/SKILL.md  |   0
+ .../skills}/fal-ai-wan-vision-enhancer/SKILL.md    |   0
+ .../not Migrated/skills}/fal-ai-whisper/SKILL.md   |   0
+ .../not Migrated/skills}/fal-ai-wizper/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-workflow-utilities-blend-video/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-workflow-utilities-scale-video/SKILL.md |   0
+ .../fal-ai-workflow-utilities-trim-video/SKILL.md  |   0
+ .../skills}/fal-ai-x-ailab-nsfw/SKILL.md           |   0
+ .../fal-ai-xai-grok-imagine-image-edit/SKILL.md    |   0
+ .../skills}/fal-ai-xai-grok-imagine-image/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../not Migrated/skills}/fal-ai-yue/SKILL.md       |   0
+ .../skills}/fal-ai-z-image-base-lora/SKILL.md      |   0
+ .../skills}/fal-ai-z-image-base-trainer/SKILL.md   |   0
+ .../skills}/fal-ai-z-image-base/SKILL.md           |   0
+ .../skills}/fal-ai-z-image-trainer/SKILL.md        |   0
+ .../fal-ai-z-image-turbo-controlnet-lora/SKILL.md  |   0
+ .../fal-ai-z-image-turbo-controlnet/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../fal-ai-z-image-turbo-image-to-image/SKILL.md   |   0
+ .../fal-ai-z-image-turbo-inpaint-lora/SKILL.md     |   0
+ .../skills}/fal-ai-z-image-turbo-inpaint/SKILL.md  |   0
+ .../skills}/fal-ai-z-image-turbo-lora/SKILL.md     |   0
+ .../fal-ai-z-image-turbo-trainer-v2/SKILL.md       |   0
+ .../skills}/fal-ai-z-image-turbo/SKILL.md          |   0
+ .../not Migrated/skills}/fal-ai-zonos/SKILL.md     |   0
+ .../replicate-851-labs-background-remover/SKILL.md |   0
+ .../replicate-aaronaftab-mirage-ghibli/SKILL.md    |   0
+ .../replicate-abiruyt-text-extract-ocr/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-adirik-grounding-dino/SKILL.md       |   0
+ .../skills}/replicate-adirik-imagedream/SKILL.md   |   0
+ .../replicate-adirik-interior-design/SKILL.md      |   0
+ .../skills}/replicate-adirik-kosmos-g/SKILL.md     |   0
+ .../skills}/replicate-adirik-mvdream/SKILL.md      |   0
+ .../replicate-adirik-owlvit-base-patch32/SKILL.md  |   0
+ .../replicate-adirik-realvisxl-v3.0-turbo/SKILL.md |   0
+ .../skills}/replicate-adirik-styletts2/SKILL.md    |   0
+ .../skills}/replicate-adirik-text2tex/SKILL.md     |   0
+ .../skills}/replicate-adirik-texture/SKILL.md      |   0
+ .../skills}/replicate-adirik-wonder3d/SKILL.md     |   0
+ .../replicate-afiaka87-tortoise-tts/SKILL.md       |   0
+ .../replicate-ahmdyassr-mask-clothing/SKILL.md     |   0
+ .../replicate-ai-forever-kandinsky-2.2/SKILL.md    |   0
+ .../replicate-ai-forever-kandinsky-2/SKILL.md      |   0
+ .../replicate-alexgenovese-upscaler/SKILL.md       |   0
+ .../skills}/replicate-ali-vilab-i2vgen-xl/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../replicate-andreasjansson-illusion/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-andreasjansson-tile-morph/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-anthropic-claude-3.5-haiku/SKILL.md  |   0
+ .../replicate-anthropic-claude-3.7-sonnet/SKILL.md |   0
+ .../replicate-anthropic-claude-4-sonnet/SKILL.md   |   0
+ .../replicate-anthropic-claude-4.5-haiku/SKILL.md  |   0
+ .../replicate-anthropic-claude-4.5-sonnet/SKILL.md |   0
+ .../replicate-anthropic-claude-opus-4.6/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-awerks-neon-tts/SKILL.md     |   0
+ .../skills}/replicate-awerks-whisperx/SKILL.md     |   0
+ .../replicate-awilliamson10-meta-nougat/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-black-forest-labs-flux-dev/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-black-forest-labs-flux-pro/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-bria-eraser/SKILL.md         |   0
+ .../skills}/replicate-bria-expand-image/SKILL.md   |   0
+ .../skills}/replicate-bria-fibo-edit/SKILL.md      |   0
+ .../skills}/replicate-bria-fibo/SKILL.md           |   0
+ .../replicate-bria-generate-background/SKILL.md    |   0
+ .../skills}/replicate-bria-genfill/SKILL.md        |   0
+ .../skills}/replicate-bria-image-3.2/SKILL.md      |   0
+ .../replicate-bria-increase-resolution/SKILL.md    |   0
+ .../skills}/replicate-bria-product-cutout/SKILL.md |   0
+ .../replicate-bria-product-packshot/SKILL.md       |   0
+ .../skills}/replicate-bria-product-shadow/SKILL.md |   0
+ .../replicate-bria-remove-background/SKILL.md      |   0
+ .../replicate-bria-video-erase-object/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-bytedance-bagel/SKILL.md     |   0
+ .../skills}/replicate-bytedance-dolphin/SKILL.md   |   0
+ .../replicate-bytedance-dreamactor-m2.0/SKILL.md   |   0
+ .../replicate-bytedance-dreamina-3.1/SKILL.md      |   0
+ .../replicate-bytedance-flux-pulid/SKILL.md        |   0
+ .../replicate-bytedance-latentsync/SKILL.md        |   0
+ .../replicate-bytedance-omni-human-1.5/SKILL.md    |   0
+ .../replicate-bytedance-omni-human/SKILL.md        |   0
+ .../skills}/replicate-bytedance-pulid/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../replicate-bytedance-seedance-1-lite/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../replicate-bytedance-seedance-1-pro/SKILL.md    |   0
+ .../replicate-bytedance-seedance-1.5-pro/SKILL.md  |   0
+ .../replicate-bytedance-seedream-3/SKILL.md        |   0
+ .../replicate-bytedance-seedream-4.5/SKILL.md      |   0
+ .../replicate-bytedance-seedream-4/SKILL.md        |   0
+ .../replicate-bytedance-seedream-5-lite/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../replicate-character-ai-ovi-i2v/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-chenxwh-cogvlm2-video/SKILL.md       |   0
+ .../skills}/replicate-chenxwh-openvoice/SKILL.md   |   0
+ .../replicate-chenxwh-video-retalking/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../replicate-chigozienri-mediapipe-face/SKILL.md  |   0
+ .../replicate-cjwbw-aniportrait-audio2vid/SKILL.md |   0
+ .../skills}/replicate-cjwbw-anything-v4.0/SKILL.md |   0
+ .../skills}/replicate-cjwbw-bigcolor/SKILL.md      |   0
+ .../skills}/replicate-cjwbw-cogvlm/SKILL.md        |   0
+ .../skills}/replicate-cjwbw-controlvideo/SKILL.md  |   0
+ .../replicate-cjwbw-damo-text-to-video/SKILL.md    |   0
+ .../skills}/replicate-cjwbw-docentr/SKILL.md       |   0
+ .../replicate-cjwbw-face-align-cog/SKILL.md        |   0
+ .../replicate-cjwbw-internlm-xcomposer/SKILL.md    |   0
+ .../replicate-cjwbw-night-enhancement/SKILL.md     |   0
+ .../skills}/replicate-cjwbw-parler-tts/SKILL.md    |   0
+ .../skills}/replicate-cjwbw-real-esrgan/SKILL.md   |   0
+ .../skills}/replicate-cjwbw-rembg/SKILL.md         |   0
+ .../skills}/replicate-cjwbw-rmgb/SKILL.md          |   0
+ .../skills}/replicate-cjwbw-rudalle-sr/SKILL.md    |   0
+ .../skills}/replicate-cjwbw-sadtalker/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-cjwbw-shap-e/SKILL.md        |   0
+ .../skills}/replicate-cjwbw-supir-v0f/SKILL.md     |   0
+ .../skills}/replicate-cjwbw-supir-v0q/SKILL.md     |   0
+ .../skills}/replicate-cjwbw-supir/SKILL.md         |   0
+ .../replicate-cjwbw-text2video-zero/SKILL.md       |   0
+ .../skills}/replicate-cjwbw-videocrafter/SKILL.md  |   0
+ .../skills}/replicate-cjwbw-voicecraft/SKILL.md    |   0
+ .../skills}/replicate-cjwbw-vqfr/SKILL.md          |   0
+ .../SKILL.md                                       |   0
+ .../replicate-codeplugtech-face-swap/SKILL.md      |   0
+ .../replicate-codeplugtech-object_remover/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-cswry-seesr/SKILL.md         |   0
+ .../skills}/replicate-cudanexus-ocr-surya/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../replicate-cuuupid-cogvideox-5b/SKILL.md        |   0
+ .../skills}/replicate-cuuupid-glm-4v-9b/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-cuuupid-marker/SKILL.md      |   0
+ .../skills}/replicate-cuuupid-qwen2-vl-2b/SKILL.md |   0
+ .../skills}/replicate-daanelson-imagebind/SKILL.md |   0
+ .../skills}/replicate-daanelson-minigpt-4/SKILL.md |   0
+ .../skills}/replicate-daanelson-whisperx/SKILL.md  |   0
+ .../skills}/replicate-daanelson-yolox/SKILL.md     |   0
+ .../replicate-datacte-proteus-v0.2/SKILL.md        |   0
+ .../replicate-datacte-proteus-v0.3/SKILL.md        |   0
+ .../skills}/replicate-datalab-to-marker/SKILL.md   |   0
+ .../skills}/replicate-datalab-to-ocr/SKILL.md      |   0
+ .../replicate-deepseek-ai-deepseek-r1/SKILL.md     |   0
+ .../replicate-deepseek-ai-deepseek-v3.1/SKILL.md   |   0
+ .../replicate-deepseek-ai-deepseek-v3/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-easel-ai-avatars/SKILL.md    |   0
+ .../replicate-elevenlabs-flash-v2.5/SKILL.md       |   0
+ .../skills}/replicate-elevenlabs-music/SKILL.md    |   0
+ .../replicate-elevenlabs-turbo-v2.5/SKILL.md       |   0
+ .../replicate-elevenlabs-v2-multilingual/SKILL.md  |   0
+ .../skills}/replicate-elevenlabs-v3/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-fictions-ai-autocaption/SKILL.md     |   0
+ .../skills}/replicate-firtoz-trellis/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-flux-kontext-apps-filters/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-fofr-audio-to-waveform/SKILL.md      |   0
+ .../skills}/replicate-fofr-become-image/SKILL.md   |   0
+ .../skills}/replicate-fofr-color-matcher/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-fofr-face-to-many/SKILL.md   |   0
+ .../replicate-fofr-face-to-sticker/SKILL.md        |   0
+ .../replicate-fofr-frames-to-video/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../replicate-fofr-prompt-classifier/SKILL.md      |   0
+ .../skills}/replicate-fofr-sdxl-emoji/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-fofr-sticker-maker/SKILL.md  |   0
+ .../skills}/replicate-fofr-toolkit/SKILL.md        |   0
+ .../skills}/replicate-fofr-tooncrafter/SKILL.md    |   0
+ .../skills}/replicate-fofr-video-morpher/SKILL.md  |   0
+ .../replicate-fofr-video-to-frames/SKILL.md        |   0
+ .../replicate-gauravk95-sadtalker-video/SKILL.md   |   0
+ .../skills}/replicate-genmoai-mochi-1/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../replicate-google-deepmind-gemma-2b-it/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../replicate-google-gemini-2.5-flash/SKILL.md     |   0
+ .../replicate-google-gemini-3-flash/SKILL.md       |   0
+ .../skills}/replicate-google-gemini-3-pro/SKILL.md |   0
+ .../replicate-google-gemini-3.1-pro/SKILL.md       |   0
+ .../replicate-google-imagen-3-fast/SKILL.md        |   0
+ .../skills}/replicate-google-imagen-3/SKILL.md     |   0
+ .../replicate-google-imagen-4-fast/SKILL.md        |   0
+ .../replicate-google-imagen-4-ultra/SKILL.md       |   0
+ .../skills}/replicate-google-imagen-4/SKILL.md     |   0
+ .../skills}/replicate-google-lyria-2/SKILL.md      |   0
+ .../replicate-google-nano-banana-2/SKILL.md        |   0
+ .../replicate-google-nano-banana-pro/SKILL.md      |   0
+ .../skills}/replicate-google-nano-banana/SKILL.md  |   0
+ .../replicate-google-research-maxim/SKILL.md       |   0
+ .../skills}/replicate-google-upscaler/SKILL.md     |   0
+ .../skills}/replicate-google-veo-2/SKILL.md        |   0
+ .../skills}/replicate-google-veo-3-fast/SKILL.md   |   0
+ .../skills}/replicate-google-veo-3.1-fast/SKILL.md |   0
+ .../skills}/replicate-google-veo-3.1/SKILL.md      |   0
+ .../skills}/replicate-google-veo-3/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-hadilq-hair-segment/SKILL.md |   0
+ .../replicate-hassamdevsy-mask2former/SKILL.md     |   0
+ .../skills}/replicate-heygen-avatar-iv/SKILL.md    |   0
+ .../skills}/replicate-heygen-video-agent/SKILL.md  |   0
+ .../replicate-heygen-video-translate/SKILL.md      |   0
+ .../skills}/replicate-hyper3d-rodin/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-ideogram-ai-ideogram-v2/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../replicate-ideogram-ai-ideogram-v2a/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-jaaari-kokoro-82m/SKILL.md   |   0
+ .../replicate-jagilley-controlnet-canny/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../replicate-jagilley-controlnet-hed/SKILL.md     |   0
+ .../replicate-jagilley-controlnet-hough/SKILL.md   |   0
+ .../replicate-jagilley-controlnet-normal/SKILL.md  |   0
+ .../replicate-jagilley-controlnet-pose/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../replicate-jagilley-controlnet-seg/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../replicate-jd7h-zero123plusplus/SKILL.md        |   0
+ .../replicate-jingyunliang-hcflow-sr/SKILL.md      |   0
+ .../skills}/replicate-jingyunliang-swinir/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-jweek-mask_maker/SKILL.md    |   0
+ .../replicate-krthr-clip-embeddings/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-kwaivgi-kling-avatar-v2/SKILL.md     |   0
+ .../replicate-kwaivgi-kling-lip-sync/SKILL.md      |   0
+ .../skills}/replicate-kwaivgi-kling-o1/SKILL.md    |   0
+ .../replicate-kwaivgi-kling-v1.5-pro/SKILL.md      |   0
+ .../replicate-kwaivgi-kling-v1.5-standard/SKILL.md |   0
+ .../replicate-kwaivgi-kling-v1.6-pro/SKILL.md      |   0
+ .../replicate-kwaivgi-kling-v1.6-standard/SKILL.md |   0
+ .../skills}/replicate-kwaivgi-kling-v2.0/SKILL.md  |   0
+ .../replicate-kwaivgi-kling-v2.1-master/SKILL.md   |   0
+ .../skills}/replicate-kwaivgi-kling-v2.1/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-kwaivgi-kling-v2.6/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../replicate-kwaivgi-kling-v3-omni-video/SKILL.md |   0
+ .../replicate-kwaivgi-kling-v3-video/SKILL.md      |   0
+ .../replicate-leonardoai-lucid-origin/SKILL.md     |   0
+ .../replicate-leonardoai-motion-2.0/SKILL.md       |   0
+ .../replicate-leonardoai-phoenix-1.0/SKILL.md      |   0
+ .../replicate-lightricks-audio-to-video/SKILL.md   |   0
+ .../replicate-lightricks-ltx-2-distilled/SKILL.md  |   0
+ .../replicate-lightricks-ltx-2-fast/SKILL.md       |   0
+ .../replicate-lightricks-ltx-2-pro/SKILL.md        |   0
+ .../replicate-lightricks-ltx-2-retake/SKILL.md     |   0
+ .../replicate-lightricks-ltx-2.3-fast/SKILL.md     |   0
+ .../replicate-lightricks-ltx-2.3-pro/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../replicate-lightricks-ltx-video-0.9.7/SKILL.md  |   0
+ .../replicate-lightricks-ltx-video/SKILL.md        |   0
+ .../skills}/replicate-lucataco-ace-step/SKILL.md   |   0
+ .../replicate-lucataco-animate-diff/SKILL.md       |   0
+ .../skills}/replicate-lucataco-apollo-3b/SKILL.md  |   0
+ .../skills}/replicate-lucataco-apollo-7b/SKILL.md  |   0
+ .../skills}/replicate-lucataco-bakllava/SKILL.md   |   0
+ .../replicate-lucataco-bulk-video-caption/SKILL.md |   0
+ .../skills}/replicate-lucataco-codeformer/SKILL.md |   0
+ .../replicate-lucataco-controlnet-tile/SKILL.md    |   0
+ .../skills}/replicate-lucataco-csm-1b/SKILL.md     |   0
+ .../skills}/replicate-lucataco-deep3d/SKILL.md     |   0
+ .../replicate-lucataco-deepseek-ocr/SKILL.md       |   0
+ .../replicate-lucataco-demofusion-enhance/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-lucataco-florence-2-large/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../replicate-lucataco-frame-extractor/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-lucataco-hotshot-xl/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../replicate-lucataco-ip-adapter-faceid/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-lucataco-magnet/SKILL.md     |   0
+ .../skills}/replicate-lucataco-merge-img/SKILL.md  |   0
+ .../replicate-lucataco-minicpm-v-4/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-lucataco-moondream2/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-lucataco-omnigen2/SKILL.md   |   0
+ .../replicate-lucataco-open-dalle-v1.1/SKILL.md    |   0
+ .../replicate-lucataco-orpheus-3b-0.1-ft/SKILL.md  |   0
+ .../replicate-lucataco-pasd-magnify/SKILL.md       |   0
+ .../skills}/replicate-lucataco-pheme/SKILL.md      |   0
+ .../replicate-lucataco-qwen-vl-chat/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-lucataco-qwen2.5-omni-7b/SKILL.md    |   0
+ .../replicate-lucataco-real-esrgan-video/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../replicate-lucataco-rembg-video/SKILL.md        |   0
+ .../skills}/replicate-lucataco-remove-bg/SKILL.md  |   0
+ .../replicate-lucataco-sdxl-controlnet/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-lucataco-split-screen-video/SKILL.md |   0
+ .../skills}/replicate-lucataco-ssd-1b/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-lucataco-trim-video/SKILL.md |   0
+ .../skills}/replicate-lucataco-vid2webp/SKILL.md   |   0
+ .../replicate-lucataco-video-audio-merge/SKILL.md  |   0
+ .../replicate-lucataco-video-merge/SKILL.md        |   0
+ .../replicate-lucataco-video-split/SKILL.md        |   0
+ .../replicate-lucataco-videollama3-7b/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-lucataco-xtts-v2/SKILL.md    |   0
+ .../skills}/replicate-luma-modify-video/SKILL.md   |   0
+ .../skills}/replicate-luma-photon-flash/SKILL.md   |   0
+ .../skills}/replicate-luma-photon/SKILL.md         |   0
+ .../skills}/replicate-luma-ray-2-540p/SKILL.md     |   0
+ .../skills}/replicate-luma-ray-2-720p/SKILL.md     |   0
+ .../replicate-luma-ray-flash-2-540p/SKILL.md       |   0
+ .../replicate-luma-ray-flash-2-720p/SKILL.md       |   0
+ .../skills}/replicate-luma-ray/SKILL.md            |   0
+ .../skills}/replicate-luma-reframe-image/SKILL.md  |   0
+ .../skills}/replicate-luma-reframe-video/SKILL.md  |   0
+ .../replicate-m1guelpf-nsfw-filter/SKILL.md        |   0
+ .../replicate-m1guelpf-whisper-subtitles/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../replicate-megvii-research-nafnet/SKILL.md      |   0
+ .../skills}/replicate-men1scus-birefnet/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../replicate-meta-llama-2-13b-chat/SKILL.md       |   0
+ .../skills}/replicate-meta-llama-2-13b/SKILL.md    |   0
+ .../replicate-meta-llama-2-70b-chat/SKILL.md       |   0
+ .../skills}/replicate-meta-llama-2-70b/SKILL.md    |   0
+ .../replicate-meta-llama-2-7b-chat/SKILL.md        |   0
+ .../skills}/replicate-meta-llama-2-7b/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../replicate-meta-llama-4-scout-instruct/SKILL.md |   0
+ .../replicate-meta-llama-guard-3-8b/SKILL.md       |   0
+ .../replicate-meta-llama-guard-4-12b/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../replicate-meta-meta-llama-3-70b/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-meta-meta-llama-3-8b/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../replicate-meta-meta-llama-guard-2-8b/SKILL.md  |   0
+ .../skills}/replicate-meta-musicgen/SKILL.md       |   0
+ .../skills}/replicate-meta-sam-2-video/SKILL.md    |   0
+ .../skills}/replicate-meta-sam-2/SKILL.md          |   0
+ .../replicate-mickeybeurskens-latex-ocr/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../replicate-midllle-material-maker/SKILL.md      |   0
+ .../skills}/replicate-miike-ai-flux-ico/SKILL.md   |   0
+ .../replicate-minimax-hailuo-02-fast/SKILL.md      |   0
+ .../skills}/replicate-minimax-hailuo-02/SKILL.md   |   0
+ .../replicate-minimax-hailuo-2.3-fast/SKILL.md     |   0
+ .../skills}/replicate-minimax-hailuo-2.3/SKILL.md  |   0
+ .../skills}/replicate-minimax-image-01/SKILL.md    |   0
+ .../skills}/replicate-minimax-music-01/SKILL.md    |   0
+ .../skills}/replicate-minimax-music-1.5/SKILL.md   |   0
+ .../skills}/replicate-minimax-music-2.5/SKILL.md   |   0
+ .../replicate-minimax-speech-02-hd/SKILL.md        |   0
+ .../replicate-minimax-speech-02-turbo/SKILL.md     |   0
+ .../replicate-minimax-speech-2.6-hd/SKILL.md       |   0
+ .../replicate-minimax-speech-2.6-turbo/SKILL.md    |   0
+ .../replicate-minimax-speech-2.8-hd/SKILL.md       |   0
+ .../replicate-minimax-speech-2.8-turbo/SKILL.md    |   0
+ .../replicate-minimax-video-01-director/SKILL.md   |   0
+ .../replicate-minimax-video-01-live/SKILL.md       |   0
+ .../skills}/replicate-minimax-video-01/SKILL.md    |   0
+ .../replicate-minimax-voice-cloning/SKILL.md       |   0
+ .../replicate-mirelo-video-to-sfx-v1.5/SKILL.md    |   0
+ .../replicate-mirelo-video-to-sfx-v1/SKILL.md      |   0
+ .../replicate-mistralai-mistral-7b-v0.1/SKILL.md   |   0
+ .../replicate-moonshotai-kimi-k2-thinking/SKILL.md |   0
+ .../replicate-moonshotai-kimi-k2.5/SKILL.md        |   0
+ .../skills}/replicate-mv-lab-instructir/SKILL.md   |   0
+ .../skills}/replicate-mv-lab-swin2sr/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-nateraw-autotune/SKILL.md    |   0
+ .../replicate-nateraw-bge-large-en-v1.5/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-nightmareai-latent-sr/SKILL.md       |   0
+ .../replicate-nightmareai-real-esrgan/SKILL.md     |   0
+ .../replicate-nvidia-parakeet-rnnt-1.1b/SKILL.md   |   0
+ .../replicate-nvidia-sana-sprint-1.6b/SKILL.md     |   0
+ .../skills}/replicate-nvidia-sana/SKILL.md         |   0
+ .../skills}/replicate-open-mmlab-pia/SKILL.md      |   0
+ .../skills}/replicate-openai-clip/SKILL.md         |   0
+ .../skills}/replicate-openai-dall-e-2/SKILL.md     |   0
+ .../skills}/replicate-openai-dall-e-3/SKILL.md     |   0
+ .../skills}/replicate-openai-gpt-4.1-mini/SKILL.md |   0
+ .../skills}/replicate-openai-gpt-4.1-nano/SKILL.md |   0
+ .../skills}/replicate-openai-gpt-4.1/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-openai-gpt-4o-mini/SKILL.md  |   0
+ .../replicate-openai-gpt-4o-transcribe/SKILL.md    |   0
+ .../skills}/replicate-openai-gpt-4o/SKILL.md       |   0
+ .../skills}/replicate-openai-gpt-5-mini/SKILL.md   |   0
+ .../skills}/replicate-openai-gpt-5-nano/SKILL.md   |   0
+ .../skills}/replicate-openai-gpt-5-pro/SKILL.md    |   0
+ .../replicate-openai-gpt-5-structured/SKILL.md     |   0
+ .../skills}/replicate-openai-gpt-5.1/SKILL.md      |   0
+ .../skills}/replicate-openai-gpt-5.2/SKILL.md      |   0
+ .../skills}/replicate-openai-gpt-5.4/SKILL.md      |   0
+ .../skills}/replicate-openai-gpt-5/SKILL.md        |   0
+ .../replicate-openai-gpt-image-1-mini/SKILL.md     |   0
+ .../replicate-openai-gpt-image-1.5/SKILL.md        |   0
+ .../skills}/replicate-openai-gpt-image-1/SKILL.md  |   0
+ .../skills}/replicate-openai-gpt-oss-120b/SKILL.md |   0
+ .../skills}/replicate-openai-gpt-oss-20b/SKILL.md  |   0
+ .../skills}/replicate-openai-o1-mini/SKILL.md      |   0
+ .../skills}/replicate-openai-o1/SKILL.md           |   0
+ .../skills}/replicate-openai-o4-mini/SKILL.md      |   0
+ .../skills}/replicate-openai-sora-2-pro/SKILL.md   |   0
+ .../skills}/replicate-openai-sora-2/SKILL.md       |   0
+ .../skills}/replicate-openai-whisper/SKILL.md      |   0
+ .../replicate-orpatashnik-styleclip/SKILL.md       |   0
+ .../replicate-pbarker-gfpgan-video/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../replicate-perceptron-ai-inc-isaac-0.1/SKILL.md |   0
+ .../replicate-philz1337x-clarity-upscaler/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../replicate-philz1337x-crystal-upscaler/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-piddnad-ddcolor/SKILL.md     |   0
+ .../skills}/replicate-pixverse-lipsync/SKILL.md    |   0
+ .../replicate-pixverse-pixverse-v3.5/SKILL.md      |   0
+ .../replicate-pixverse-pixverse-v4.5/SKILL.md      |   0
+ .../replicate-pixverse-pixverse-v4/SKILL.md        |   0
+ .../replicate-pixverse-pixverse-v5.6/SKILL.md      |   0
+ .../replicate-pixverse-pixverse-v5/SKILL.md        |   0
+ .../replicate-platform-kit-mars5-tts/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-playht-play-dialog/SKILL.md  |   0
+ .../replicate-pnyompen-sd-controlnet-lora/SKILL.md |   0
+ .../skills}/replicate-pollinations-modnet/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-prunaai-flux-fast/SKILL.md   |   0
+ .../replicate-prunaai-flux-kontext-fast/SKILL.md   |   0
+ .../replicate-prunaai-hidream-l1-dev/SKILL.md      |   0
+ .../replicate-prunaai-hidream-l1-fast/SKILL.md     |   0
+ .../replicate-prunaai-hidream-l1-full/SKILL.md     |   0
+ .../skills}/replicate-prunaai-hunyuan3d-2/SKILL.md |   0
+ .../replicate-prunaai-p-image-edit-lora/SKILL.md   |   0
+ .../replicate-prunaai-p-image-edit/SKILL.md        |   0
+ .../replicate-prunaai-p-image-lora/SKILL.md        |   0
+ .../replicate-prunaai-p-image-trainer/SKILL.md     |   0
+ .../skills}/replicate-prunaai-p-image/SKILL.md     |   0
+ .../skills}/replicate-prunaai-p-video/SKILL.md     |   0
+ .../replicate-prunaai-sdxl-lightning/SKILL.md      |   0
+ .../skills}/replicate-prunaai-vace-1.3b/SKILL.md   |   0
+ .../skills}/replicate-prunaai-vace-14b/SKILL.md    |   0
+ .../replicate-prunaai-wan-2.2-image/SKILL.md       |   0
+ .../replicate-prunaai-z-image-turbo/SKILL.md       |   0
+ .../skills}/replicate-pseudoram-rvc-v2/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-qwen-qwen-edit-multiangle/SKILL.md   |   0
+ .../replicate-qwen-qwen-image-2-pro/SKILL.md       |   0
+ .../skills}/replicate-qwen-qwen-image-2/SKILL.md   |   0
+ .../replicate-qwen-qwen-image-2512/SKILL.md        |   0
+ .../replicate-qwen-qwen-image-edit-2511/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../replicate-qwen-qwen-image-edit-plus/SKILL.md   |   0
+ .../replicate-qwen-qwen-image-edit/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-qwen-qwen-image/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-qwen-qwen3-tts/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../replicate-recraft-ai-recraft-20b-svg/SKILL.md  |   0
+ .../replicate-recraft-ai-recraft-20b/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-recraft-ai-recraft-v3-svg/SKILL.md   |   0
+ .../replicate-recraft-ai-recraft-v3/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-recraft-ai-recraft-v4-pro/SKILL.md   |   0
+ .../replicate-recraft-ai-recraft-v4-svg/SKILL.md   |   0
+ .../replicate-recraft-ai-recraft-v4/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-replicate-all-mpnet-base-v2/SKILL.md |   0
+ .../replicate-replicate-flan-t5-xl/SKILL.md        |   0
+ .../skills}/replicate-replicate-llama-7b/SKILL.md  |   0
+ .../replicate-replicate-train-rvc-model/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../replicate-resemble-ai-chatterbox-pro/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../replicate-resemble-ai-chatterbox/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../replicate-retro-diffusion-rd-fast/SKILL.md     |   0
+ .../replicate-retro-diffusion-rd-plus/SKILL.md     |   0
+ .../replicate-retro-diffusion-rd-tile/SKILL.md     |   0
+ .../skills}/replicate-reve-create/SKILL.md         |   0
+ .../skills}/replicate-reve-edit-fast/SKILL.md      |   0
+ .../skills}/replicate-reve-edit/SKILL.md           |   0
+ .../skills}/replicate-reve-remix/SKILL.md          |   0
+ .../skills}/replicate-riffusion-riffusion/SKILL.md |   0
+ .../skills}/replicate-runwayml-gen-4.5/SKILL.md    |   0
+ .../skills}/replicate-runwayml-gen4-aleph/SKILL.md |   0
+ .../replicate-runwayml-gen4-image-turbo/SKILL.md   |   0
+ .../skills}/replicate-runwayml-gen4-image/SKILL.md |   0
+ .../skills}/replicate-runwayml-gen4-turbo/SKILL.md |   0
+ .../replicate-sabuhigr-sabuhi-model/SKILL.md       |   0
+ .../replicate-sakemin-musicgen-chord/SKILL.md      |   0
+ .../replicate-sakemin-musicgen-remixer/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../replicate-schananas-grounded_sam/SKILL.md      |   0
+ .../skills}/replicate-sczhou-codeformer/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-shridharathi-ghibli-vid/SKILL.md     |   0
+ .../replicate-smoretalk-rembg-enhance/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-sourceful-riverflow-2.0-pro/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-stability-ai-sdxl/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-suno-ai-bark/SKILL.md        |   0
+ .../skills}/replicate-swook-inspyrenet/SKILL.md    |   0
+ .../skills}/replicate-sync-lipsync-2-pro/SKILL.md  |   0
+ .../skills}/replicate-sync-lipsync-2/SKILL.md      |   0
+ .../skills}/replicate-sync-react-1/SKILL.md        |   0
+ .../SKILL.md                                       |   0
+ .../replicate-tencent-hunyuan-3d-3.1/SKILL.md      |   0
+ .../replicate-tencent-hunyuan-image-2.1/SKILL.md   |   0
+ .../replicate-tencent-hunyuan-image-3/SKILL.md     |   0
+ .../replicate-tencent-hunyuan-video/SKILL.md       |   0
+ .../replicate-tencent-hunyuan3d-2mv/SKILL.md       |   0
+ .../skills}/replicate-tencentarc-animesr/SKILL.md  |   0
+ .../skills}/replicate-tencentarc-gfpgan/SKILL.md   |   0
+ .../replicate-tencentarc-photomaker-style/SKILL.md |   0
+ .../replicate-tencentarc-photomaker/SKILL.md       |   0
+ .../skills}/replicate-tencentarc-vqfr/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-tmappdev-lipsync/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-topazlabs-image-upscale/SKILL.md     |   0
+ .../replicate-topazlabs-video-upscale/SKILL.md     |   0
+ .../replicate-tstramer-material-diffusion/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-veed-fabric-1.0/SKILL.md     |   0
+ .../replicate-victor-upmeet-whisperx/SKILL.md      |   0
+ .../replicate-wan-video-wan-2.1-1.3b/SKILL.md      |   0
+ .../replicate-wan-video-wan-2.2-5b-fast/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../replicate-wan-video-wan-2.2-i2v-a14b/SKILL.md  |   0
+ .../replicate-wan-video-wan-2.2-i2v-fast/SKILL.md  |   0
+ .../replicate-wan-video-wan-2.2-s2v/SKILL.md       |   0
+ .../replicate-wan-video-wan-2.2-t2v-fast/SKILL.md  |   0
+ .../replicate-wan-video-wan-2.5-i2v-fast/SKILL.md  |   0
+ .../replicate-wan-video-wan-2.5-i2v/SKILL.md       |   0
+ .../replicate-wan-video-wan-2.5-t2v-fast/SKILL.md  |   0
+ .../replicate-wan-video-wan-2.5-t2v/SKILL.md       |   0
+ .../replicate-wan-video-wan-2.6-i2v/SKILL.md       |   0
+ .../replicate-wan-video-wan-2.6-t2v/SKILL.md       |   0
+ .../replicate-wan-video-wan2.1-with-lora/SKILL.md  |   0
+ .../replicate-wan-video-wan2.6-i2v-flash/SKILL.md  |   0
+ .../replicate-wavespeedai-qwen-image/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-willywongi-donut/SKILL.md    |   0
+ .../skills}/replicate-x-lance-f5-tts/SKILL.md      |   0
+ .../skills}/replicate-xai-grok-2-image/SKILL.md    |   0
+ .../skills}/replicate-xai-grok-4/SKILL.md          |   0
+ .../replicate-xai-grok-imagine-image/SKILL.md      |   0
+ .../replicate-xai-grok-imagine-video/SKILL.md      |   0
+ .../skills}/replicate-xinntao-esrgan/SKILL.md      |   0
+ .../skills}/replicate-yangxy-gpen/SKILL.md         |   0
+ .../skills}/replicate-yorickvp-llava-13b/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-zsxkib-animate-diff/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-zsxkib-aura-sr-v2/SKILL.md   |   0
+ .../skills}/replicate-zsxkib-aura-sr/SKILL.md      |   0
+ .../skills}/replicate-zsxkib-bsrgan/SKILL.md       |   0
+ .../replicate-zsxkib-create-rvc-dataset/SKILL.md   |   0
+ .../skills}/replicate-zsxkib-dia/SKILL.md          |   0
+ .../skills}/replicate-zsxkib-diffbir/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-zsxkib-flash-face/SKILL.md   |   0
+ .../skills}/replicate-zsxkib-flux-music/SKILL.md   |   0
+ .../replicate-zsxkib-hunyuan-video2video/SKILL.md  |   0
+ .../replicate-zsxkib-ic-light-background/SKILL.md  |   0
+ .../skills}/replicate-zsxkib-instant-id/SKILL.md   |   0
+ .../skills}/replicate-zsxkib-jina-clip-v2/SKILL.md |   0
+ .../skills}/replicate-zsxkib-mmaudio/SKILL.md      |   0
+ .../skills}/replicate-zsxkib-multitalk/SKILL.md    |   0
+ .../skills}/replicate-zsxkib-pyramid-flow/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-zsxkib-samurai/SKILL.md      |   0
+ .../skills}/replicate-zsxkib-seedvr2/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-zsxkib-step1x-edit/SKILL.md  |   0
+ .../skills}/replicate-zsxkib-thinksound/SKILL.md   |   0
+ .../skills}/replicate-zsxkib-uform-gen/SKILL.md    |   0
+ .../skills}/replicate-zsxkib-yolo-world/SKILL.md   |   0
+ .../skills}/replicate-zsyoaoa-invsr/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/replicate-zylim0702-remove_bg/SKILL.md |   0
+ .../wavespeed-alibaba-wan-2.5-image-edit/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../wavespeed-bria-fibo-video-upscaler/SKILL.md    |   0
+ .../wavespeed-bytedance-dreamactor-v2/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../wavespeed-bytedance-seedream-v3.1/SKILL.md     |   0
+ .../skills}/wavespeed-elevenlabs-dubbing/SKILL.md  |   0
+ .../skills}/wavespeed-elevenlabs-music/SKILL.md    |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../wavespeed-google-nano-banana-2-edit/SKILL.md   |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../wavespeed-google-nano-banana-edit/SKILL.md     |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../wavespeed-google-nano-banana-pro-edit/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../skills}/wavespeed-minimax-music-02/SKILL.md    |   0
+ .../wavespeed-wavespeed-ai-ace-step-1.5/SKILL.md   |   0
+ .../wavespeed-wavespeed-ai-flashvsr/SKILL.md       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../wavespeed-wavespeed-ai-longcat-avatar/SKILL.md |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../wavespeed-wavespeed-ai-sam3-image-rle/SKILL.md |   0
+ .../wavespeed-wavespeed-ai-sam3-image/SKILL.md     |   0
+ .../wavespeed-wavespeed-ai-sam3-video-rle/SKILL.md |   0
+ .../wavespeed-wavespeed-ai-seedvr2-image/SKILL.md  |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../wavespeed-wavespeed-ai-wan-flf2v/SKILL.md      |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../SKILL.md                                       |   0
+ .../wavespeed-wavespeed-ai-z-image-turbo/SKILL.md  |   0
+ {tasks => kiani/not Migrated/tasks}/TASKS.md       |   0
+ {tasks => kiani/not Migrated/tasks}/TaskFormat.md  |   0
+ kiani/orchestration.md                             | 176 ++++++++++
+ kiani/primer.md                                    |  39 +++
+ kiani/primerPrompt.md                              |   8 +
+ kiani/skills/agent-roles/SKILL.md                  | 121 +++++++
+ kiani/skills/frontend-design/SKILL.md              |  42 +++
+ kiani/skills/ui-design-document/SKILL.md           |  87 +++++
+ kiani/start.sh                                     |  48 +++
+ kiani/tickets/README.md                            | 132 ++++++++
+ kiani/tickets/TEMPLATE.md                          |  75 +++++
+ kiani/tickets/backlog/.gitkeep                     |   0
+ kiani/tickets/current/.gitkeep                     |   0
+ kiani/tickets/done/.gitkeep                        |   0
+ ...-openrouter-text-generation-models-6-flagshi.md |  92 +++++
+ .../done/001-kiani-framework-bootstrap-P1.md       |  78 +++++
+ ...job-submission-polling-api-new-submit-functi.md |  92 +++++
+ .../done/002-migrate-existing-projects-P1.md       |  88 +++++
+ ...ation-tests-6-new-tests-covering-submit-poll.md |  92 +++++
+ ...y-refactor-extracted-shared-validation-auth-.md |  92 +++++
+ ...video-create-voice-fixed-wrong-output-map-ex.md |  92 +++++
+ ...video-v3-pro-image-to-video-fixed-image-mapp.md |  92 +++++
+ ...se-swap-removed-4-phantom-params-prompt-guid.md |  92 +++++
+ ...se-lipsync-removed-7-phantom-params-per-prov.md |  92 +++++
+ ...-2-14b-animate-replace-removed-phantom-promp.md |  92 +++++
+ ...-2-14b-animate-move-removed-3-phantom-params.md |  92 +++++
+ ...video-v3-pro-motion-control-removed-5-phanto.md |  92 +++++
+ ...anana-2-removed-6-phantom-params-per-provide.md |  92 +++++
+ ...anana-2-edit-removed-5-phantom-params-per-pr.md |  92 +++++
+ ...specific-param-mapping-tests-for-pixverse-sw.md |  92 +++++
+ ...provider-unified-param-names-keep-audio-turb.md |  92 +++++
+ ...y-poll-loop-timeout-poll-loop-could-hang-ind.md |  92 +++++
+ ...y-poll-backoff-poll-interval-now-ramps-from-.md |  92 +++++
+ ...-output-casts-in-mapper-mapoutput-could-retu.md |  92 +++++
+ ...s-passthrough-leaking-internal-keys-timeout-.md |  92 +++++
+ ...uter-poll-silent-data-loss-poll-returned-sta.md |  92 +++++
+ ...n-on-invalid-numeric-args-seed-abc-silently-.md |  92 +++++
+ ...terror-missing-context-retry-timeouts-report.md |  92 +++++
+ ...ry-bundled-at-build-time-replaced-readfilesy.md |  92 +++++
+ ...ry-removed-from-npm-package-since-the-regist.md |  92 +++++
+ ...ion-guide-new-docs-migration-md-covering-v0-.md |  92 +++++
+ ...ployment-section-documents-that-getaiapi-wor.md |  92 +++++
+ ...-edge-runtime-note-providers-section-now-men.md |  92 +++++
+ ...-migration-section-links-to-migration-guide-.md |  92 +++++
+ ...ecture-md-updated-all-15-sections-to-match-v.md |  92 +++++
+ ...t-spec-md-replaced-getmodel-with-resolvemode.md |  92 +++++
+ ...ng-removed-v1-category-based-architecture-v2.md |  92 +++++
+ ...ntry-no-longer-has-a-category-field-use-deri.md |  92 +++++
+ ...dels-now-accepts-input-output-modality-filte.md |  92 +++++
+ ...olvemodel-replaces-getmodel-for-model-lookup.md |  92 +++++
+ ...terequest-now-accepts-optional-provider-fiel.md |  92 +++++
+ ...rovider-binding-is-self-contained-with-its-o.md |  92 +++++
+ ...ry-moved-from-registry-v2-registry-json-to-r.md |  92 +++++
+ ...ry-template-system-17-template-files-replace.md |  92 +++++
+ ...9-getmodel-function-use-resolvemodel-instead.md |  92 +++++
+ ...ategory-type-and-category-field-on-modelentr.md |  92 +++++
+ .../041-v2-package-export-only-export-remains.md   |  92 +++++
+ ...ry-catalog-json-registry-categories-json-v1-.md |  92 +++++
+ .../done/043-v2-migration-script-and-guide.md      |  92 +++++
+ ...dels-recategorized-from-full-category-audit-.md |  92 +++++
+ ...x-models-image-edit-training-text-to-image-n.md |  92 +++++
+ ...-extend-retake-audio-to-video-models-text-to.md |  92 +++++
+ ...-models-text-to-video-image-to-video-image-e.md |  92 +++++
+ ...ogram-remix-reframe-models-text-to-image-ima.md |  92 +++++
+ ...ion-language-models-text-generation-image-to.md |  92 +++++
+ ...-models-text-to-video-text-to-image-image-to.md |  92 +++++
+ ...erse-models-text-to-video-video-to-video-ima.md |  92 +++++
+ ...3d-models-segmentation-image-to-3d-outputs-3.md |  92 +++++
+ ...dio-models-segmentation-text-to-audio-audio-.md |  92 +++++
+ ...-glm-image-models-image-edit-text-to-image-n.md |  92 +++++
+ ...clone-embedding-models-text-to-audio-trainin.md |  92 +++++
+ ...s-style-transfer-preprocessor-and-utility-mo.md |  92 +++++
+ ...ovider-output-map-entries-fixed-output-map-t.md |  92 +++++
+ ...ty-inputs-outputs-updated-on-all-recategoriz.md |  92 +++++
+ ...categories-in-categories-json-video-to-video.md |  92 +++++
+ ...tegory-test-suite-127-new-tests-verifying-ev.md |  92 +++++
+ ...ry-counts-updated-in-categories-json-and-rea.md |  92 +++++
+ ...ck-forest-labs-flux-models-recategorized-6-t.md |  92 +++++
+ ...models-recategorized-lucataco-wan-2-1-1-3b-v.md |  92 +++++
+ ...bw-models-recategorized-5-to-upscale-image-r.md |  92 +++++
+ ...-text-category-new-category-template-for-doc.md |  92 +++++
+ ...to-text-category-new-category-template-for-i.md |  92 +++++
+ ...to-text-category-new-category-template-for-v.md |  92 +++++
+ ...els-recategorized-3-to-doc-to-text-bytedance.md |  92 +++++
+ ...eam-merges-merged-4-duplicate-seeddream-mode.md |  92 +++++
+ ...nce-merges-merged-7-duplicate-bytedance-mode.md |  92 +++++
+ ...to-video-category-new-category-template-with.md |  92 +++++
+ ...ry-qa-checklist-tasks-registry-qa-md-6-autom.md |  92 +++++
+ ...-2-14b-animate-replace-corrected-category-fr.md |  92 +++++
+ ...video-v2-6-pro-motion-control-corrected-cate.md |  92 +++++
+ ...video-v2-6-standard-motion-control-corrected.md |  92 +++++
+ ...video-v3-pro-motion-control-corrected-catego.md |  92 +++++
+ ...video-v3-standard-motion-control-corrected-c.md |  92 +++++
+ ...se-swap-corrected-category-from-text-to-vide.md |  92 +++++
+ ...ate-404-fallback-community-models-e-g-codepl.md |  92 +++++
+ ...ry-registration-registered-8-missing-categor.md |  92 +++++
+ ...ry-tests-updated-to-cover-all-17-registered-.md |  92 +++++
+ ...identity-graph-batch-3-merged-35-additional-.md |  92 +++++
+ ...idererror-when-a-model-exists-but-none-of-th.md |  92 +++++
+ ...ugtech-face-swap-recategorized-from-text-to-.md |  92 +++++
+ ...identity-graph-merged-14-duplicate-model-ent.md |  92 +++++
+ ...ry-duplicate-detection-new-scripts-validate-.md |  92 +++++
+ ...-md-generator-new-scripts-generate-models-md.md |  92 +++++
+ ...uter-empty-outputs-mapoutput-returned-empty-.md |  92 +++++
+ ...uter-provider-new-provider-for-text-llm-gene.md |  92 +++++
+ ...eneration-category-new-text-generation-categ.md |  92 +++++
+ ...-models-claude-sonnet-4-6-claude-opus-4-6-cl.md |  92 +++++
+ ...2-options-system-prompts-options-system-temp.md |  92 +++++
+ ...metadata-tokens-prompt-tokens-completion-tok.md |  92 +++++
+ ...utput-support-content-field-on-outputitem-fo.md |  92 +++++
+ ...directory-full-model-listing-at-docs-models-.md |  92 +++++
+ ...ry-recategorization-47-replicate-llm-models-.md |  92 +++++
+ ...artifacts-0-3-2-0-3-4-were-published-from-a-.md |  92 +++++
+ ...lishonly-script-npm-run-build-now-runs-autom.md |  92 +++++
+ ...-extract-path-fixed-182-endpoints-with-wrong.md |  92 +++++
+ ...-output-types-fixed-89-endpoints-with-wrong-.md |  92 +++++
+ ...-categories-fixed-27-endpoints-miscategorize.md |  92 +++++
+ ...-parseoutput-added-support-for-image-url-sin.md |  92 +++++
+ ...-url-parity-tests-1241-tests-verifying-adapt.md |  92 +++++
+ ...ry-verification-tools-tools-fal-endpoint-ver.md |  92 +++++
+ ...-polling-urls-fixed-queue-polling-url-constr.md |  92 +++++
+ ...image-support-new-images-field-on-generatere.md |  92 +++++
+ ...anana-recategorized-from-image-edit-to-text-.md |  92 +++++
+ ...anana-2-recategorized-from-image-edit-to-tex.md |  92 +++++
+ ...anana-pro-recategorized-from-image-edit-to-t.md |  92 +++++
+ ...am-v2-turbo-recategorized-from-upscale-image.md |  92 +++++
+ ...am-v2a-turbo-recategorized-from-upscale-imag.md |  92 +++++
+ ...avatars-text-to-video-veed-avatars-text-to-v.md |  92 +++++
+ ...sync-dubbing-models-recategorized-from-image.md |  92 +++++
+ ...avatars-audio-to-video-longcat-single-avatar.md |  92 +++++
+ ...labs-sfx-v2-recategorized-from-video-to-audi.md |  92 +++++
+ ...labs-flash-v2-5-elevenlabs-turbo-v2-5-eleven.md |  92 +++++
+ ...labs-audio-isolation-elevenlabs-voice-change.md |  92 +++++
+ ...labs-dubbing-recategorized-from-text-to-vide.md |  92 +++++
+ ...evenlabs-text-to-dialogue-moved-from-video-t.md |  92 +++++
+ ...-veo-2-google-veo-3-google-veo-3-fast-google.md |  92 +++++
+ ...tegory-video-to-video-16-models-lipsync-dubb.md |  92 +++++
+ ...tegory-audio-to-video-4-models-avatar-video-.md |  92 +++++
+ ...tegory-audio-edit-2-models-audio-isolation-v.md |  92 +++++
+ ...ned-urls-new-presignasset-function-generates.md |  92 +++++
+ ...e-mode-storageconfig-mode-option-public-pres.md |  92 +++++
+ ...n-expiry-storageconfig-presignexpiresin-sets.md |  92 +++++
+ ...ner-new-presigns3url-function-for-query-stri.md |  92 +++++
+ ...rs-r2-storage-mode-and-r2-presign-expires-in.md |  92 +++++
+ ...rage-new-configurestorage-uploadasset-delete.md |  92 +++++
+ ...pload-binary-params-buffer-blob-file-arraybu.md |  92 +++++
+ ...oad-url-params-can-be-re-uploaded-to-r2-via-.md |  92 +++++
+ ...eerror-new-error-class-for-storage-operation.md |  92 +++++
+ ...ner-aws-signature-v4-signing-via-node-crypto.md |  92 +++++
+ ...storageconfig-uploadresult-uploadoptions-exp.md |  92 +++++
+ ...labs-sfx-v2-empty-endpoint-filled-in-fal-ai-.md |  92 +++++
+ ...video-pro-renamed-to-kling-video-v3-pro-imag.md |  92 +++++
+ ...video-create-voice-fixed-category-from-text-.md |  92 +++++
+ ...anana-pro-edit-added-fal-ai-provider-fal-ai-.md |  92 +++++
+ ...labs-text-to-dialogue-eleven-v3-new-registry.md |  92 +++++
+ ...0-add-async-job-submission-and-polling-api-7.md |  92 +++++
+ ...dd-v2-registry-gateway-and-discovery-layer-5.md |  92 +++++
+ ...duplicate-model-entries-for-cross-provider-i.md |  92 +++++
+ ...enrouter-provider-with-text-generation-suppo.md |  92 +++++
+ ...lti-image-reference-support-for-image-edit-m.md |  92 +++++
+ ...esigned-url-support-for-private-r2-buckets-2.md |  92 +++++
+ ...oudflare-r2-storage-provider-and-programmati.md |  92 +++++
+ ...47-implement-complete-unified-ai-api-gateway.md |  92 +++++
+ ...plicate-and-wavespeed-skills-with-auth-free-.md |  92 +++++
+ ...l-ai-skills-cloudflare-r2-skill-and-scraper-.md |  92 +++++
+ ...aude-agent-system-with-10-personas-and-opera.md |  92 +++++
+ kiani/tickets/drafts/.gitkeep                      |   0
+ kiani/tickets/on-hold/.gitkeep                     |   0
+ kiani/tickets/proposals/.gitkeep                   |   0
+ kiani/tickets/qa/.gitkeep                          |   0
+ kiani/tickets/review/.gitkeep                      |   0
+ kiani/tickets/scoreboard.md                        |  59 ++++
+ kiani/tickets/todo/.gitkeep                        |   0
+ {tools => kiani/tools}/fal-endpoint-verifier.ts    |   0
+ {tools => kiani/tools}/fal-registry-fixer.ts       |   0
+ {tools => kiani/tools}/fal-skill-scraper.py        |   8 +-
+ kiani/tools/framework-checklist.ts                 |  72 ++++
+ kiani/tools/framework-migration.ts                 | 313 +++++++++++++++++
+ {tools => kiani/tools}/replicate-skill-scraper.py  |   0
+ kiani/tools/skill-detection.ts                     | 121 +++++++
+ {tools => kiani/tools}/wavespeed-skill-scraper.py  |   0
+ package-lock.json                                  |  22 +-
+ package.json                                       |   6 +-
+ registry/registry.json                             | 369 ++++++++++++++++++++-
+ tests/unit/models/kling-video-create-voice.test.ts |  91 +++++
+ .../kling-video-v3-pro-image-to-video.test.ts      | 123 +++++++
+ tests/unit/models/openrouter-new-models.test.ts    | 129 +++++++
+ 2181 files changed, 17067 insertions(+), 107 deletions(-)
 
---- 692f23a: fix: add missing gender and clothing fields to character PATCH schema ---
- src/app/[locale]/api/characters/[id]/route.ts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+--- a5eb395: feat(gateway): add async job submission and polling API (#7) ---
+ CHANGELOG.md                          |   9 ++
+ README.md                             |  76 +++++++++++
+ package-lock.json                     |   4 +-
+ package.json                          |   2 +-
+ src/gateway.ts                        | 113 +++++++++++++++-
+ src/index.ts                          |   4 +-
+ src/types.ts                          |  20 +++
+ tests/integration/submit-poll.test.ts | 245 ++++++++++++++++++++++++++++++++++
+ 8 files changed, 466 insertions(+), 7 deletions(-)
 
---- 224bad5: fix: preserve storage key for character uploadedImageUrl to prevent expired presigned URL ---
- src/app/[locale]/(auth)/(app)/characters/[id]/page.tsx | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--- 27e5c46: fix(registry): remove phantom params and add correct mappings for 7 models (#6) ---
+ CHANGELOG.md                                       |  15 ++
+ docs/combined-audit.md                             |  14 +-
+ package.json                                       |   2 +-
+ registry/registry.json                             | 123 +++++-----
+ tasks/lessons.md                                   |  41 ++++
+ .../fixtures/fal-ai/video-swap/pixverse-swap.json  |   6 +
+ .../kling-video-v3-pro-motion-control.test.ts      | 225 ++++++++++++++++++
+ tests/unit/models/nano-banana-2-edit.test.ts       | 210 +++++++++++++++++
+ tests/unit/models/nano-banana-2.test.ts            | 233 +++++++++++++++++++
+ tests/unit/models/pixverse-lipsync.test.ts         | 196 ++++++++++++++++
+ tests/unit/models/pixverse-swap.test.ts            | 160 +++++++++++++
+ .../unit/models/wan-v2.2-14b-animate-move.test.ts  | 140 +++++++++++
+ .../models/wan-v2.2-14b-animate-replace.test.ts    | 258 +++++++++++++++++++++
+ 13 files changed, 1546 insertions(+), 77 deletions(-)
 
---- 8f9e9d5: feat: Shorts Analyzer V2 — multi-video cart, 3 story options, direction input ---
- .env.example                                       |   4 +
- infra/Pulumi.production.yaml                       |   2 +
- infra/index.ts                                     |   1 +
- package-lock.json                                  |  15 +
- package.json                                       |   1 +
- .../(auth)/(app)/admin/shorts-analyzer/page.tsx    |  18 +
- .../[locale]/api/admin/shorts-analyzer/route.ts    | 165 ++++++++
- src/components/AdminDashboardClient.tsx            |  10 +-
- src/components/ShortsAnalyzerClient.tsx            | 418 +++++++++++++++++++++
- src/libs/Env.ts                                    |   2 +
- src/libs/prompts/shortsAnalyzerPrompt.ts           | 188 +++++++++
- src/libs/youtube.ts                                | 114 ++++++
- src/libs/youtubeUtils.ts                           |  25 ++
- tasks/TASKS.md                                     |  14 +-
- tasks/task-86.md                                   |  26 ++
- tasks/task-87.md                                   | 123 ++++++
- 16 files changed, 1116 insertions(+), 10 deletions(-)
+--- 9afca50: feat(v2): add v2 registry, gateway, and discovery layer (#5) ---
+ CHANGELOG.md                               |   118 +
+ README.md                                  |    89 +-
+ docs/ARCHITECTURE.md                       |   156 +-
+ docs/FAQ.md                                |     8 +
+ docs/MIGRATION.md                          |   150 +
+ docs/MODELS.md                             |  1932 --
+ docs/PRODUCT-SPEC.md                       |   119 +-
+ docs/combined-audit.md                     |  1826 ++
+ package-lock.json                          |     4 +-
+ package.json                               |     3 +-
+ registry/catalog.json                      |  4115 -----
+ registry/categories.json                   |    21 -
+ registry/registry.json                     | 26660 ++++++++++++++++++++-------
+ src/adapters/openrouter.ts                 |     8 +-
+ src/auth.ts                                |    42 +-
+ src/categories/.gitkeep                    |     0
+ src/categories/audio-to-text.ts            |    23 -
+ src/categories/image-edit.ts               |    89 -
+ src/categories/image-to-3d.ts              |    47 -
+ src/categories/image-to-image.ts           |    80 -
+ src/categories/image-to-video.ts           |    80 -
+ src/categories/index.ts                    |    62 -
+ src/categories/moderation.ts               |    46 -
+ src/categories/remove-background.ts        |    39 -
+ src/categories/segmentation.ts             |    31 -
+ src/categories/text-generation.ts          |    19 -
+ src/categories/text-to-3d.ts               |    47 -
+ src/categories/text-to-audio.ts            |    47 -
+ src/categories/text-to-image.ts            |    97 -
+ src/categories/text-to-video.ts            |    89 -
+ src/categories/training.ts                 |    23 -
+ src/categories/upscale-image.ts            |    47 -
+ src/categories/upscale-video.ts            |    31 -
+ src/categories/video-to-audio.ts           |    31 -
+ src/cli.ts                                 |   225 +-
+ src/discovery.ts                           |    58 +-
+ src/gateway.ts                             |    64 +-
+ src/index.ts                               |    39 +-
+ src/mapper.ts                              |   141 +-
+ src/registry.ts                            |   127 +
+ src/resolver.ts                            |   177 -
+ src/retry.ts                               |     8 +-
+ src/types.ts                               |   255 +-
+ tasks/lessons.md                           |    48 +
+ tests/integration/discovery.test.ts        |    72 +-
+ tests/integration/generate.test.ts         |    10 +-
+ tests/integration/provider-routing.test.ts |     5 +-
+ tests/unit/adapters/openrouter.test.ts     |     7 +-
+ tests/unit/audit-vs-registry.test.ts       |    93 +
+ tests/unit/auth.test.ts                    |     1 -
+ tests/unit/categories-extended.test.ts     |   206 -
+ tests/unit/categories.test.ts              |   189 -
+ tests/unit/cli.test.ts                     |    58 +-
+ tests/unit/discovery-extended.test.ts      |    76 -
+ tests/unit/gateway-extended.test.ts        |   287 -
+ tests/unit/mapper-extended.test.ts         |   342 -
+ tests/unit/mapper.test.ts                  |   284 -
+ tests/unit/registry-integrity.test.ts      |   138 +
+ tests/unit/resolver.test.ts                |   238 -
+ tsconfig.json                              |     1 +
+ tsup.config.ts                             |     6 +
+ 61 files changed, 23456 insertions(+), 15878 deletions(-)
