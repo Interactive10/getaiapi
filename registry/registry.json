@@ -23305,7 +23305,9 @@
     ],
     "modality": {
       "inputs": [
-        "image"
+        "image",
+        "text",
+        "audio"
       ],
       "outputs": [
         "video"
@@ -23320,12 +23322,12 @@
         "param_map": {
           "image": "image_url",
           "prompt": "prompt",
-          "negative_prompt": "negative_prompt",
-          "seed": "seed",
-          "guidance": "guidance_scale",
-          "steps": "num_inference_steps",
-          "format": "output_format",
-          "safety": "enable_safety_checker"
+          "audio": "audio_url",
+          "voice": "voice",
+          "resolution": "resolution",
+          "caption": "caption",
+          "talking_style": "talking_style",
+          "expression": "expression"
         },
         "output_map": {
           "type": "video",
@@ -43890,7 +43892,8 @@
     ],
     "modality": {
       "inputs": [
-        "audio"
+        "audio",
+        "text"
       ],
       "outputs": [
         "audio"
@@ -43903,7 +43906,12 @@
         "endpoint": "fal-ai/minimax/voice-clone",
         "auth_env": "FAL_KEY",
         "param_map": {
-          "image": "images_data_url"
+          "audio": "audio_url",
+          "prompt": "text",
+          "model": "model",
+          "accuracy": "accuracy",
+          "noise_reduction": "noise_reduction",
+          "volume_normalization": "need_volume_normalization"
         },
         "output_map": {
           "type": "audio",
@@ -60159,13 +60167,9 @@
         "auth_env": "FAL_KEY",
         "param_map": {
           "video": "video_url",
-          "image": "image_url",
-          "prompt": "prompt",
-          "resolution": "resolution",
-          "seed": "seed",
-          "guidance": "guidance_scale",
-          "steps": "num_inference_steps",
-          "safety": "enable_safety_checker"
+          "audio": "audio_url",
+          "model": "model",
+          "sync_mode": "sync_mode"
         },
         "output_map": {
           "type": "video",

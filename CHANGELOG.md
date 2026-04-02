@@ -6,6 +6,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.0.5] - 2026-03-31
+
+### Fixed
+
+- **heygen-avatar4-image-to-video**: Removed 6 phantom params (`negative_prompt`, `seed`, `guidance_scale`, `num_inference_steps`, `output_format`, `enable_safety_checker`), added actual API params (`audio_url`, `voice`, `resolution`, `caption`, `talking_style`, `expression`). Added `text` and `audio` to modality inputs.
+- **minimax-voice-clone**: Replaced bogus `image` → `images_data_url` param with actual API params (`audio_url`, `text`, `model`, `accuracy`, `noise_reduction`, `need_volume_normalization`). Added `text` to modality inputs.
+- **sync-lipsync**: Removed 6 phantom params (`image_url`, `prompt`, `resolution`, `seed`, `guidance_scale`, `num_inference_steps`, `enable_safety_checker`), added actual API params (`audio_url`, `model`, `sync_mode`).
+
 ## [1.0.2] - 2026-03-30
 
 ### Added
