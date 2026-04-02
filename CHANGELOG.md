@@ -6,6 +6,40 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-04-02
+
+### Added
+
+- **Kling AI as 5th direct provider**: Native JWT (HS256) authentication using `KLING_ACCESS_KEY` + `KLING_SECRET_KEY` key pair, async submit/poll adapter at `src/adapters/kling.ts`, and 78 model bindings across 15 Kling API endpoints.
+- **Kling video endpoints**: text-to-video (`v1/videos/text2video`), image-to-video (`v1/videos/image2video`), video extend (`v1/videos/video-extend`), lip sync (`v1/videos/lip-sync`), avatar (`v1/videos/avatar`), video effects (`v1/videos/effects`).
+- **Kling image endpoints**: image generation (`v1/images/generations`), image expansion/outpaint (`v1/images/image-expansion`), virtual try-on (`v1/images/kolors-virtual-try-on`), multi-shot (`v1/images/ai-multi-shot`), image recognition (`v1/images/image-recognize`).
+- **Kling audio endpoints**: text-to-audio (`v1/audios/generation`), video-to-audio (`v1/audios/video2audio`), TTS (`v1/audios/tts`), voice clone (`v1/audios/voice-clone`).
+- **5 new Kling-only models**: `kling-v1-text-to-audio`, `kling-v1-extend-video`, `kling-v1-extend-image`, `kling-v1-ai-multi-shot`, `kling-v1-image-recognize` — endpoints not available via fal-ai/replicate proxies.
+- **`KlingOptions` type**: Typed options interface for all Kling-specific parameters — `model_name`, `mode`, `sound`, `camera_control`, `aspect_ratio`, `resolution`, `voice_id`, `cloth_image`, `effect_scene`, `expansion_ratio`, lip sync timing, and more.
+- **`KlingVideoModel` and `KlingImageModel` types**: Union types for all supported Kling model versions (v1 through v3, omni, o1).
+- **`KlingCameraControl` type**: Typed camera movement config for video generation.
+- **`defaults` field on `ProviderBinding`**: Allows hardcoding provider-specific defaults (e.g., `model_name`, `mode`) per registry entry. Applied before `options` passthrough so users can still override. Enables one Kling endpoint to serve many model variants.
+- **`duration` field on `GenerateRequest`**: Universal parameter for specifying output duration, mapped to Kling's `duration` param for video/audio generation.
+- **27 Kling skill documentation files**: Complete API reference for every Kling endpoint in `kiani/skills/kling/`.
+- **Kling provider implementation guides**: `SETUP.md`, `ADAPTER.md`, `MODELS.md`, `REGISTRY.md` in `kiani/skills/kling/kling-provider/`.
+- **Kling documentation scraper tools**: `kiani/tools/kling-fetch-pages.ts` (Playwright doc fetcher) and `kiani/tools/kling-skill-scraper.ts` (SKILL.md generator).
+
+### Changed
+
+- **`ProviderName` type**: Extended union with `'kling'`.
+- **`ProviderBinding` type**: Added optional `defaults` field (`Record<string, unknown>`).
+- **`auth.ts`**: Kling uses compound key (`accessKey:secretKey`) — `AuthManager` reads both `KLING_ACCESS_KEY` and `KLING_SECRET_KEY` from env.
+- **`gateway.ts`**: Registered `klingAdapter` in adapters map.
+- **`mapper.ts`**: `mapInput` now applies `binding.defaults` before options passthrough.
+- **`errors.ts`**: `NoProviderError` env hints include `KLING_ACCESS_KEY + KLING_SECRET_KEY`.
+- **`index.ts`**: Exports `klingAdapter`, `KlingOptions`, `KlingVideoModel`, `KlingImageModel`, `KlingCameraControl`.
+- **Registry**: 73 existing Kling models (via fal-ai/replicate) now have native Kling provider as first binding — Kling is preferred when keys are available, proxies remain as fallback.
+
+### Fixed
+
+- **kling-video-create-voice**: Updated modality outputs to `["text", "audio"]` — native Kling voice-clone returns audio URLs while fal-ai proxy returns voice_id.
+- **Kling param_maps**: Corrected provider parameter names — lip sync `audio` → `sound_file`, voice clone `audio` → `voice_url`, image-recognize removed invalid `prompt` param.
+
 ## [1.0.5] - 2026-03-31
 
 ### Fixed
