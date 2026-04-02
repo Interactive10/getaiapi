@@ -33437,9 +33437,11 @@
           "prompt": "prompt",
           "negative_prompt": "negative_prompt",
           "image": "image",
+          "image_tail": "image_tail",
           "duration": "duration",
           "size": "aspect_ratio",
-          "guidance": "cfg_scale"
+          "voice_list": "voice_list",
+          "sound": "sound"
         },
         "defaults": {
           "model_name": "kling-v2-6",
@@ -33457,14 +33459,13 @@
         "endpoint": "fal-ai/kling-video/v2.6/pro/image-to-video",
         "auth_env": "FAL_KEY",
         "param_map": {
-          "image": "image_url",
+          "image": "start_image_url",
+          "image_tail": "end_image_url",
           "prompt": "prompt",
           "negative_prompt": "negative_prompt",
-          "seed": "seed",
-          "guidance": "guidance_scale",
-          "steps": "num_inference_steps",
-          "format": "output_format",
-          "safety": "enable_safety_checker"
+          "duration": "duration",
+          "voice_ids": "voice_ids",
+          "generate_audio": "generate_audio"
         },
         "output_map": {
           "type": "video",
