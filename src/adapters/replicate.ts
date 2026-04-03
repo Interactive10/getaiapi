@@ -1,5 +1,6 @@
 import type { ProviderAdapter, ProviderResponse, OutputItem, OutputMapping } from "./base.js";
 import { AuthError, RateLimitError, ProviderError } from "../errors.js";
+import { fetchWithTimeout } from "../fetch.js";
 
 const BASE_URL = "https://api.replicate.com/v1";
 
@@ -60,7 +61,7 @@ async function fetchLatestVersion(endpoint: string, auth: string): Promise<strin
   if (cached) return cached;
 
   const url = `${BASE_URL}/models/${endpoint}`;
-  const response = await fetch(url, {
+  const response = await fetchWithTimeout(url, {
     headers: { Authorization: `Bearer ${auth}` },
   });
 
@@ -84,7 +85,7 @@ async function submitWithVersion(
   auth: string,
 ): Promise<ProviderResponse> {
   const version = await fetchLatestVersion(endpoint, auth);
-  const response = await fetch(`${BASE_URL}/predictions`, {
+  const response = await fetchWithTimeout(`${BASE_URL}/predictions`, {
     method: "POST",
     headers: authHeaders(auth),
     body: JSON.stringify({ version, input: params }),
@@ -110,7 +111,7 @@ export const replicateAdapter: ProviderAdapter = {
 
     // Try the newer /models/{owner}/{name}/predictions endpoint first
     const modelsUrl = `${BASE_URL}/models/${endpoint}/predictions`;
-    const response = await fetch(modelsUrl, {
+    const response = await fetchWithTimeout(modelsUrl, {
       method: "POST",
       headers: authHeaders(auth),
       body: JSON.stringify({ input: params }),
@@ -132,7 +133,7 @@ export const replicateAdapter: ProviderAdapter = {
     auth: string,
   ): Promise<ProviderResponse> {
     const url = `${BASE_URL}/predictions/${taskId}`;
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       headers: { Authorization: `Bearer ${auth}` },
     });
 

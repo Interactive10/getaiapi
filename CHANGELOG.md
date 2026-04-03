@@ -6,6 +6,20 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-04-03
+
+### Added
+
+- **Shared fetch helper with timeout**: All provider fetch calls now go through `fetchWithTimeout()` with a configurable `AbortSignal.timeout` (default 30s). Prevents hanging requests when a provider server stops responding.
+- **Request/response logging**: Optional debug logging for all provider HTTP calls. Logs method, URL, body size, status, timing, and errors. Auth headers are automatically redacted.
+- **`configureFetch()` function**: Configure fetch timeout and logging globally or via `configure({ fetch: { ... } })`.
+- **`FetchLogEntry`, `LogFn`, `FetchOptions` types**: Public types for the logging and fetch configuration API.
+- **Custom logger support**: Pass `logger: (entry) => ...` to `configureFetch()` to route fetch logs to your own logging system instead of `console.debug`.
+
+### Fixed
+
+- **Kling adapter hanging on submit**: The `POST /v1/videos/image2video` (and all other Kling endpoints) could block indefinitely when the server didn't respond. Now aborts after 30s (configurable) and throws a retryable error.
+
 ## [1.1.0] - 2026-04-02
 
 ### Added

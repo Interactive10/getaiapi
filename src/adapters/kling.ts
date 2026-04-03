@@ -1,6 +1,7 @@
 import { createHmac } from 'crypto'
 import type { ProviderAdapter, ProviderResponse, OutputItem, OutputMapping } from './base.js'
 import { AuthError, RateLimitError, ProviderError } from '../errors.js'
+import { fetchWithTimeout } from '../fetch.js'
 
 const API_BASE = 'https://api-singapore.klingai.com'
 
@@ -129,7 +130,7 @@ export const klingAdapter: ProviderAdapter = {
     auth: string,
   ): Promise<ProviderResponse> {
     const url = `${API_BASE}/${endpoint}`
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       method: 'POST',
       headers: getAuthHeaders(auth),
       body: JSON.stringify(cleanParams(params)),
@@ -156,7 +157,7 @@ export const klingAdapter: ProviderAdapter = {
     }
 
     const url = `${API_BASE}/${endpoint}/${taskId}`
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       headers: getAuthHeaders(auth),
     })
 

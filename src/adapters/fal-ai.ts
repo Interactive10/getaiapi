@@ -1,5 +1,6 @@
 import type { ProviderAdapter, ProviderResponse, OutputItem, OutputMapping } from "./base.js";
 import { AuthError, RateLimitError, ProviderError, TimeoutError } from "../errors.js";
+import { fetchWithTimeout } from "../fetch.js";
 
 const BASE_URL = "https://queue.fal.run";
 
@@ -59,7 +60,7 @@ export const falAiAdapter: ProviderAdapter = {
     auth: string,
   ): Promise<ProviderResponse> {
     const url = `${BASE_URL}/${endpoint}`;
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       method: "POST",
       headers: authHeaders(auth),
       body: JSON.stringify(params),
@@ -87,7 +88,7 @@ export const falAiAdapter: ProviderAdapter = {
     // Check status — use base endpoint (owner/alias) for polling
     const baseEndpoint = getBaseEndpoint(endpoint);
     const statusUrl = `${BASE_URL}/${baseEndpoint}/requests/${taskId}/status`;
-    const statusResponse = await fetch(statusUrl, {
+    const statusResponse = await fetchWithTimeout(statusUrl, {
       headers: { Authorization: `Key ${auth}` },
     });
 
@@ -115,7 +116,7 @@ export const falAiAdapter: ProviderAdapter = {
 
     // Fetch result
     const resultUrl = `${BASE_URL}/${baseEndpoint}/requests/${taskId}`;
-    const resultResponse = await fetch(resultUrl, {
+    const resultResponse = await fetchWithTimeout(resultUrl, {
       headers: { Authorization: `Key ${auth}` },
     });
 

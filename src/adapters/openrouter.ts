@@ -1,5 +1,6 @@
 import type { ProviderAdapter, ProviderResponse, OutputItem, OutputMapping } from "./base.js";
 import { AuthError, RateLimitError, ProviderError } from "../errors.js";
+import { fetchWithTimeout } from "../fetch.js";
 
 const BASE_URL = "https://openrouter.ai/api/v1";
 
@@ -68,7 +69,7 @@ export const openRouterAdapter: ProviderAdapter = {
     if (top_p !== undefined) body.top_p = top_p;
 
     const url = `${BASE_URL}/chat/completions`;
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       method: "POST",
       headers: authHeaders(auth),
       body: JSON.stringify(body),

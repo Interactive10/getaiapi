@@ -240,11 +240,34 @@ export interface ProviderAdapter {
   parseOutput(raw: unknown, outputMapping: OutputMapping): OutputItem[]
 }
 
+// === Fetch ===
+
+export interface FetchLogEntry {
+  kind: 'request' | 'response' | 'error'
+  method: string
+  url: string
+  bodyBytes?: number
+  headers?: Record<string, string>
+  status?: number
+  durationMs?: number
+  responseBytes?: number
+  error?: string
+}
+
+export type LogFn = (entry: FetchLogEntry) => void
+
+export interface FetchOptions {
+  timeoutMs?: number
+  logging?: boolean
+  logger?: LogFn
+}
+
 // === Configuration ===
 
 export interface ConfigureOptions {
   keys?: Partial<Record<ProviderName, string>>
   storage?: StorageConfig
+  fetch?: FetchOptions
 }
 
 // === Storage (R2) ===

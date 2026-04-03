@@ -6,6 +6,7 @@ export { generate, submit, poll, submitAndPoll } from './gateway.js'
 // Configuration
 export { configure } from './configure.js'
 export { configureAuth } from './auth.js'
+export { configureFetch } from './fetch.js'
 
 // Discovery
 export { listModels, deriveCategory } from './discovery.js'
@@ -41,6 +42,9 @@ export type {
   KlingVideoModel,
   KlingImageModel,
   KlingCameraControl,
+  FetchLogEntry,
+  LogFn,
+  FetchOptions,
 } from './types.js'
 
 // Adapters

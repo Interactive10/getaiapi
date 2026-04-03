@@ -1,5 +1,6 @@
 import type { ProviderAdapter, ProviderResponse, OutputItem, OutputMapping } from "./base.js";
 import { AuthError, RateLimitError, ProviderError } from "../errors.js";
+import { fetchWithTimeout } from "../fetch.js";
 
 const BASE_URL = "https://api.wavespeed.ai/api/v3";
 
@@ -70,7 +71,7 @@ export const wavespeedAdapter: ProviderAdapter = {
     auth: string,
   ): Promise<ProviderResponse> {
     const url = `${BASE_URL}/${endpoint}`;
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       method: "POST",
       headers: authHeaders(auth),
       body: JSON.stringify(params),
@@ -93,7 +94,7 @@ export const wavespeedAdapter: ProviderAdapter = {
     auth: string,
   ): Promise<ProviderResponse> {
     const url = `${BASE_URL}/predictions/${taskId}/result`;
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       headers: { Authorization: `Bearer ${auth}` },
     });
 
