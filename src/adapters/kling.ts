@@ -5,6 +5,11 @@ import { fetchWithTimeout } from '../fetch.js'
 
 const API_BASE = 'https://api-singapore.klingai.com'
 
+const SYNC_ENDPOINTS = new Set([
+  'v1/audio/tts',
+  'v1/videos/image-recognize',
+])
+
 function generateJwt(accessKey: string, secretKey: string): string {
   const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url')
   const now = Math.floor(Date.now() / 1000)
@@ -98,6 +103,8 @@ interface KlingSubmitResponse {
   data: {
     task_id: string
     task_status: string
+    task_result?: Record<string, unknown>
+    task_info?: Record<string, unknown>
     created_at: number
     updated_at: number
   }
@@ -121,6 +128,13 @@ interface KlingPollResponse {
   }
 }
 
+/** Infers a default content type from the output mapping type. */
+function inferContentType(type: string): string {
+  if (type === 'video') return 'video/mp4'
+  if (type === 'audio') return 'audio/mpeg'
+  return 'image/png'
+}
+
 export const klingAdapter: ProviderAdapter = {
   name: 'kling',
 
@@ -140,6 +154,14 @@ export const klingAdapter: ProviderAdapter = {
 
     const json = await response.json() as KlingSubmitResponse
     handleBodyErrors(json, endpoint)
+
+    if (SYNC_ENDPOINTS.has(endpoint)) {
+      return {
+        id: json.data.task_id,
+        status: 'completed',
+        output: json.data,
+      }
+    }
 
     return {
       id: json.data.task_id,
@@ -193,47 +215,46 @@ export const klingAdapter: ProviderAdapter = {
 
   parseOutput(raw: unknown, outputMapping: OutputMapping): OutputItem[] {
     const data = raw as Record<string, unknown>
-    const taskResult = data.task_result as Record<string, unknown> | undefined
-    if (!taskResult) return []
-
     const path = outputMapping.extract_path
 
-    if (path === 'task_result.videos[].url') {
-      const videos = taskResult.videos as Array<{ url: string }> | undefined
-      if (!Array.isArray(videos)) return []
-      return videos
-        .filter(v => v.url)
-        .map(v => ({
-          type: outputMapping.type,
-          url: v.url,
-          content_type: outputMapping.content_type ?? 'video/mp4',
-        }))
+    // Parse the extract_path to navigate dynamically.
+    // Paths look like "task_result.videos[].url" or "images[].url_1"
+    const segments = path.split('.')
+    const arrayIndex = segments.findIndex(s => s.endsWith('[]'))
+
+    if (arrayIndex === -1) return []
+
+    // Navigate to the parent of the array segment
+    let current: unknown = data
+    for (let i = 0; i < arrayIndex; i++) {
+      if (current == null || typeof current !== 'object') return []
+      current = (current as Record<string, unknown>)[segments[i]]
     }
 
-    if (path === 'task_result.images[].url') {
-      const images = taskResult.images as Array<{ url: string }> | undefined
-      if (!Array.isArray(images)) return []
-      return images
-        .filter(img => img.url)
-        .map(img => ({
-          type: outputMapping.type,
-          url: img.url,
-          content_type: outputMapping.content_type ?? 'image/png',
-        }))
-    }
+    // Get the array
+    const arrayKey = segments[arrayIndex].slice(0, -2)
+    if (current == null || typeof current !== 'object') return []
+    const items = (current as Record<string, unknown>)[arrayKey]
+    if (!Array.isArray(items)) return []
 
-    if (path === 'task_result.audios[].url') {
-      const audios = taskResult.audios as Array<{ url: string }> | undefined
-      if (!Array.isArray(audios)) return []
-      return audios
-        .filter(a => a.url)
-        .map(a => ({
-          type: outputMapping.type,
-          url: a.url,
-          content_type: outputMapping.content_type ?? 'audio/mpeg',
-        }))
-    }
+    // The remaining segments after the array are the field(s) to extract
+    const fieldSegments = segments.slice(arrayIndex + 1)
 
-    return []
+    const results: OutputItem[] = []
+    for (const item of items) {
+      // Navigate nested fields within each array item
+      let value: unknown = item
+      for (const field of fieldSegments) {
+        if (value == null || typeof value !== 'object') { value = null; break }
+        value = (value as Record<string, unknown>)[field]
+      }
+      if (typeof value !== 'string' || !value) continue
+      results.push({
+        type: outputMapping.type,
+        url: value,
+        content_type: outputMapping.content_type ?? inferContentType(outputMapping.type),
+      })
+    }
+    return results
   },
 }

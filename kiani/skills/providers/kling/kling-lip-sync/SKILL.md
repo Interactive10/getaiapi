@@ -1,283 +1,117 @@
 ---
 name: kling-lip-sync
 description: >
-  Use this skill for the Kling AI Kling Lip Sync API (/v1/videos/lip-sync).
-  Synchronize lip movements in videos with audio or text using the Kling AI API. Supports both text-driven and audio-driven lip sync on existing videos.
+  Use this skill for the Kling AI Lip-Sync API. Synchronize lip movements in videos to audio, with face identification, audio cropping, and volume control.
 ---
 
-# Kling Lip Sync
+# Kling Lip-Sync
 
-Synchronize lip movements in videos with audio or text using the Kling AI API. Supports both text-driven and audio-driven lip sync on existing videos.
+Synchronize lip movements in videos to provided audio. This is a multi-step process: first identify faces in the video, then create a lip-sync task with audio and timing parameters.
 
-**Provider:** Kling AI (Kuaishou)
-**API Domain:** `https://api-singapore.klingai.com`
-**Create Task:** `POST /v1/videos/lip-sync`
-**Query Task:** `GET /v1/videos/lip-sync/{task_id}`
-**Source:** [Kling API Docs](https://kling.ai/document-api/apiReference%2Fmodel%2FlipSync)
+**Provider:** Kling AI
+**API Base:** https://api-singapore.klingai.com
+
+---
+
+## API Reference
+
+### Step 1: Identify Face
+
+**POST** `/v1/videos/identify-face`
+
+Identifies faces in a video and returns face data with timing information.
+
+#### Request Body
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `video_id` | `string` | Optional |  | Kling AI generated video ID. Mutually exclusive with `video_url`. Only supports videos within 30 days, max 60 seconds. |
+| `video_url` | `string` | Optional |  | Video URL. Mutually exclusive with `video_id`. Formats: .mp4/.mov, <=100MB, 2s-60s, 720p/1080p, 512px-2160px. |
+
+#### Response
+
+```json
+{
+  "code": 0,
+  "message": "string",
+  "request_id": "string",
+  "data": {
+    "session_id": "string",
+    "final_unit_deduction": "string",
+    "face_data": [
+      {
+        "face_id": "string",
+        "face_image": "url",
+        "start_time": 0,
+        "end_time": 5200
+      }
+    ]
+  }
+}
+```
+
+### Step 2: Create Lip-Sync Task
+
+**POST** `/v1/videos/advanced-lip-sync`
+
+#### Request Body
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `session_id` | `string` | Required |  | Session ID from the identify-face step |
+| `face_choose` | `array` | Required |  | Face selection for lip-sync. Currently supports one person only. |
+| `face_choose[].face_id` | `string` | Required |  | Face ID from identify-face response |
+| `face_choose[].audio_id` | `string` | Optional |  | Audio ID from TTS API. Duration 2s-60s, within last 30 days. Mutually exclusive with `sound_file`. |
+| `face_choose[].sound_file` | `string` | Optional |  | Audio file (Base64 or URL). Formats: .mp3/.wav/.m4a/.aac, <=5MB. Duration 2s-60s. Mutually exclusive with `audio_id`. |
+| `face_choose[].sound_start_time` | `long` | Required |  | Audio crop start time in ms. Cropped audio must be >=2s. |
+| `face_choose[].sound_end_time` | `long` | Required |  | Audio crop end time in ms. Must not exceed original duration. |
+| `face_choose[].sound_insert_time` | `long` | Required |  | Time to insert audio in video (ms). Must overlap with face's lip-sync interval for >=2s. Must be within video duration. |
+| `face_choose[].sound_volume` | `float` | Optional | `1` | Inserted audio volume. Range: [0, 2] |
+| `face_choose[].original_audio_volume` | `float` | Optional | `1` | Original video volume. Range: [0, 2]. No effect if source video is silent. |
+| `watermark_info` | `object` | Optional |  | Watermark config. `{ "enabled": boolean }` |
+| `external_task_id` | `string` | Optional |  | Custom task ID. Must be unique per user. |
+| `callback_url` | `string` | Optional |  | Callback URL for task status changes |
+
+#### Response
+
+```json
+{
+  "code": 0,
+  "message": "string",
+  "request_id": "string",
+  "data": {
+    "task_id": "string",
+    "task_info": { "external_task_id": "string" },
+    "task_status": "string",
+    "created_at": 1722769557708,
+    "updated_at": 1722769557708
+  }
+}
+```
+
+### Query Task (Single)
+
+**GET** `/v1/videos/advanced-lip-sync/{task_id}`
+
+Returns video result with original video info (`parent_video`) and generated lip-synced video.
+
+### Query Task (List)
+
+**GET** `/v1/videos/advanced-lip-sync`
+
+#### Query Parameters
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `pageNum` | `int` | Optional | `1` | Page number. Range: [1, 1000] |
+| `pageSize` | `int` | Optional | `30` | Items per page. Range: [1, 500] |
 
 ---
 
 ## Authentication
 
-Kling uses **JWT (JSON Web Token)** authentication with an Access Key + Secret Key pair.
+JWT Bearer token using HS256 with access key and secret key. Token validity: 30 minutes.
 
-1. Get your Access Key and Secret Key from [Kling Developer Console](https://kling.ai/dev/api-key)
-2. Generate a JWT token:
+## Callback Protocol
 
-```python
-import time
-import jwt
-
-ak = ""  # Access Key
-sk = ""  # Secret Key
-
-def encode_jwt_token(ak, sk):
-    headers = {"alg": "HS256", "typ": "JWT"}
-    payload = {
-        "iss": ak,
-        "exp": int(time.time()) + 1800,  # 30 min validity
-        "nbf": int(time.time()) - 5
-    }
-    return jwt.encode(payload, sk, headers=headers)
-
-token = encode_jwt_token(ak, sk)
-```
-
-3. Include in request: `Authorization: Bearer <token>`
-
----
-
-## Quick Start (cURL)
-
-```bash
-curl --request POST \
-  --url https://api-singapore.klingai.com/v1/videos/lip-sync \
-  --header 'Authorization: Bearer <token>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-    "model_name": "kling-v1",
-    "prompt": "<your prompt>"
-}'
-```
-
-## Quick Start (Python)
-
-```python
-import os, time, jwt, requests
-
-AK = os.environ["KLING_ACCESS_KEY"]
-SK = os.environ["KLING_SECRET_KEY"]
-
-def get_token():
-    headers = {"alg": "HS256", "typ": "JWT"}
-    payload = {"iss": AK, "exp": int(time.time()) + 1800, "nbf": int(time.time()) - 5}
-    return jwt.encode(payload, SK, headers=headers)
-
-HEADERS = {
-    "Authorization": f"Bearer {get_token()}",
-    "Content-Type": "application/json",
-}
-
-# 1. Create task
-payload = {
-    "model_name": "kling-v1",
-    "prompt": "<your prompt>"
-}
-
-resp = requests.post(
-    "https://api-singapore.klingai.com/v1/videos/lip-sync",
-    json=payload,
-    headers=HEADERS,
-)
-task_id = resp.json()["data"]["task_id"]
-print(f"Task created: {task_id}")
-
-# 2. Poll for result
-while True:
-    result = requests.get(
-        f"https://api-singapore.klingai.com/v1/videos/lip-sync/{task_id}",
-        headers=HEADERS,
-    ).json()
-    status = result["data"]["task_status"]
-    print(f"Status: {status}")
-    if status == "succeed":
-        video_url = result["data"]["videos[0].url"]
-        print(f"Result: {video_url}")
-        break
-    elif status == "failed":
-        print(f"Failed: {result['data'].get('task_status_msg', 'unknown')}")
-        break
-    time.sleep(5)
-```
-
-## Quick Start (JavaScript / Node.js)
-
-```javascript
-import jwt from "jsonwebtoken";
-
-const AK = process.env.KLING_ACCESS_KEY;
-const SK = process.env.KLING_SECRET_KEY;
-
-function getToken() {
-  return jwt.sign(
-    { iss: AK, exp: Math.floor(Date.now() / 1000) + 1800, nbf: Math.floor(Date.now() / 1000) - 5 },
-    SK,
-    { algorithm: "HS256", header: { alg: "HS256", typ: "JWT" } }
-  );
-}
-
-// 1. Create task
-const createResp = await fetch("https://api-singapore.klingai.com/v1/videos/lip-sync", {
-  method: "POST",
-  headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "application/json" },
-  body: JSON.stringify({
-    "model_name": "kling-v1",
-    "prompt": "<your prompt>"
-}),
-});
-const { data } = await createResp.json();
-const taskId = data.task_id;
-console.log("Task:", taskId);
-
-// 2. Poll for result
-while (true) {
-  const resp = await fetch(`https://api-singapore.klingai.com/v1/videos/lip-sync/${taskId}`, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
-  const result = await resp.json();
-  if (result.data.task_status === "succeed") {
-    console.log("Result:", result.data.videos[0].url);
-    break;
-  }
-  if (result.data.task_status === "failed") {
-    console.error("Failed:", result.data.task_status_msg);
-    break;
-  }
-  await new Promise((r) => setTimeout(r, 5000));
-}
-```
-
----
-
-## Models
-
-| Model Name | Description |
-| --- | --- |
-| `kling-v1` | V1 base model, 720p, 30fps |
-
----
-
-## Input Parameters
-
-| Parameter | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `video_id` | string | No | — | The ID of the video generated by Kling AI Used to specify the video and determine whether it can be used for lip-sync services. This parameter and 'video_url' are mutually exclusive—only one can be fi |
-| `video_url` | string | No | — | The URL of the video Used to specify the video and determine whether it can be used for lip-sync services. This parameter and 'video_id' are mutually exclusive—only one can be filled, and neither can  |
-| `face_id` | string | **Yes** | — | Face ID Returned by the facial recognition interface. |
-| `audio_id` | string | No | — | Sound ID Generated via TTS API Only supports audio generated within the last 30 days with a duration of no less than 2 seconds and no more than 60 seconds. Either audio_id or sound_file must be provid |
-| `sound_file` | string | No | — | Sound File Supports Base64-encoded audio or accessible audio URL. Accepted formats: .mp3/.wav/.m4a/.aac (max 5MB). Format mismatches or oversized files will return error codes. Only supports audio wit |
-| `sound_start_time` | long | **Yes** | — | Time point to start cropping sound Based on the original sound start time, the start time is 0'0", units: ms The sound before the starting point will be cropped, and the cropped sound must not be shor |
-| `sound_end_time` | long | **Yes** | — | Time point to stop cropping sound Based on the original sound start time, the start time is 0'0", units: ms The sound after the end point will be cropped, and the cropped sound must not be shorter tha |
-| `sound_insert_time` | long | **Yes** | — | The time for inserting cropped sound Based on the original video start time, the start time is 0'0", units: ms The time range for inserting sound should overlap with the face's lip-sync time interval  |
-| `sound_volume` | float | No | 1 | Volume Controls (higher values = louder) Value range: [0, 2] |
-| `original_audio_volume` | float | No | 1 | Original video volume (higher values = louder) Value range: [0, 2] No effect if source video is silent. |
-| `watermark_info` | object | No | — | Whether to generate watermarked results simultaneously Defined by the enabled parameter, format: "watermark_info": { "enabled": boolean } true: generate watermarked result, false: do not generate Cust |
-| `external_task_id` | string | No | — | Custom Task ID User-defined task ID. It will not override the system-generated task ID, but supports querying tasks by this ID. Please note that uniqueness must be ensured for each user. |
-| `callback_url` | string | No | — | The callback notification address for the result of this task. If configured, the server will actively notify when the task status changes. For specific message schema, see Callback Protocol cURLcURLc |
-
----
-
-## Output Schema
-
-### Create Task Response
-
-```json
-{
-  "code": 0,
-  "message": "string",
-  "request_id": "string",
-  "data": {
-    "task_id": "string",
-    "task_status": "submitted | processing | succeed | failed",
-    "task_info": {
-      "external_task_id": "string"
-    },
-    "created_at": 1722769557708,
-    "updated_at": 1722769557708
-  }
-}
-```
-
-### Query Task Response (on success)
-
-```json
-{
-  "code": 0,
-  "message": "string",
-  "request_id": "string",
-  "data": {
-    "task_id": "string",
-    "task_status": "succeed",
-    "task_status_msg": "string",
-    "task_info": {
-      "external_task_id": "string"
-    },
-    "task_result": {
-      "videos": [
-        {
-          "id": "string",
-          "url": "string",
-          "watermark_url": "string",
-          "duration": "string"
-        }
-      ]
-    },
-    "final_unit_deduction": "string",
-    "created_at": 1722769557708,
-    "updated_at": 1722769557708
-  }
-}
-```
-
----
-
-## Task Lifecycle
-
-1. **Create Task** — `POST /v1/videos/lip-sync` → returns `task_id` with status `submitted`
-2. **Poll Status** — `GET /v1/videos/lip-sync/{task_id}` → status cycles: `submitted` → `processing` → `succeed` / `failed`
-3. **Get Result** — When `task_status === "succeed"`, result URLs are in `data.task_result.videos[].url`
-
-**Polling interval:** 5-10 seconds recommended.
-**Results expire:** Generated files are cleared after 30 days.
-
----
-
-## Callback Support
-
-Set `callback_url` in the create request to receive webhook notifications on status changes.
-
----
-
-## Error Codes
-
-| HTTP | Code | Meaning | Solution |
-| --- | --- | --- | --- |
-| 200 | 0 | Success | — |
-| 401 | 1000-1004 | Auth failure | Check JWT token |
-| 429 | 1100-1102 | Account issue | Check balance/package |
-| 400 | 1200-1201 | Invalid params | Check request body |
-| 400 | 1300-1301 | Content policy | Modify input content |
-| 429 | 1302-1304 | Rate limited | Reduce frequency, use backoff |
-| 500 | 5000-5002 | Server error | Retry later |
-
----
-
-## References
-
-- [Kling API Documentation](https://kling.ai/document-api/apiReference%2Fmodel%2FlipSync)
-- [Kling Developer Console](https://kling.ai/dev/api-key)
-- [Authentication Guide](https://kling.ai/document-api/apiReference%2FcommonInfo)
-- [Rate Limits](https://kling.ai/document-api/apiReference%2FrateLimits)
-- [Callback Protocol](https://kling.ai/document-api/apiReference%2FcallbackProtocol)
-- [Video Models Capability Map](https://kling.ai/document-api/apiReference%2Fmodel%2FvideoModels)
-- [Image Models Capability Map](https://kling.ai/document-api/apiReference%2Fmodel%2FimageModels)
+POST notifications on task status changes when callback_url is configured. Generated assets cleared after 30 days.

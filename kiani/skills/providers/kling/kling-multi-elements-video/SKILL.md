@@ -1,290 +1,135 @@
 ---
 name: kling-multi-elements-video
 description: >
-  Use this skill for the Kling AI Kling Multi-Elements to Video API (/v1/videos/image2video).
-  Generate videos with multiple character/element control using the Kling AI API. Reference specific characters or objects in generation using element IDs and image references.
+  Use this skill for the Kling AI Multi-Elements Video Editing API. Replace or remove elements within existing videos using interactive point-based selection and mask tracking.
 ---
 
-# Kling Multi-Elements to Video
+# Kling Multi-Elements Video Editing
 
-Generate videos with multiple character/element control using the Kling AI API. Reference specific characters or objects in generation using element IDs and image references.
+Replace or remove elements within existing videos. This is a multi-step interactive workflow: initialize a video, select areas by clicking points on frames, preview selections with masks, then create the final editing task.
 
-**Provider:** Kling AI (Kuaishou)
-**API Domain:** `https://api-singapore.klingai.com`
-**Create Task:** `POST /v1/videos/image2video`
-**Query Task:** `GET /v1/videos/image2video/{task_id}`
-**Source:** [Kling API Docs](https://kling.ai/document-api/apiReference%2Fmodel%2FmultiElements)
+**Provider:** Kling AI
+**API Base:** https://api-singapore.klingai.com
+
+---
+
+## API Reference
+
+### Step 1: Initialize Video
+
+**POST** `/v1/videos/multi-elements/init-selection`
+
+#### Request Body
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `video_id` | `string` | Optional |  | Kling AI generated video ID. Only videos within 30 days. Duration: 2-5s or 7-10s. Mutually exclusive with `video_url`. |
+| `video_url` | `string` | Optional |  | Upload video URL. Formats: .mp4/.mov. Duration: 2-5s or 7-10s. Resolution: 720px-2160px. Frame rate: 24/30/60fps. Mutually exclusive with `video_id`. |
+
+#### Response
+
+```json
+{
+  "code": 0,
+  "message": "string",
+  "request_id": "string",
+  "data": {
+    "status": 0,
+    "session_id": "string",
+    "final_unit_deduction": "string",
+    "fps": 30.0,
+    "original_duration": 1000,
+    "width": 720,
+    "height": 1280,
+    "total_frame": 300,
+    "normalized_video": "url"
+  }
+}
+```
+
+### Step 2: Add Selection Area
+
+**POST** `/v1/videos/multi-elements/add-selection`
+
+#### Request Body
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `session_id` | `string` | Required |  | Session ID from initialization |
+| `frame_index` | `int` | Required |  | Frame number. Max 10 frames can be marked. Only 1 frame at a time. |
+| `points` | `array` | Required |  | Click coordinates. Values [0, 1] as percentages. [0, 0] = top-left. Max 10 points per frame. |
+| `points[].x` | `float` | Required |  | X coordinate [0-1] |
+| `points[].y` | `float` | Required |  | Y coordinate [0-1] |
+
+#### Response
+
+Returns RLE mask data (`rle_mask`) and PNG mask (`png_mask`) for each detected object.
+
+### Step 3: Delete Selection Area
+
+**POST** `/v1/videos/multi-elements/delete-selection`
+
+#### Request Body
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `session_id` | `string` | Required |  | Session ID |
+| `frame_index` | `int` | Required |  | Frame number |
+| `points` | `array` | Required |  | Coordinates to delete. Must exactly match add-selection coordinates. |
+| `points[].x` | `float` | Required |  | X coordinate [0-1] |
+| `points[].y` | `float` | Required |  | Y coordinate [0-1] |
+
+### Step 4: Clear All Selections
+
+**POST** `/v1/videos/multi-elements/clear-selection`
+
+#### Request Body
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `session_id` | `string` | Required |  | Session ID |
+
+### Step 5: Preview Selection
+
+**POST** `/v1/videos/multi-elements/preview-selection`
+
+#### Request Body
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `session_id` | `string` | Required |  | Session ID |
+
+#### Response
+
+Returns `video` (video with mask overlay), `video_cover` (cover image), and `tracking_output` (per-frame mask results).
+
+### Step 6: Create Editing Task
+
+**POST** `/v1/videos/multi-elements/generation`
+
+(Refer to the Kling Multi-Elements Generation API for the full creation endpoint details.)
+
+### Query Task (Single)
+
+**GET** `/v1/videos/multi-elements/{task_id}`
+
+### Query Task (List)
+
+**GET** `/v1/videos/multi-elements`
+
+#### Query Parameters
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `pageNum` | `int` | Optional | `1` | Page number. Range: [1, 1000] |
+| `pageSize` | `int` | Optional | `30` | Items per page. Range: [1, 500] |
 
 ---
 
 ## Authentication
 
-Kling uses **JWT (JSON Web Token)** authentication with an Access Key + Secret Key pair.
+JWT Bearer token using HS256 with access key and secret key. Token validity: 30 minutes.
 
-1. Get your Access Key and Secret Key from [Kling Developer Console](https://kling.ai/dev/api-key)
-2. Generate a JWT token:
+## Callback Protocol
 
-```python
-import time
-import jwt
-
-ak = ""  # Access Key
-sk = ""  # Secret Key
-
-def encode_jwt_token(ak, sk):
-    headers = {"alg": "HS256", "typ": "JWT"}
-    payload = {
-        "iss": ak,
-        "exp": int(time.time()) + 1800,  # 30 min validity
-        "nbf": int(time.time()) - 5
-    }
-    return jwt.encode(payload, sk, headers=headers)
-
-token = encode_jwt_token(ak, sk)
-```
-
-3. Include in request: `Authorization: Bearer <token>`
-
----
-
-## Quick Start (cURL)
-
-```bash
-curl --request POST \
-  --url https://api-singapore.klingai.com/v1/videos/image2video \
-  --header 'Authorization: Bearer <token>' \
-  --header 'Content-Type: application/json' \
-  --data '{
-    "model_name": "kling-v1-6",
-    "prompt": "<your prompt>",
-    "image": "<image_url_or_base64>"
-}'
-```
-
-## Quick Start (Python)
-
-```python
-import os, time, jwt, requests
-
-AK = os.environ["KLING_ACCESS_KEY"]
-SK = os.environ["KLING_SECRET_KEY"]
-
-def get_token():
-    headers = {"alg": "HS256", "typ": "JWT"}
-    payload = {"iss": AK, "exp": int(time.time()) + 1800, "nbf": int(time.time()) - 5}
-    return jwt.encode(payload, SK, headers=headers)
-
-HEADERS = {
-    "Authorization": f"Bearer {get_token()}",
-    "Content-Type": "application/json",
-}
-
-# 1. Create task
-payload = {
-    "model_name": "kling-v1-6",
-    "prompt": "<your prompt>",
-    "image": "<image_url_or_base64>"
-}
-
-resp = requests.post(
-    "https://api-singapore.klingai.com/v1/videos/image2video",
-    json=payload,
-    headers=HEADERS,
-)
-task_id = resp.json()["data"]["task_id"]
-print(f"Task created: {task_id}")
-
-# 2. Poll for result
-while True:
-    result = requests.get(
-        f"https://api-singapore.klingai.com/v1/videos/image2video/{task_id}",
-        headers=HEADERS,
-    ).json()
-    status = result["data"]["task_status"]
-    print(f"Status: {status}")
-    if status == "succeed":
-        video_url = result["data"]["videos[0].url"]
-        print(f"Result: {video_url}")
-        break
-    elif status == "failed":
-        print(f"Failed: {result['data'].get('task_status_msg', 'unknown')}")
-        break
-    time.sleep(5)
-```
-
-## Quick Start (JavaScript / Node.js)
-
-```javascript
-import jwt from "jsonwebtoken";
-
-const AK = process.env.KLING_ACCESS_KEY;
-const SK = process.env.KLING_SECRET_KEY;
-
-function getToken() {
-  return jwt.sign(
-    { iss: AK, exp: Math.floor(Date.now() / 1000) + 1800, nbf: Math.floor(Date.now() / 1000) - 5 },
-    SK,
-    { algorithm: "HS256", header: { alg: "HS256", typ: "JWT" } }
-  );
-}
-
-// 1. Create task
-const createResp = await fetch("https://api-singapore.klingai.com/v1/videos/image2video", {
-  method: "POST",
-  headers: { Authorization: `Bearer ${getToken()}`, "Content-Type": "application/json" },
-  body: JSON.stringify({
-    "model_name": "kling-v1-6",
-    "prompt": "<your prompt>",
-    "image": "<image_url_or_base64>"
-}),
-});
-const { data } = await createResp.json();
-const taskId = data.task_id;
-console.log("Task:", taskId);
-
-// 2. Poll for result
-while (true) {
-  const resp = await fetch(`https://api-singapore.klingai.com/v1/videos/image2video/${taskId}`, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
-  const result = await resp.json();
-  if (result.data.task_status === "succeed") {
-    console.log("Result:", result.data.videos[0].url);
-    break;
-  }
-  if (result.data.task_status === "failed") {
-    console.error("Failed:", result.data.task_status_msg);
-    break;
-  }
-  await new Promise((r) => setTimeout(r, 5000));
-}
-```
-
----
-
-## Models
-
-| Model Name | Description |
-| --- | --- |
-| `kling-v1-6` | V1.6, multi-image support, 720p/1080p |
-| `kling-v3` | V3, 3-15s variable duration, multi-shot, std/pro |
-
----
-
-## Input Parameters
-
-| Parameter | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `video_id` | string | No | — | The ID of the video generated by the Kling AI Only videos generated within the last 30 days are supported Only supports videos with a duration of ≥2 seconds and ≤5 seconds, or ≥7 seconds and ≤10 secon |
-| `video_url` | string | No | — | Get link for uploaded video Only .mp4/.mov formats are supported Only supports videos with a duration of ≥2 seconds and ≤5 seconds, or ≥7 seconds and ≤10 seconds Video resolution must be between 720px |
-| `operationsframe_index` | int | **Yes** | — | Frame Number A maximum of 10 frames can be marked. That is, up to 10 frames can be used to define selection areas in the video Only supports marking 1 frame at a time |
-| `points` | array | **Yes** | — | Click Coordinates, represented by x and y Value range: [0, 1], expressed as percentages; [0, 1] represents the top-left corner of the frame Multiple points can be marked at once; up to 10 points can b |
-| `name` | string | No | kling-v1-6 | Model NameEnum: kling-v1- |
-| `session_id` | string | **Yes** | — | Session ID, generated during the video initialization task and remains unchanged during editing |
-| `operationsedit_mode` | string | **Yes** | — | Operation TypeEnum: additionswapremoval addition: Add an element swap: Replace an element removal: Remove an element |
-| `image_list` | array | No | — | Cropped Reference Images For adding video elements: This parameter is required; upload 1–2 images For editing (swapping) video elements: This parameter is required; upload 1 image only For deleting vi |
-| `image` | string | **Yes** | — | Image URL or Base64 |
-| `stringprompt` | string | **Yes** | — | Positive Prompt Use the format <<<xxx>>> to explicitly refer to a specific video or image, such as <<<video_1>>> or <<<image_1>>> To ensure optimal results, the prompt must include references to the v |
-| `negative_prompt` | string | No | — | Negative Prompt Must not exceed 2,500 characters |
-| `mode` | string | No | std | Video Generation ModeEnum: stdpro std: Standard mode, basic rendering, cost-effective pro: Professional mode, high-quality, enhanced rendering, better video output quality |
-| `duration` | string | No | 5 | Video Duration (in seconds)Enum: 510 Only 5-second and 10-second videos are supported To generate a 5-second video, the input video must be ≥2 seconds and ≤5 seconds To generate a 10-second video, the |
-| `watermark_info` | object | No | — | Whether to generate watermarked results simultaneously Defined by the enabled parameter, format: "watermark_info": { "enabled": boolean } true: generate watermarked result, false: do not generate Cust |
-| `callback_url` | string | No | — | Callback URL for Task Result Notification. If configured, the server will actively send notifications when the task status changes For the message schema, refer to the Callback Protocol |
-| `external_task_id` | string | No | — | Custom Task ID A user-defined task ID; it will not overwrite the system-generated task ID, but can be used to query the task Please ensure uniqueness of the task ID within a single user account cURLcU |
-
----
-
-## Output Schema
-
-### Create Task Response
-
-```json
-{
-  "code": 0,
-  "message": "string",
-  "request_id": "string",
-  "data": {
-    "task_id": "string",
-    "task_status": "submitted | processing | succeed | failed",
-    "task_info": {
-      "external_task_id": "string"
-    },
-    "created_at": 1722769557708,
-    "updated_at": 1722769557708
-  }
-}
-```
-
-### Query Task Response (on success)
-
-```json
-{
-  "code": 0,
-  "message": "string",
-  "request_id": "string",
-  "data": {
-    "task_id": "string",
-    "task_status": "succeed",
-    "task_status_msg": "string",
-    "task_info": {
-      "external_task_id": "string"
-    },
-    "task_result": {
-      "videos": [
-        {
-          "id": "string",
-          "url": "string",
-          "watermark_url": "string",
-          "duration": "string"
-        }
-      ]
-    },
-    "final_unit_deduction": "string",
-    "created_at": 1722769557708,
-    "updated_at": 1722769557708
-  }
-}
-```
-
----
-
-## Task Lifecycle
-
-1. **Create Task** — `POST /v1/videos/image2video` → returns `task_id` with status `submitted`
-2. **Poll Status** — `GET /v1/videos/image2video/{task_id}` → status cycles: `submitted` → `processing` → `succeed` / `failed`
-3. **Get Result** — When `task_status === "succeed"`, result URLs are in `data.task_result.videos[].url`
-
-**Polling interval:** 5-10 seconds recommended.
-**Results expire:** Generated files are cleared after 30 days.
-
----
-
-## Callback Support
-
-Set `callback_url` in the create request to receive webhook notifications on status changes.
-
----
-
-## Error Codes
-
-| HTTP | Code | Meaning | Solution |
-| --- | --- | --- | --- |
-| 200 | 0 | Success | — |
-| 401 | 1000-1004 | Auth failure | Check JWT token |
-| 429 | 1100-1102 | Account issue | Check balance/package |
-| 400 | 1200-1201 | Invalid params | Check request body |
-| 400 | 1300-1301 | Content policy | Modify input content |
-| 429 | 1302-1304 | Rate limited | Reduce frequency, use backoff |
-| 500 | 5000-5002 | Server error | Retry later |
-
----
-
-## References
-
-- [Kling API Documentation](https://kling.ai/document-api/apiReference%2Fmodel%2FmultiElements)
-- [Kling Developer Console](https://kling.ai/dev/api-key)
-- [Authentication Guide](https://kling.ai/document-api/apiReference%2FcommonInfo)
-- [Rate Limits](https://kling.ai/document-api/apiReference%2FrateLimits)
-- [Callback Protocol](https://kling.ai/document-api/apiReference%2FcallbackProtocol)
-- [Video Models Capability Map](https://kling.ai/document-api/apiReference%2Fmodel%2FvideoModels)
-- [Image Models Capability Map](https://kling.ai/document-api/apiReference%2Fmodel%2FimageModels)
+POST notifications on task status changes when callback_url is configured. Generated assets cleared after 30 days.
