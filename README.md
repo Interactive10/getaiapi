@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue.svg)](https://www.typescriptlang.org/)
 
-A unified TypeScript library that wraps 1,890+ AI models across 4 providers into a single `generate()` function. One input shape. One output shape. Any model.
+A unified TypeScript library that wraps 1,890+ AI models across 5 providers into a single `generate()` function. One input shape. One output shape. Any model.
 
 ## Install
 
@@ -106,6 +106,18 @@ const upscaled = await generate({
 })
 ```
 
+**Kling native provider** (bypass fal-ai, call Kling API directly)
+
+```typescript
+const video = await generate({
+  model: 'kling-video-v3-pro-text-to-video',
+  provider: 'kling',  // uses KLING_ACCESS_KEY directly
+  prompt: 'a golden retriever running on a beach at sunset',
+  duration: '5',
+  options: { aspect_ratio: '16:9', sound: 'on' },
+})
+```
+
 **Remove background**
 
 ```typescript
@@ -175,6 +187,10 @@ export WAVESPEED_API_KEY="your-wavespeed-key"
 
 # OpenRouter (24 LLM models — Claude, GPT, Gemini, Llama, etc.)
 export OPENROUTER_API_KEY="your-openrouter-key"
+
+# Kling AI (69 models — native API, bypasses fal-ai middleman)
+export KLING_ACCESS_KEY="your-access-key"
+export KLING_SECRET_KEY="your-secret-key"
 ```
 
 ### Option 2: Programmatic Configuration
@@ -190,6 +206,7 @@ configure({
     'replicate': process.env.MY_REPLICATE_TOKEN,
     'wavespeed': process.env.MY_WAVESPEED_TOKEN,
     'openrouter': process.env.MY_OPENROUTER_TOKEN,
+    'kling': `${process.env.MY_KLING_AK}:${process.env.MY_KLING_SK}`,
   },
 })
 ```
@@ -259,7 +276,7 @@ Models declare their input and output types via `modality`. There are no fixed c
 
 **Output types:** `image`, `video`, `audio`, `text`, `3d`, `segmentation`
 
-Common combinations across 1,890+ models:
+Common combinations across 1,890+ models (69 with native Kling provider):
 
 | Inputs | Outputs | Example |
 |---|---|---|
@@ -279,8 +296,11 @@ Common combinations across 1,890+ models:
 |---|---|---|---|
 | fal-ai | 1,201 | `FAL_KEY` | Native fetch |
 | Replicate | 687 | `REPLICATE_API_TOKEN` | Native fetch |
+| Kling AI | 69 | `KLING_ACCESS_KEY` | Native fetch + JWT |
 | WaveSpeed | 66 | `WAVESPEED_API_KEY` | Native fetch |
 | OpenRouter | 24 | `OPENROUTER_API_KEY` | Native fetch |
+
+Many Kling models are available through both fal-ai and the native Kling provider. Using `provider: 'kling'` calls the Kling API directly with JWT authentication, bypassing intermediary markup. Set both `KLING_ACCESS_KEY` and `KLING_SECRET_KEY` env vars (or pass them combined as `accessKey:secretKey` via `configure()`).
 
 Zero external dependencies -- all provider communication uses native `fetch`. Works in Node.js, Vercel Edge, Cloudflare Workers, Deno, Bun, and any ESM runtime -- no `fs` or special bundler config needed.
 
