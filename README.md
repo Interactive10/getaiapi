@@ -302,6 +302,8 @@ Common combinations across 1,890+ models (69 with native Kling provider):
 
 Many Kling models are available through both fal-ai and the native Kling provider. Using `provider: 'kling'` calls the Kling API directly with JWT authentication, bypassing intermediary markup. Set both `KLING_ACCESS_KEY` and `KLING_SECRET_KEY` env vars (or pass them combined as `accessKey:secretKey` via `configure()`).
 
+**Provider portability** -- the same code works across providers. Parameter names are aligned: `generate_audio`, `end_image_url`, `voice_ids`, and `elements` work identically whether you use `provider: 'fal-ai'` or `provider: 'kling'`. The library automatically translates to each provider's native field names (e.g., `generate_audio: true` becomes `sound: "on"` for Kling, stays `generate_audio: true` for fal-ai).
+
 Zero external dependencies -- all provider communication uses native `fetch`. Works in Node.js, Vercel Edge, Cloudflare Workers, Deno, Bun, and any ESM runtime -- no `fs` or special bundler config needed.
 
 ## API Reference
@@ -313,9 +315,9 @@ The core function. Resolves the model, maps parameters, calls the provider, and 
 **GenerateRequest**
 
 ```typescript
-interface GenerateRequest {
+interface GenerateRequest<P extends ProviderName = ProviderName> {
   model: string                                    // required - model name
-  provider?: ProviderName                          // preferred provider (optional)
+  provider?: P                                     // preferred provider (optional)
   prompt?: string                                  // text prompt
   image?: string | File                            // input image (URL or File)
   images?: (string | File)[]                       // multiple reference images
@@ -331,9 +333,28 @@ interface GenerateRequest {
   format?: 'png' | 'jpeg' | 'webp' | 'mp4' | 'mp3' | 'wav' | 'obj' | 'glb'
   quality?: number                                 // output quality
   safety?: boolean                                 // enable safety checker
-  options?: Record<string, unknown>                // provider-specific overrides
+  duration?: string                                // output duration (video/audio)
+  options?: ProviderOptionsFor<P>                   // provider-specific overrides
 }
 ```
+
+The generic `P` narrows `options` by provider. Use `GenerateRequest<'kling'>` for type-safe Kling options:
+
+```typescript
+const req: GenerateRequest<'kling'> = {
+  model: 'kling-video-v3-pro-image-to-video',
+  provider: 'kling',
+  image: 'https://example.com/img.png',
+  prompt: 'Animate this photo',
+  options: {
+    sound: 'on',           // typed: 'on' | 'off'
+    aspect_ratio: '16:9',  // typed: string
+    cfg_scale: 0.5,        // typed: number
+  },
+}
+```
+
+Without a generic, `options` accepts any `Record<string, unknown>` (backward compatible).
 
 **GenerateResponse**
 

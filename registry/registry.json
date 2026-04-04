@@ -30514,7 +30514,8 @@
         "skill_id": "kling-virtual-try-on",
         "endpoint": "v1/images/kolors-virtual-try-on",
         "param_map": {
-          "image": "human_image"
+          "image": "human_image",
+          "cloth_image": "cloth_image"
         },
         "defaults": {
           "model_name": "kolors-virtual-try-on-v1-5"
@@ -30875,7 +30876,11 @@
           "prompt": "prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-video-o1"
@@ -30932,7 +30937,11 @@
           "prompt": "prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-video-o1"
@@ -30991,7 +31000,11 @@
           "prompt": "prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-video-o1",
@@ -31049,7 +31062,11 @@
           "prompt": "prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-video-o1",
@@ -31107,7 +31124,11 @@
         "param_map": {
           "prompt": "prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-video-o1",
@@ -31165,7 +31186,11 @@
         "param_map": {
           "prompt": "prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-video-o1",
@@ -31223,7 +31248,11 @@
         "param_map": {
           "prompt": "prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-video-o1"
@@ -31280,7 +31309,11 @@
         "param_map": {
           "prompt": "prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-video-o1"
@@ -31338,7 +31371,11 @@
           "prompt": "prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v3-omni",
@@ -31397,7 +31434,11 @@
           "prompt": "prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v3-omni",
@@ -31455,7 +31496,11 @@
         "param_map": {
           "prompt": "prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v3-omni",
@@ -31513,7 +31558,11 @@
         "param_map": {
           "prompt": "prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v3-omni",
@@ -31571,7 +31620,11 @@
         "param_map": {
           "prompt": "prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v3-omni",
@@ -31630,7 +31683,11 @@
           "prompt": "prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v3-omni",
@@ -31689,7 +31746,11 @@
         "param_map": {
           "prompt": "prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v3-omni",
@@ -31747,7 +31808,11 @@
         "param_map": {
           "prompt": "prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v3-omni",
@@ -31805,7 +31870,11 @@
         "param_map": {
           "prompt": "prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "negative_prompt": "negative_prompt",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v3-omni",
@@ -32032,7 +32101,12 @@
           "negative_prompt": "negative_prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "end_image_url": "image_tail",
+          "voice_ids": "voice_list",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v1",
@@ -32091,7 +32165,9 @@
           "prompt": "prompt",
           "negative_prompt": "negative_prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound"
         },
         "defaults": {
           "model_name": "kling-v1",
@@ -32251,7 +32327,12 @@
           "negative_prompt": "negative_prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "end_image_url": "image_tail",
+          "voice_ids": "voice_list",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v1-5",
@@ -32440,7 +32521,12 @@
           "negative_prompt": "negative_prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "end_image_url": "image_tail",
+          "voice_ids": "voice_list",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v1-6",
@@ -32499,7 +32585,9 @@
           "prompt": "prompt",
           "negative_prompt": "negative_prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound"
         },
         "defaults": {
           "model_name": "kling-v1-6",
@@ -32650,7 +32738,12 @@
           "negative_prompt": "negative_prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "end_image_url": "image_tail",
+          "voice_ids": "voice_list",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v1-6",
@@ -32709,7 +32802,9 @@
           "prompt": "prompt",
           "negative_prompt": "negative_prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound"
         },
         "defaults": {
           "model_name": "kling-v1-6",
@@ -32770,7 +32865,12 @@
           "negative_prompt": "negative_prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "end_image_url": "image_tail",
+          "voice_ids": "voice_list",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v2-master"
@@ -32828,7 +32928,9 @@
           "prompt": "prompt",
           "negative_prompt": "negative_prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound"
         },
         "defaults": {
           "model_name": "kling-v2-master"
@@ -32888,7 +32990,12 @@
           "negative_prompt": "negative_prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "end_image_url": "image_tail",
+          "voice_ids": "voice_list",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v2-1-master"
@@ -32946,7 +33053,9 @@
           "prompt": "prompt",
           "negative_prompt": "negative_prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound"
         },
         "defaults": {
           "model_name": "kling-v2-1-master"
@@ -33006,7 +33115,12 @@
           "negative_prompt": "negative_prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "end_image_url": "image_tail",
+          "voice_ids": "voice_list",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v2-1",
@@ -33067,7 +33181,12 @@
           "negative_prompt": "negative_prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "end_image_url": "image_tail",
+          "voice_ids": "voice_list",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v2-1",
@@ -33128,7 +33247,12 @@
           "negative_prompt": "negative_prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "end_image_url": "image_tail",
+          "voice_ids": "voice_list",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v2-5-turbo",
@@ -33187,7 +33311,9 @@
           "prompt": "prompt",
           "negative_prompt": "negative_prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound"
         },
         "defaults": {
           "model_name": "kling-v2-5-turbo",
@@ -33248,7 +33374,12 @@
           "negative_prompt": "negative_prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "end_image_url": "image_tail",
+          "voice_ids": "voice_list",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v2-5-turbo",
@@ -33308,7 +33439,12 @@
           "negative_prompt": "negative_prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "end_image_url": "image_tail",
+          "voice_ids": "voice_list",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v2-6",
@@ -33389,7 +33525,10 @@
         "param_map": {
           "image": "image_url",
           "video": "video_url",
-          "prompt": "prompt"
+          "prompt": "prompt",
+          "keep_audio": "keep_original_sound",
+          "character_orientation": "character_orientation",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v2-6",
@@ -33448,7 +33587,9 @@
           "prompt": "prompt",
           "negative_prompt": "negative_prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound"
         },
         "defaults": {
           "model_name": "kling-v2-6",
@@ -33507,7 +33648,10 @@
         "param_map": {
           "image": "image_url",
           "video": "video_url",
-          "prompt": "prompt"
+          "prompt": "prompt",
+          "keep_audio": "keep_original_sound",
+          "character_orientation": "character_orientation",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v2-6",
@@ -33570,7 +33714,12 @@
           "negative_prompt": "negative_prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "end_image_url": "image_tail",
+          "voice_ids": "voice_list",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v3",
@@ -33647,7 +33796,10 @@
         "param_map": {
           "image": "image_url",
           "video": "video_url",
-          "prompt": "prompt"
+          "prompt": "prompt",
+          "keep_audio": "keep_original_sound",
+          "character_orientation": "character_orientation",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v3",
@@ -33707,7 +33859,9 @@
           "prompt": "prompt",
           "negative_prompt": "negative_prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound"
         },
         "defaults": {
           "model_name": "kling-v3",
@@ -33767,7 +33921,12 @@
           "negative_prompt": "negative_prompt",
           "duration": "duration",
           "aspect_ratio": "aspect_ratio",
-          "image": "image"
+          "image": "image",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound",
+          "end_image_url": "image_tail",
+          "voice_ids": "voice_list",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v3",
@@ -33848,7 +34007,10 @@
         "param_map": {
           "image": "image_url",
           "video": "video_url",
-          "prompt": "prompt"
+          "prompt": "prompt",
+          "keep_audio": "keep_original_sound",
+          "character_orientation": "character_orientation",
+          "elements": "element_list"
         },
         "defaults": {
           "model_name": "kling-v3",
@@ -33907,7 +34069,9 @@
           "prompt": "prompt",
           "negative_prompt": "negative_prompt",
           "duration": "duration",
-          "aspect_ratio": "aspect_ratio"
+          "aspect_ratio": "aspect_ratio",
+          "cfg_scale": "cfg_scale",
+          "generate_audio": "sound"
         },
         "defaults": {
           "model_name": "kling-v3",
@@ -33956,7 +34120,8 @@
         "skill_id": "kling-video-to-audio",
         "endpoint": "v1/audio/video-to-audio",
         "param_map": {
-          "video": "video_url"
+          "video": "video_url",
+          "prompt": "sound_effect_prompt"
         },
         "output_map": {
           "type": "audio",

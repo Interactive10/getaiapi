@@ -47,11 +47,15 @@ export function mapInput(
     }
   }
 
-  // Merge options passthrough — skip internal keys, override defaults
+  // Merge options passthrough — apply param_map renames, skip internal keys
   const INTERNAL_KEYS = new Set(['timeout', 'reupload'])
   if (request.options) {
     for (const [key, val] of Object.entries(request.options)) {
-      if (!INTERNAL_KEYS.has(key)) {
+      if (INTERNAL_KEYS.has(key)) continue
+      const mappedKey = binding.param_map[key]
+      if (mappedKey && typeof mappedKey === 'string') {
+        result[mappedKey] = applyTransform(key, val, provider)
+      } else {
         result[key] = val
       }
     }
@@ -77,6 +81,19 @@ function applyTransform(
 
   if (universal === 'size') {
     return parseSizeForProvider(value, provider)
+  }
+
+  // Kling: generate_audio boolean → sound "on"/"off"
+  if (universal === 'generate_audio' && provider === 'kling') {
+    return value ? 'on' : 'off'
+  }
+
+  // Kling: voice_ids string[] → voice_list [{voice_id}]
+  if (universal === 'voice_ids' && provider === 'kling') {
+    if (Array.isArray(value)) {
+      return (value as string[]).map((id) => ({ voice_id: id }))
+    }
+    return value
   }
 
   return value

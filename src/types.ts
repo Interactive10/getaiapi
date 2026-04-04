@@ -32,11 +32,26 @@ export interface OutputMapping {
   content_type?: string
 }
 
+// === Provider-Scoped Options ===
+
+/**
+ * Resolves the options type based on provider.
+ * When provider is specified, narrows options to provider-specific type.
+ */
+export type ProviderOptionsFor<P extends ProviderName = ProviderName> =
+  P extends 'kling' ? KlingOptions :
+  Record<string, unknown>
+
 // === Request / Response ===
 
-export interface GenerateRequest {
+/**
+ * Universal input for generate/submit.
+ * Generic P narrows options by provider for type safety.
+ * Without a generic, options accepts any Record<string, unknown>.
+ */
+export interface GenerateRequest<P extends ProviderName = ProviderName> {
   model: string
-  provider?: ProviderName
+  provider?: P
   prompt?: string
   image?: string | File
   images?: (string | File)[]
@@ -53,7 +68,7 @@ export interface GenerateRequest {
   quality?: number
   safety?: boolean
   duration?: string
-  options?: Record<string, unknown> | KlingOptions
+  options?: ProviderOptionsFor<P>
 }
 
 // === Kling Provider Options ===

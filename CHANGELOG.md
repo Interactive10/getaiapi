@@ -6,6 +6,19 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-04-04
+
+### Fixed
+
+- **Kling param_map alignment**: 165 missing `param_map` entries added across 62 dual-provider kling models. Canonical param names now correctly translate to Kling-native field names (`end_image_url` → `image_tail`, `generate_audio` → `sound`, `voice_ids` → `voice_list`, `elements` → `element_list`, `keep_audio` → `keep_original_sound`, `prompt` → `sound_effect_prompt` for video-to-audio).
+- **Options passthrough now applies param_map**: `mapInput()` previously merged `options` as-is without renaming keys. Now checks `param_map` for option keys and applies renames + value transforms. Backward compatible — fal-ai bindings that map keys to the same name are unaffected.
+
+### Added
+
+- **Value transforms for kling provider**: `generate_audio: true` → `sound: "on"`, `voice_ids: ["id"]` → `voice_list: [{voice_id: "id"}]` — applied automatically in `applyTransform()`.
+- **Provider-scoped type safety**: `GenerateRequest<'kling'>` narrows `options` to `KlingOptions` at compile time. Generic defaults to `ProviderName` so existing code is unaffected. New `ProviderOptionsFor<P>` utility type exported.
+- **Param alignment tests**: 14 tests verifying param renaming, value transforms, and provider portability (same input works on both fal-ai and kling). 6 type-level tests for provider-scoped generics.
+
 ## [1.3.0] - 2026-04-04
 
 ### Added
