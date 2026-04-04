@@ -5,7 +5,7 @@ priority: P2
 complexity: M
 depends_on: []
 area: build
-status: todo
+status: done
 ---
 
 # PDD-158: Kling audio suite — TTS, text-to-audio, video-to-audio, voice clone
@@ -81,11 +81,11 @@ M — 3 existing models + 1 new, straightforward params.
 - AC-6: check:types passes
 
 ### Task breakdown
-- [ ] Read TTS SKILL.md, add kling provider
-- [ ] Read text-to-audio SKILL.md, create new registry entry
-- [ ] Read video-to-audio SKILL.md, add kling provider
-- [ ] Read voice-clone SKILL.md, add kling provider to create-voice
-- [ ] Run check:types
+- [x] Read TTS SKILL.md, add kling provider
+- [x] Read text-to-audio SKILL.md, create new registry entry
+- [x] Read video-to-audio SKILL.md, add kling provider
+- [x] Read voice-clone SKILL.md, add kling provider to create-voice
+- [x] Run check:types
 
 ## UX — Sign-off
 
@@ -97,7 +97,7 @@ M — 3 existing models + 1 new, straightforward params.
 | Loading/error/empty states | N/A | |
 | Interaction feedback (hover/focus/active) | N/A | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
 
 ## Security — Sign-off
@@ -110,7 +110,7 @@ M — 3 existing models + 1 new, straightforward params.
 | XSS | [ ] | |
 | Security misconfiguration | [ ] | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
 
 ## QA — Sign-off
@@ -124,5 +124,5 @@ M — 3 existing models + 1 new, straightforward params.
 | AC-5 | [ ] | |
 | AC-6 | [ ] | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none

@@ -5,7 +5,7 @@ priority: P1
 complexity: L
 depends_on: ["154"]
 area: build
-status: todo
+status: done
 ---
 
 # PDD-155: Kling omni-video, reference-to-video, and video extension
@@ -76,13 +76,13 @@ L — ~18 existing models + 1 new model, complex param structures.
 - AC-7: Unit tests for omni-video and video-extend
 
 ### Task breakdown
-- [ ] Read omni-video SKILL.md, map native params
-- [ ] Add kling provider to all O1 video models
-- [ ] Add kling provider to all O3 video models
-- [ ] Read reference-to-video SKILL.md, add kling provider
-- [ ] Read extend-video SKILL.md, create new kling-video-extend entry
-- [ ] Write unit tests
-- [ ] Run check:types
+- [x] Read omni-video SKILL.md, map native params
+- [x] Add kling provider to all O1 video models
+- [x] Add kling provider to all O3 video models
+- [x] Read reference-to-video SKILL.md, add kling provider
+- [x] Read extend-video SKILL.md, create new kling-video-extend entry
+- [x] Write unit tests
+- [x] Run check:types
 
 ## UX — Sign-off
 
@@ -94,7 +94,7 @@ L — ~18 existing models + 1 new model, complex param structures.
 | Loading/error/empty states | N/A | |
 | Interaction feedback (hover/focus/active) | N/A | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
 
 ## Security — Sign-off
@@ -107,7 +107,7 @@ L — ~18 existing models + 1 new model, complex param structures.
 | XSS | [ ] | |
 | Security misconfiguration | [ ] | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
 
 ## QA — Sign-off
@@ -122,5 +122,5 @@ L — ~18 existing models + 1 new model, complex param structures.
 | AC-6 | [ ] | |
 | AC-7 | [ ] | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none

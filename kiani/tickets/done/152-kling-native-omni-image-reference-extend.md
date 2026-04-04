@@ -5,7 +5,7 @@ priority: P2
 complexity: L
 depends_on: ["151"]
 area: build
-status: todo
+status: done
 ---
 
 # PDD-152: Kling omni-image, reference-to-image, and extend-image
@@ -75,11 +75,11 @@ L — 1 existing model update + 2 new model entries with new endpoints.
 - AC-6: Unit tests for new models
 
 ### Task breakdown
-- [ ] Read omni-image SKILL.md, add kling provider to kling-image-o1
-- [ ] Read reference-to-image SKILL.md, create new registry entry
-- [ ] Read extend-image SKILL.md, create new registry entry
-- [ ] Write unit tests
-- [ ] Run check:types
+- [x] Read omni-image SKILL.md, add kling provider to kling-image-o1
+- [x] Read reference-to-image SKILL.md, create new registry entry
+- [x] Read extend-image SKILL.md, create new registry entry
+- [x] Write unit tests
+- [x] Run check:types
 
 ## UX — Sign-off
 
@@ -91,7 +91,7 @@ L — 1 existing model update + 2 new model entries with new endpoints.
 | Loading/error/empty states | N/A | |
 | Interaction feedback (hover/focus/active) | N/A | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
 
 ## Security — Sign-off
@@ -104,7 +104,7 @@ L — 1 existing model update + 2 new model entries with new endpoints.
 | XSS | [ ] | |
 | Security misconfiguration | [ ] | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
 
 ## QA — Sign-off
@@ -118,5 +118,5 @@ L — 1 existing model update + 2 new model entries with new endpoints.
 | AC-5 | [ ] | |
 | AC-6 | [ ] | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none

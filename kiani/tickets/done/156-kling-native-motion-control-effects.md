@@ -5,7 +5,7 @@ priority: P2
 complexity: M
 depends_on: []
 area: build
-status: todo
+status: done
 ---
 
 # PDD-156: Add native kling provider to motion control and video effects
@@ -67,11 +67,11 @@ M — ~9 models, moderate param complexity.
 - AC-4: check:types passes
 
 ### Task breakdown
-- [ ] Read motion-control SKILL.md, map native params
-- [ ] Add kling provider to all motion control models
-- [ ] Read video-effects SKILL.md, map native params
-- [ ] Add kling provider to all effects models
-- [ ] Run check:types
+- [x] Read motion-control SKILL.md, map native params
+- [x] Add kling provider to all motion control models
+- [x] Read video-effects SKILL.md, map native params
+- [x] Add kling provider to all effects models
+- [x] Run check:types
 
 ## UX — Sign-off
 
@@ -83,7 +83,7 @@ M — ~9 models, moderate param complexity.
 | Loading/error/empty states | N/A | |
 | Interaction feedback (hover/focus/active) | N/A | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
 
 ## Security — Sign-off
@@ -96,7 +96,7 @@ M — ~9 models, moderate param complexity.
 | XSS | [ ] | |
 | Security misconfiguration | [ ] | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
 
 ## QA — Sign-off
@@ -108,5 +108,5 @@ M — ~9 models, moderate param complexity.
 | AC-3 | [ ] | |
 | AC-4 | [ ] | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none

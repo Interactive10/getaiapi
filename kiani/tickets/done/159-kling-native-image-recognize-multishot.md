@@ -5,7 +5,7 @@ priority: P3
 complexity: M
 depends_on: []
 area: build
-status: todo
+status: done
 ---
 
 # PDD-159: Kling image recognize (segmentation) and AI multi-shot
@@ -71,12 +71,12 @@ M — 2 new models, but both need parseOutput consideration for non-standard out
 - AC-6: Unit tests for both models
 
 ### Task breakdown
-- [ ] Read image-recognize SKILL.md, design output mapping
-- [ ] Read ai-multi-shot SKILL.md, design output mapping
-- [ ] Extend adapter parseOutput if needed for non-standard outputs
-- [ ] Create registry entries for both models
-- [ ] Write unit tests
-- [ ] Run check:types
+- [x] Read image-recognize SKILL.md, design output mapping
+- [x] Read ai-multi-shot SKILL.md, design output mapping
+- [x] Extend adapter parseOutput if needed for non-standard outputs
+- [x] Create registry entries for both models
+- [x] Write unit tests
+- [x] Run check:types
 
 ## UX — Sign-off
 
@@ -88,7 +88,7 @@ M — 2 new models, but both need parseOutput consideration for non-standard out
 | Loading/error/empty states | N/A | |
 | Interaction feedback (hover/focus/active) | N/A | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
 
 ## Security — Sign-off
@@ -101,7 +101,7 @@ M — 2 new models, but both need parseOutput consideration for non-standard out
 | XSS | [ ] | |
 | Security misconfiguration | [ ] | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
 
 ## QA — Sign-off
@@ -115,5 +115,5 @@ M — 2 new models, but both need parseOutput consideration for non-standard out
 | AC-5 | [ ] | |
 | AC-6 | [ ] | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none

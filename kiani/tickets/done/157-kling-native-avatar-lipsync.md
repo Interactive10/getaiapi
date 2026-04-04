@@ -5,7 +5,7 @@ priority: P2
 complexity: L
 depends_on: []
 area: build
-status: todo
+status: done
 ---
 
 # PDD-157: Add native kling provider to avatar and lip-sync models
@@ -71,12 +71,12 @@ L — 4 models but lip-sync workflow needs design decision.
 - AC-6: Unit test for avatar param mapping
 
 ### Task breakdown
-- [ ] Read avatar SKILL.md, map native params
-- [ ] Add kling provider to avatar models
-- [ ] Read lip-sync SKILL.md, decide on 2-step approach
-- [ ] Implement lip-sync kling provider (per design decision)
-- [ ] Write unit tests
-- [ ] Run check:types
+- [x] Read avatar SKILL.md, map native params
+- [x] Add kling provider to avatar models
+- [x] Read lip-sync SKILL.md, decide on 2-step approach
+- [x] Implement lip-sync kling provider (per design decision)
+- [x] Write unit tests
+- [x] Run check:types
 
 ## UX — Sign-off
 
@@ -88,7 +88,7 @@ L — 4 models but lip-sync workflow needs design decision.
 | Loading/error/empty states | N/A | |
 | Interaction feedback (hover/focus/active) | N/A | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
 
 ## Security — Sign-off
@@ -101,7 +101,7 @@ L — 4 models but lip-sync workflow needs design decision.
 | XSS | [ ] | |
 | Security misconfiguration | [ ] | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
 
 ## QA — Sign-off
@@ -115,5 +115,5 @@ L — 4 models but lip-sync workflow needs design decision.
 | AC-5 | [ ] | |
 | AC-6 | [ ] | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none

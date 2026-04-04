@@ -30214,6 +30214,26 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-omni",
+        "endpoint": "v1/images/omni-image",
+        "param_map": {
+          "image": "image",
+          "prompt": "prompt",
+          "count": "n",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-image-o1"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
+          "content_type": "image/png"
+        }
       }
     ]
   },
@@ -30251,6 +30271,26 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
+          "content_type": "image/png"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-omni",
+        "endpoint": "v1/images/omni-image",
+        "param_map": {
+          "image": "image",
+          "prompt": "prompt",
+          "count": "n",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
           "content_type": "image/png"
         }
       }
@@ -30292,6 +30332,26 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-omni",
+        "endpoint": "v1/images/omni-image",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "count": "n",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
+          "content_type": "image/png"
+        }
       }
     ]
   },
@@ -30329,6 +30389,26 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
+          "content_type": "image/png"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-generation",
+        "endpoint": "v1/images/generations",
+        "param_map": {
+          "image": "image",
+          "prompt": "prompt",
+          "count": "n",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v3"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
           "content_type": "image/png"
         }
       }
@@ -30370,6 +30450,26 @@
           "extract_path": "images[].url",
           "content_type": "image/png"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image-generation",
+        "endpoint": "v1/images/generations",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "count": "n",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v3"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
+          "content_type": "image/png"
+        }
       }
     ]
   },
@@ -30405,6 +30505,23 @@
         "output_map": {
           "type": "image",
           "extract_path": "images[].url",
+          "content_type": "image/png"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-virtual-try-on",
+        "endpoint": "v1/images/kolors-virtual-try-on",
+        "param_map": {
+          "image": "human_image"
+        },
+        "defaults": {
+          "model_name": "kolors-virtual-try-on-v1-5"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
           "content_type": "image/png"
         }
       }
@@ -30483,6 +30600,25 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-avatar",
+        "endpoint": "v1/videos/avatar/image2video",
+        "param_map": {
+          "image": "image",
+          "audio": "sound_file",
+          "prompt": "prompt"
+        },
+        "defaults": {
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -30521,6 +30657,25 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-avatar",
+        "endpoint": "v1/videos/avatar/image2video",
+        "param_map": {
+          "image": "image",
+          "audio": "sound_file",
+          "prompt": "prompt"
+        },
+        "defaults": {
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -30551,6 +30706,20 @@
           "type": "text",
           "extract_path": "voice_id",
           "content_type": "text/plain"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-voice-clone",
+        "endpoint": "v1/general/custom-voices",
+        "param_map": {
+          "audio": "voice_url"
+        },
+        "output_map": {
+          "type": "audio",
+          "extract_path": "task_result.audios[].url",
+          "content_type": "audio/mpeg"
         }
       }
     ]
@@ -30588,6 +30757,20 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-lip-sync",
+        "endpoint": "v1/videos/advanced-lip-sync",
+        "param_map": {
+          "audio": "sound_file"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -30629,6 +30812,20 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-lip-sync",
+        "endpoint": "v1/videos/advanced-lip-sync",
+        "param_map": {
+          "audio": "sound_file"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -30668,6 +30865,26 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-video-o1"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -30703,6 +30920,26 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-video-o1"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -30744,6 +30981,27 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-video-o1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -30779,6 +31037,27 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-video-o1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -30819,6 +31098,26 @@
           "extract_path": "images[].url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-video-o1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -30855,6 +31154,26 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-video-o1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -30895,6 +31214,25 @@
           "extract_path": "images[].url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-video-o1"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -30931,6 +31269,25 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-video-o1"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -30971,6 +31328,27 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -31007,6 +31385,27 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -31047,6 +31446,26 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -31083,6 +31502,26 @@
         "output_map": {
           "type": "video",
           "extract_path": "images[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -31123,6 +31562,26 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -31159,6 +31618,27 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -31200,6 +31680,26 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -31236,6 +31736,26 @@
         "output_map": {
           "type": "video",
           "extract_path": "images[].url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -31276,6 +31796,26 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-omni",
+        "endpoint": "v1/videos/omni-video",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v3-omni",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -31312,6 +31852,25 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-avatar",
+        "endpoint": "v1/videos/avatar/image2video",
+        "param_map": {
+          "image": "image",
+          "audio": "sound_file",
+          "prompt": "prompt"
+        },
+        "defaults": {
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -31352,6 +31911,25 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-avatar",
+        "endpoint": "v1/videos/avatar/image2video",
+        "param_map": {
+          "image": "image",
+          "audio": "sound_file",
+          "prompt": "prompt"
+        },
+        "defaults": {
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -31388,6 +31966,20 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-effects",
+        "endpoint": "v1/videos/effects",
+        "param_map": {
+          "image": "image"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -31429,6 +32021,28 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image2video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -31467,6 +32081,27 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text2video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -31498,6 +32133,20 @@
         "output_map": {
           "type": "audio",
           "extract_path": "audio.url",
+          "content_type": "audio/mpeg"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-tts",
+        "endpoint": "v1/audio/tts",
+        "param_map": {
+          "prompt": "text"
+        },
+        "output_map": {
+          "type": "audio",
+          "extract_path": "task_result.audios[].url",
           "content_type": "audio/mpeg"
         }
       }
@@ -31538,6 +32187,20 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-effects",
+        "endpoint": "v1/videos/effects",
+        "param_map": {
+          "image": "image"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -31575,6 +32238,28 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image2video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v1-5",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -31651,6 +32336,20 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-effects",
+        "endpoint": "v1/videos/effects",
+        "param_map": {
+          "image": "image"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -31730,6 +32429,28 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image2video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v1-6",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -31768,6 +32489,27 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text2video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v1-6",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -31804,6 +32546,20 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-effects",
+        "endpoint": "v1/videos/effects",
+        "param_map": {
+          "image": "image"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -31883,6 +32639,28 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image2video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v1-6",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -31919,6 +32697,27 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text2video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v1-6",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -31960,6 +32759,27 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image2video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v2-master"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -31996,6 +32816,26 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text2video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v2-master"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -32037,6 +32877,27 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image2video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v2-1-master"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -32073,6 +32934,26 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text2video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v2-1-master"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -32114,6 +32995,28 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image2video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v2-1",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -32151,6 +33054,28 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image2video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v2-1",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -32192,6 +33117,28 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image2video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v2-5-turbo",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -32228,6 +33175,27 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text2video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v2-5-turbo",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -32269,6 +33237,28 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image2video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v2-5-turbo",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -32305,6 +33295,28 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image2video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v2-6",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -32368,6 +33380,26 @@
           "extract_path": "output[]",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-motion-control",
+        "endpoint": "v1/videos/motion-control",
+        "param_map": {
+          "image": "image_url",
+          "video": "video_url",
+          "prompt": "prompt"
+        },
+        "defaults": {
+          "model_name": "kling-v2-6",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -32404,6 +33436,27 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text2video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v2-6",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -32445,6 +33498,26 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-motion-control",
+        "endpoint": "v1/videos/motion-control",
+        "param_map": {
+          "image": "image_url",
+          "video": "video_url",
+          "prompt": "prompt"
+        },
+        "defaults": {
+          "model_name": "kling-v2-6",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -32484,6 +33557,28 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image2video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v3",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -32543,6 +33638,26 @@
           "extract_path": "output[]",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-motion-control",
+        "endpoint": "v1/videos/motion-control",
+        "param_map": {
+          "image": "image_url",
+          "video": "video_url",
+          "prompt": "prompt"
+        },
+        "defaults": {
+          "model_name": "kling-v3",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -32582,6 +33697,27 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text2video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v3",
+          "mode": "pro"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -32618,6 +33754,28 @@
         "output_map": {
           "type": "video",
           "extract_path": "video.url",
+          "content_type": "video/mp4"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-image2video",
+        "endpoint": "v1/videos/image2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio",
+          "image": "image"
+        },
+        "defaults": {
+          "model_name": "kling-v3",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
           "content_type": "video/mp4"
         }
       }
@@ -32681,6 +33839,26 @@
           "extract_path": "data.outputs[]",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-motion-control",
+        "endpoint": "v1/videos/motion-control",
+        "param_map": {
+          "image": "image_url",
+          "video": "video_url",
+          "prompt": "prompt"
+        },
+        "defaults": {
+          "model_name": "kling-v3",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -32719,6 +33897,27 @@
           "extract_path": "video.url",
           "content_type": "video/mp4"
         }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text2video",
+        "endpoint": "v1/videos/text2video",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt",
+          "duration": "duration",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v3",
+          "mode": "std"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
       }
     ]
   },
@@ -32748,6 +33947,20 @@
         "output_map": {
           "type": "audio",
           "extract_path": "audio.url",
+          "content_type": "audio/mpeg"
+        }
+      },
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-to-audio",
+        "endpoint": "v1/audio/video-to-audio",
+        "param_map": {
+          "video": "video_url"
+        },
+        "output_map": {
+          "type": "audio",
+          "extract_path": "task_result.audios[].url",
           "content_type": "audio/mpeg"
         }
       }
@@ -71111,6 +72324,236 @@
           "type": "text",
           "extract_path": "choices[0].message.content",
           "content_type": "text/plain"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "kling-reference-to-image",
+    "aliases": [
+      "kling-reference-to-image",
+      "kling-multi-image2image"
+    ],
+    "modality": {
+      "inputs": [
+        "image",
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-reference-to-image",
+        "endpoint": "v1/images/multi-image2image",
+        "param_map": {
+          "prompt": "prompt",
+          "count": "n",
+          "aspect_ratio": "aspect_ratio"
+        },
+        "defaults": {
+          "model_name": "kling-v2-1"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "kling-extend-image",
+    "aliases": [
+      "kling-extend-image",
+      "kling-image-expand",
+      "kling-outpaint"
+    ],
+    "modality": {
+      "inputs": [
+        "image",
+        "text"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-extend-image",
+        "endpoint": "v1/images/editing/expand",
+        "param_map": {
+          "image": "image",
+          "prompt": "prompt",
+          "count": "n"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "kling-video-extend",
+    "aliases": [
+      "kling-video-extend",
+      "kling-video-extension"
+    ],
+    "modality": {
+      "inputs": [
+        "video",
+        "text"
+      ],
+      "outputs": [
+        "video"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-video-extend",
+        "endpoint": "v1/videos/video-extend",
+        "param_map": {
+          "prompt": "prompt",
+          "negative_prompt": "negative_prompt"
+        },
+        "output_map": {
+          "type": "video",
+          "extract_path": "task_result.videos[].url",
+          "content_type": "video/mp4"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "kling-identify-face",
+    "aliases": [
+      "kling-identify-face",
+      "kling-face-detection"
+    ],
+    "modality": {
+      "inputs": [
+        "video"
+      ],
+      "outputs": [
+        "text"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-identify-face",
+        "endpoint": "v1/videos/identify-face",
+        "param_map": {
+          "video": "video_url"
+        },
+        "output_map": {
+          "type": "text",
+          "extract_path": "face_data",
+          "content_type": "application/json"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "kling-text-to-audio",
+    "aliases": [
+      "kling-text-to-audio",
+      "kling-sound-generation"
+    ],
+    "modality": {
+      "inputs": [
+        "text"
+      ],
+      "outputs": [
+        "audio"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "kling",
+        "auth_env": "KLING_ACCESS_KEY",
+        "skill_id": "kling-text-to-audio",
+        "endpoint": "v1/audio/text-to-audio",
+        "param_map": {
+          "prompt": "prompt",
+          "duration": "duration"
+        },
+        "output_map": {
+          "type": "audio",
+          "extract_path": "task_result.audios[].url",
+          "content_type": "audio/mpeg"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "kling-image-recognize",
+    "aliases": [
+      "kling-image-recognize",
+      "kling-segmentation"
+    ],
+    "modality": {
+      "inputs": [
+        "image"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "kling",
+        "skill_id": "kling-image-recognize",
+        "endpoint": "v1/videos/image-recognize",
+        "auth_env": "KLING_ACCESS_KEY",
+        "param_map": {
+          "image": "image"
+        },
+        "output_map": {
+          "type": "segmentation",
+          "extract_path": "task_result.images[].url",
+          "content_type": "image/png"
+        }
+      }
+    ]
+  },
+  {
+    "canonical_name": "kling-ai-multi-shot",
+    "aliases": [
+      "kling-ai-multi-shot",
+      "kling-multi-angle"
+    ],
+    "modality": {
+      "inputs": [
+        "image"
+      ],
+      "outputs": [
+        "image"
+      ]
+    },
+    "providers": [
+      {
+        "provider": "kling",
+        "skill_id": "kling-ai-multi-shot",
+        "endpoint": "v1/general/ai-multi-shot",
+        "auth_env": "KLING_ACCESS_KEY",
+        "param_map": {
+          "image": "element_frontal_image"
+        },
+        "output_map": {
+          "type": "image",
+          "extract_path": "task_result.images[].url_1",
+          "content_type": "image/png"
         }
       }
     ]

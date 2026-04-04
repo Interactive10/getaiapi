@@ -6,6 +6,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-04-04
+
+### Added
+
+- **Native Kling provider bindings**: 62 existing kling models now have a direct `provider: "kling"` entry alongside their fal-ai/replicate bindings. Users with `KLING_ACCESS_KEY` can bypass third-party providers and call the Kling API directly.
+- **7 new kling-only models**: `kling-reference-to-image` (multi-subject image gen), `kling-extend-image` (outpainting), `kling-video-extend` (video continuation), `kling-identify-face` (face detection for lip-sync), `kling-text-to-audio` (sound effect generation), `kling-image-recognize` (segmentation masks), `kling-ai-multi-shot` (multi-angle reference images).
+- **`defaults` field on provider bindings**: New registry mechanism for hardcoding provider-specific values (e.g., `model_name`, `mode`) per model variant without polluting `param_map`. Applied via `mapInput()` as fallback values that users can override via `options`.
+- **Unit tests for native kling param mapping**: Validates defaults injection, phantom param exclusion, and `task_result.*[].url` output extraction paths.
+
 ## [1.2.0] - 2026-04-03
 
 ### Added

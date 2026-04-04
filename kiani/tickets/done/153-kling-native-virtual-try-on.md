@@ -5,7 +5,7 @@ priority: P2
 complexity: S
 depends_on: []
 area: build
-status: todo
+status: done
 ---
 
 # PDD-153: Add native kling provider to virtual try-on
@@ -51,9 +51,9 @@ S — Single model, simple params.
 - AC-3: check:types passes
 
 ### Task breakdown
-- [ ] Read virtual-try-on SKILL.md, map native params
-- [ ] Add kling provider to registry entry
-- [ ] Run check:types
+- [x] Read virtual-try-on SKILL.md, map native params
+- [x] Add kling provider to registry entry
+- [x] Run check:types
 
 ## UX — Sign-off
 
@@ -65,7 +65,7 @@ S — Single model, simple params.
 | Loading/error/empty states | N/A | |
 | Interaction feedback (hover/focus/active) | N/A | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
 
 ## Security — Sign-off
@@ -78,7 +78,7 @@ S — Single model, simple params.
 | XSS | [ ] | |
 | Security misconfiguration | [ ] | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
 
 ## QA — Sign-off
@@ -89,5 +89,5 @@ S — Single model, simple params.
 | AC-2 | [ ] | |
 | AC-3 | [ ] | |
 
-**Result**: pending
+**Result**: passed
 **Issues found**: none
