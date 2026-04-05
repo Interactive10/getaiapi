@@ -5,7 +5,7 @@ priority: P2
 complexity: M
 depends_on: []
 area: build
-status: todo
+status: done
 ---
 
 # PDD-161: Kling element library management

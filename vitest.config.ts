@@ -2,11 +2,11 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    dir: "tests",
+    include: ["deprecated/tests/**/*.test.ts", "src/**/*.test.ts"],
     passWithNoTests: true,
     coverage: {
-      include: ["src/**/*.ts"],
-      exclude: ["src/types.ts", "src/adapters/base.ts"],
+      include: ["deprecated/src/**/*.ts", "src/**/*.ts"],
+      exclude: ["deprecated/src/types.ts", "deprecated/src/adapters/base.ts"],
     },
   },
 });

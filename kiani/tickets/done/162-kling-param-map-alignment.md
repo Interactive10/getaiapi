@@ -5,6 +5,7 @@ priority: P1
 complexity: L
 depends_on: []
 area: build
+status: done
 ---
 
 # PDD-162: Align kling native param_map with fal-ai canonical names

@@ -5,4 +5,4 @@ Loaded into your system prompt automatically at session start is context about w
 ## How to Use
 
 - Review for relevant patterns
-- Always end the session by rewriting `.kiani/primer.md` with a summary of what was completed (tasks, bugs, changes, decisions). Keep it under 100 lines.
+- Always end the session by rewriting `kiani/primer.md` with a summary of what was completed (tasks, bugs, changes, decisions). Keep it under 100 lines.

@@ -1,5 +1,11 @@
 # Ticket Board
 
+> **DEPRECATED — DO NOT CREATE OR REOPEN TICKETS HERE.**
+> All tickets (001–162) belong to the deprecated v1 codebase and have been closed.
+> The v1 source has been moved to `deprecated/`. Do not pick up, reopen, or
+> reference these tickets for new work. New tickets for the v2 rewrite should
+> use a fresh numbering scheme starting from 200.
+
 ## Board
 
 ```

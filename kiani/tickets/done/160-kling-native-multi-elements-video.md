@@ -5,7 +5,7 @@ priority: P3
 complexity: XL
 depends_on: ["154"]
 area: build
-status: todo
+status: done
 ---
 
 # PDD-160: Kling multi-elements video editing (6-step workflow)

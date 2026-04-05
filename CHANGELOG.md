@@ -6,6 +6,28 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-04-05
+
+### Added
+
+- **v2 Kling provider**: Self-contained Kling module at `src/providers/kling.ts` with 69 typed functions — one per model variant. No registry, no mapping layer, no generic `generate()`. Each function uses Kling-native field names and bakes in its endpoint + defaults.
+- **20 typed input interfaces**: `TextToVideoInput`, `ImageToVideoInput`, `OmniVideoInput`, `ImageGenerationInput`, `OmniImageInput`, `VirtualTryOnInput`, `AvatarInput`, `LipSyncInput`, `EffectsInput`, `MotionControlInput`, `TtsInput`, `VideoToAudioInput`, `TextToAudioInput`, `CreateVoiceInput`, `MultiShotInput`, `ReferenceToImageInput`, `ExpandImageInput`, `ExtendVideoInput`, `IdentifyFaceInput`, `ImageRecognizeInput`.
+- **4 typed output interfaces**: `KlingVideoResult`, `KlingImageResult`, `KlingAudioResult`, `KlingJsonResult`.
+- **Kling-specific error hierarchy**: `KlingError` base with `KlingAuthError`, `KlingRateLimitError`, `KlingApiError`, `KlingTimeoutError`, `KlingTaskFailedError`.
+- **Built-in submit + poll**: Each function handles the full async lifecycle internally with configurable `timeout` and `pollInterval`. Sync endpoints (`tts`, `imageRecognize`) return immediately.
+- **JWT auth**: HS256 JWT generation, configurable via `kling.configure()` or `KLING_ACCESS_KEY` + `KLING_SECRET_KEY` env vars.
+- **Base64 data URI cleaning**: Automatically strips `data:` prefixes from base64 strings (Kling requires raw base64).
+- **20 unit tests**: Covers all endpoint types, auth, error handling, polling, sync endpoints, and output extraction.
+
+### Deprecated
+
+- **v1 unified gateway**: `generate()`, `submit()`, `poll()`, `submitAndPoll()`, `listModels()`, `resolveModel()`, `configure()`, `configureAuth()`, and all multi-provider registry abstractions are deprecated. They remain exported for backward compatibility but will be removed in v3.
+
+### Changed
+
+- **README rewritten**: Documents the new provider-first architecture with all 69 Kling functions, typed inputs/outputs, and usage examples.
+- **vitest config**: Now includes `src/**/*.test.ts` alongside `deprecated/tests/**/*.test.ts`.
+
 ## [1.3.1] - 2026-04-04
 
 ### Fixed

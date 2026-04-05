@@ -1,24 +1,57 @@
-// Public API — Modality-First Architecture
+// ── v2 Providers ─────────────────────────────────────────────────────────────
+export { kling, createClient, KlingClient } from './providers/kling/index.js'
+export type {
+  TextToVideoInput, ImageToVideoInput, OmniVideoInput,
+  ImageGenerationInput, OmniImageInput, VirtualTryOnInput,
+  AvatarInput, LipSyncInput, EffectsInput, MotionControlInput,
+  TtsInput, VideoToAudioInput, TextToAudioInput, CreateVoiceInput,
+  MultiShotInput, ReferenceToImageInput, ExpandImageInput,
+  ExtendVideoInput, IdentifyFaceInput, ImageRecognizeInput,
+  ReferenceToVideoInput,
+  KlingVideoResult, KlingImageResult, KlingAudioResult, KlingJsonResult,
+  KlingConfig,
+} from './providers/kling/index.js'
+export {
+  KlingError, KlingAuthError, KlingRateLimitError,
+  KlingApiError, KlingTimeoutError, KlingTaskFailedError,
+  generateJwt,
+} from './providers/kling/index.js'
 
-// Generation
-export { generate, submit, poll, submitAndPoll } from './gateway.js'
+/**
+ * @deprecated All exports below are from the deprecated v1 library.
+ * New code should not import from this module.
+ */
+export {
+  generate,
+  submit,
+  poll,
+  submitAndPoll,
+  configure,
+  configureAuth,
+  configureFetch,
+  listModels,
+  deriveCategory,
+  resolveModel,
+  loadRegistry,
+  clearRegistryCache,
+  mapInput,
+  mapOutput,
+  configureStorage,
+  uploadAsset,
+  deleteAsset,
+  presignAsset,
+  klingAdapter,
+  GetAIApiError,
+  AuthError,
+  ModelNotFoundError,
+  NoProviderError,
+  ValidationError,
+  ProviderError,
+  TimeoutError,
+  RateLimitError,
+  StorageError,
+} from '../deprecated/src/index.js'
 
-// Configuration
-export { configure } from './configure.js'
-export { configureAuth } from './auth.js'
-export { configureFetch } from './fetch.js'
-
-// Discovery
-export { listModels, deriveCategory } from './discovery.js'
-export { resolveModel, loadRegistry, clearRegistryCache } from './registry.js'
-
-// Mapper (advanced use)
-export { mapInput, mapOutput } from './mapper.js'
-
-// Storage
-export { configureStorage, uploadAsset, deleteAsset, presignAsset } from './storage.js'
-
-// Types
 export type {
   ModelEntry,
   ProviderBinding,
@@ -45,20 +78,4 @@ export type {
   FetchLogEntry,
   LogFn,
   FetchOptions,
-} from './types.js'
-
-// Adapters
-export { klingAdapter } from './adapters/kling.js'
-
-// Errors
-export {
-  GetAIApiError,
-  AuthError,
-  ModelNotFoundError,
-  NoProviderError,
-  ValidationError,
-  ProviderError,
-  TimeoutError,
-  RateLimitError,
-  StorageError,
-} from './errors.js'
+} from '../deprecated/src/index.js'
