@@ -270,10 +270,26 @@ describe('kling', () => {
   })
 
   describe('videoToAudio', () => {
-    it('submits and polls for audio result', async () => {
+    it('returns both videos and audios with url_mp3/url_wav fields', async () => {
       mockFetch([
         submitResponse('task-5'),
-        pollSucceedAudioResponse('task-5'),
+        {
+          body: {
+            code: 0,
+            message: 'Success',
+            request_id: 'req-3',
+            data: {
+              task_id: 'task-5',
+              task_status: 'succeed',
+              task_result: {
+                videos: [{ id: 'vid-1', url: 'https://cdn.kling.ai/merged.mp4', duration: '10.0' }],
+                audios: [{ id: 'aud-1', url_mp3: 'https://cdn.kling.ai/a.mp3', url_wav: 'https://cdn.kling.ai/a.wav', duration_mp3: '10.0', duration_wav: '10.0' }],
+              },
+              created_at: 0,
+              updated_at: 0,
+            },
+          },
+        },
       ])
 
       const result = await kling.videoToAudio({
@@ -283,7 +299,83 @@ describe('kling', () => {
       })
 
       expect(result.task_id).toBe('task-5')
+      expect(result.videos).toHaveLength(1)
+      expect(result.videos[0].url).toBe('https://cdn.kling.ai/merged.mp4')
       expect(result.audios).toHaveLength(1)
+      expect(result.audios[0].url_mp3).toBe('https://cdn.kling.ai/a.mp3')
+      expect(result.audios[0].url_wav).toBe('https://cdn.kling.ai/a.wav')
+    })
+  })
+
+  describe('textToAudio', () => {
+    it('normalizes url_mp3/url_wav into url', async () => {
+      mockFetch([
+        submitResponse('task-ta'),
+        {
+          body: {
+            code: 0,
+            message: 'Success',
+            request_id: 'req-3',
+            data: {
+              task_id: 'task-ta',
+              task_status: 'succeed',
+              task_result: {
+                audios: [{ id: 'aud-1', url_mp3: 'https://cdn.kling.ai/t.mp3', url_wav: 'https://cdn.kling.ai/t.wav', duration_mp3: '5.0', duration_wav: '5.0' }],
+              },
+              created_at: 0,
+              updated_at: 0,
+            },
+          },
+        },
+      ])
+
+      const result = await kling.textToAudio({
+        prompt: 'thunder storm',
+        duration: 5.0,
+        pollInterval: 10,
+      })
+
+      expect(result.task_id).toBe('task-ta')
+      expect(result.audios).toHaveLength(1)
+      expect(result.audios[0].url).toBe('https://cdn.kling.ai/t.mp3')
+      expect(result.audios[0].url_mp3).toBe('https://cdn.kling.ai/t.mp3')
+      expect(result.audios[0].url_wav).toBe('https://cdn.kling.ai/t.wav')
+    })
+  })
+
+  describe('createVoice', () => {
+    it('reads voices array not audios', async () => {
+      mockFetch([
+        submitResponse('task-cv'),
+        {
+          body: {
+            code: 0,
+            message: 'Success',
+            request_id: 'req-3',
+            data: {
+              task_id: 'task-cv',
+              task_status: 'succeed',
+              task_result: {
+                voices: [{ voice_id: 'v-1', voice_name: 'custom', trial_url: 'https://cdn.kling.ai/trial.mp3', owned_by: 'kling' }],
+              },
+              created_at: 0,
+              updated_at: 0,
+            },
+          },
+        },
+      ])
+
+      const result = await kling.createVoice({
+        voice_name: 'custom',
+        voice_url: 'https://example.com/sample.mp3',
+        pollInterval: 10,
+      })
+
+      expect(result.task_id).toBe('task-cv')
+      expect(result.voices).toHaveLength(1)
+      expect(result.voices[0].voice_id).toBe('v-1')
+      expect(result.voices[0].voice_name).toBe('custom')
+      expect(result.voices[0].trial_url).toBe('https://cdn.kling.ai/trial.mp3')
     })
   })
 

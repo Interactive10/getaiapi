@@ -343,19 +343,28 @@ console.log(result.audios[0].url)
 
 ### Video to Audio
 
+Generates audio for a video. Returns both the merged video and the generated audio tracks.
+
 ```typescript
 const result = await kling.videoToAudio({
   video_url: 'https://example.com/video.mp4',
   sound_effect_prompt: 'ocean waves crashing',
 })
+
+console.log(result.videos[0].url)       // merged video with audio
+console.log(result.audios[0].url_mp3)   // audio track (mp3)
+console.log(result.audios[0].url_wav)   // audio track (wav)
 ```
 
 **Input: `VideoToAudioInput`**
 
 ```typescript
 {
-  video_url: string           // required
+  video_url?: string          // mutually exclusive with video_id
+  video_id?: string           // mutually exclusive with video_url
   sound_effect_prompt?: string
+  bgm_prompt?: string         // background music prompt
+  asmr_mode?: boolean         // enhanced detailed sound effects
 }
 ```
 
@@ -364,8 +373,12 @@ const result = await kling.videoToAudio({
 ```typescript
 const result = await kling.textToAudio({
   prompt: 'thunderstorm with heavy rain',
-  duration: '10',
+  duration: 5.0,
 })
+
+console.log(result.audios[0].url)       // normalized from url_mp3
+console.log(result.audios[0].url_mp3)   // mp3 URL
+console.log(result.audios[0].url_wav)   // wav URL
 ```
 
 **Input: `TextToAudioInput`**
@@ -373,7 +386,7 @@ const result = await kling.textToAudio({
 ```typescript
 {
   prompt: string              // required
-  duration?: string
+  duration: number            // required — 3.0 to 10.0
 }
 ```
 
@@ -381,26 +394,36 @@ const result = await kling.textToAudio({
 
 ```typescript
 const result = await kling.createVoice({
+  voice_name: 'my-voice',
   voice_url: 'https://example.com/sample.mp3',
 })
+
+console.log(result.voices[0].voice_id)
+console.log(result.voices[0].trial_url)
 ```
 
 **Input: `CreateVoiceInput`**
 
 ```typescript
 {
-  voice_url: string           // required
+  voice_name: string          // required
+  voice_url?: string          // audio sample URL
+  video_id?: string           // or extract from video
 }
 ```
 
 ### Multi-Shot
 
-Generate multi-angle reference images from a frontal image.
+Generate multi-angle reference images from a frontal image. Each image returns 3 angle variants.
 
 ```typescript
 const result = await kling.multiShot({
   element_frontal_image: 'https://example.com/face.jpg',
 })
+
+console.log(result.images[0].url_1)  // angle 1
+console.log(result.images[0].url_2)  // angle 2
+console.log(result.images[0].url_3)  // angle 3
 ```
 
 **Input: `MultiShotInput`**
@@ -470,22 +493,27 @@ const result = await kling.extendVideo({
 }
 ```
 
-### Identify Face
+### Identify Face (Sync)
 
-Detect faces in a video for lip-sync targeting.
+Detect faces in a video for lip-sync targeting. Returns immediately — no polling.
 
 ```typescript
 const result = await kling.identifyFace({
   video_url: 'https://example.com/video.mp4',
 })
-// result.data contains face_list with face_id values
+
+console.log(result.session_id)
+result.face_data.forEach(face => {
+  console.log(face.face_id, face.face_image, face.start_time, face.end_time)
+})
 ```
 
 **Input: `IdentifyFaceInput`**
 
 ```typescript
 {
-  video_url: string           // required
+  video_url?: string          // mutually exclusive with video_id
+  video_id?: string           // mutually exclusive with video_url
 }
 ```
 
@@ -512,25 +540,50 @@ const result = await kling.imageRecognize({
 All functions return typed results based on output modality:
 
 ```typescript
-// Video endpoints
+// Video endpoints (textToVideo, imageToVideo, omniVideo, avatar, lipSync, effects, motionControl, extendVideo)
 interface KlingVideoResult {
   task_id: string
   videos: Array<{ id: string; url: string; duration: string }>
 }
 
-// Image endpoints
+// Image endpoints (imageGeneration, omniImage, virtualTryOn, referenceToImage, expandImage)
 interface KlingImageResult {
   task_id: string
   images: Array<{ index: number; url: string }>
 }
 
-// Audio endpoints
+// Audio endpoints (tts, textToAudio)
 interface KlingAudioResult {
   task_id: string
-  audios: Array<{ id: string; url: string; duration?: string }>
+  audios: Array<{ id: string; url: string; url_mp3?: string; url_wav?: string; duration?: string; duration_mp3?: string; duration_wav?: string }>
 }
 
-// JSON endpoints (identifyFace, imageRecognize)
+// Multi-shot endpoint — 3 angle URLs per image
+interface KlingMultiShotResult {
+  task_id: string
+  images: Array<{ index: number; url_1: string; url_2: string; url_3: string }>
+}
+
+// Voice clone endpoint
+interface KlingVoiceResult {
+  task_id: string
+  voices: Array<{ voice_id: string; voice_name: string; trial_url: string; owned_by: string }>
+}
+
+// Video-to-audio endpoint — merged video + generated audio
+interface KlingVideoAudioResult {
+  task_id: string
+  videos: Array<{ id: string; url: string; duration: string }>
+  audios: Array<{ id: string; url_mp3?: string; url_wav?: string; duration_mp3?: string; duration_wav?: string }>
+}
+
+// Face detection (identifyFace) — sync, no task_id
+interface KlingFaceResult {
+  session_id: string
+  face_data: Array<{ face_id: string; face_image: string; start_time: number; end_time: number }>
+}
+
+// Generic JSON (imageRecognize)
 interface KlingJsonResult {
   task_id: string
   data: unknown
@@ -549,7 +602,7 @@ await kling.textToVideoV3Pro({
 })
 ```
 
-Sync endpoints (`tts`, `imageRecognize`) return immediately regardless of these settings.
+Sync endpoints (`tts`, `imageRecognize`, `identifyFace`) return immediately regardless of these settings.
 
 ## Extra Parameters
 

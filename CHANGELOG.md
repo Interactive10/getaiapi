@@ -10,14 +10,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- **v2 Kling provider**: Self-contained Kling module at `src/providers/kling.ts` with 69 typed functions — one per model variant. No registry, no mapping layer, no generic `generate()`. Each function uses Kling-native field names and bakes in its endpoint + defaults.
+- **v2 Kling provider**: Self-contained Kling module at `src/providers/kling/` with 69 typed functions — one per model variant. No registry, no mapping layer, no generic `generate()`. Each function uses Kling-native field names and bakes in its endpoint + defaults.
 - **20 typed input interfaces**: `TextToVideoInput`, `ImageToVideoInput`, `OmniVideoInput`, `ImageGenerationInput`, `OmniImageInput`, `VirtualTryOnInput`, `AvatarInput`, `LipSyncInput`, `EffectsInput`, `MotionControlInput`, `TtsInput`, `VideoToAudioInput`, `TextToAudioInput`, `CreateVoiceInput`, `MultiShotInput`, `ReferenceToImageInput`, `ExpandImageInput`, `ExtendVideoInput`, `IdentifyFaceInput`, `ImageRecognizeInput`.
-- **4 typed output interfaces**: `KlingVideoResult`, `KlingImageResult`, `KlingAudioResult`, `KlingJsonResult`.
+- **8 typed output interfaces**: `KlingVideoResult`, `KlingImageResult`, `KlingAudioResult`, `KlingJsonResult`, `KlingFaceResult`, `KlingMultiShotResult`, `KlingVoiceResult`, `KlingVideoAudioResult`.
 - **Kling-specific error hierarchy**: `KlingError` base with `KlingAuthError`, `KlingRateLimitError`, `KlingApiError`, `KlingTimeoutError`, `KlingTaskFailedError`.
-- **Built-in submit + poll**: Each function handles the full async lifecycle internally with configurable `timeout` and `pollInterval`. Sync endpoints (`tts`, `imageRecognize`) return immediately.
+- **Built-in submit + poll**: Each function handles the full async lifecycle internally with configurable `timeout` and `pollInterval`. Sync endpoints (`tts`, `imageRecognize`, `identifyFace`) return immediately.
 - **JWT auth**: HS256 JWT generation, configurable via `kling.configure()` or `KLING_ACCESS_KEY` + `KLING_SECRET_KEY` env vars.
 - **Base64 data URI cleaning**: Automatically strips `data:` prefixes from base64 strings (Kling requires raw base64).
-- **20 unit tests**: Covers all endpoint types, auth, error handling, polling, sync endpoints, and output extraction.
+- **Dedicated extractors**: `extractFace` (sync face detection), `extractMultiShot` (url_1/url_2/url_3), `extractVoices` (voice clone), `extractVideoAudio` (merged video + audio). `extractAudios` normalizes `url_mp3`/`url_wav` → `url` for endpoints that use variant field names.
+- **27 unit tests**: Covers all endpoint types, auth, error handling, polling, sync endpoints, and output extraction.
 
 ### Deprecated
 
