@@ -920,7 +920,7 @@ describe('kling', () => {
           body: { code: 0, message: 'Success', request_id: 'r', data: { tasks: [{ task_id: 't1' }] } },
         }])
 
-        const result = await (kling as Record<string, (p?: unknown) => Promise<{ tasks: unknown[] }>>)[fn]({ pageNum: 1, pageSize: 5 })
+        const result = await (kling as unknown as Record<string, (p?: unknown) => Promise<{ tasks: unknown[] }>>)[fn]({ pageNum: 1, pageSize: 5 })
         expect(result.tasks).toHaveLength(1)
         const url = fetchSpy.mock.calls[0][0] as string
         expect(url).toContain(endpoint)

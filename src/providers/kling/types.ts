@@ -39,7 +39,7 @@ export interface ImageToVideoInput extends PollOptions {
   sound?: 'on' | 'off'
   image_tail?: string
   voice_list?: Array<{ voice_id: string }>
-  element_list?: Array<{ id: string; image: string }>
+  element_list?: Array<{ element_id: number }>
   options?: Record<string, unknown>
 }
 
@@ -51,7 +51,7 @@ export interface OmniVideoInput extends PollOptions {
   aspect_ratio?: string
   cfg_scale?: number
   sound?: 'on' | 'off'
-  element_list?: Array<{ id: string; image: string }>
+  element_list?: Array<{ element_id: number }>
   options?: Record<string, unknown>
 }
 
@@ -111,7 +111,7 @@ export interface MotionControlInput extends PollOptions {
   prompt?: string
   keep_original_sound?: 'yes' | 'no'
   character_orientation?: string
-  element_list?: Array<{ id: string; image: string }>
+  element_list?: Array<{ element_id: number }>
   options?: Record<string, unknown>
 }
 
