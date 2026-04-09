@@ -1,7 +1,18 @@
-import type { KlingConfig, KlingApiResponse, PollOptions, AccountCostsInput, AccountCostsResult } from './types.js'
+import type {
+  KlingConfig, KlingApiResponse, PollOptions,
+  AccountCostsInput, AccountCostsResult,
+  ElementListInput, ElementListResult, DeleteElementInput, ElementResult,
+  KlingListParams, KlingVoiceListResult, KlingTaskListResult,
+  KlingVoiceResult,
+  MultiElementsInitInput, MultiElementsInitResult,
+  MultiElementsAddSelectionInput, MultiElementsSelectionResult,
+  MultiElementsDeleteSelectionInput, MultiElementsClearSelectionInput,
+  MultiElementsPreviewInput, MultiElementsPreviewResult,
+} from './types.js'
 import { KlingAuthError, KlingRateLimitError, KlingApiError, KlingTimeoutError, KlingTaskFailedError } from './errors.js'
 import { buildAuthHeaders } from './auth.js'
 import type { Extractor } from './extract.js'
+import { extractVoices, extractElement } from './extract.js'
 
 const API_BASE = 'https://api-singapore.klingai.com'
 const DEFAULT_FETCH_TIMEOUT_MS = 30_000
@@ -152,6 +163,119 @@ export class KlingClient {
     return {
       resource_pack_subscribe_infos: (data.resource_pack_subscribe_infos ?? []) as AccountCostsResult['resource_pack_subscribe_infos'],
     }
+  }
+
+  async elementList(input: ElementListInput): Promise<ElementListResult> {
+    const params: Record<string, string> = {}
+    if (input.pageNum !== undefined) params.pageNum = String(input.pageNum)
+    if (input.pageSize !== undefined) params.pageSize = String(input.pageSize)
+    const json = await this.httpGet('v1/general/advanced-custom-elements', params)
+    const data = json.data as Record<string, unknown>
+    // Assumption: list response uses data.elements — verify key name against live API
+    return { elements: (data.elements ?? []) as ElementListResult['elements'] }
+  }
+
+  async presetElementList(): Promise<ElementListResult> {
+    const json = await this.httpGet('v1/general/advanced-presets-elements', {})
+    const data = json.data as Record<string, unknown>
+    // Assumption: list response uses data.elements — verify key name against live API
+    return { elements: (data.elements ?? []) as ElementListResult['elements'] }
+  }
+
+  async deleteElement(input: DeleteElementInput): Promise<void> {
+    await this.httpSubmit('v1/general/delete-elements', { element_id: input.element_id })
+  }
+
+  // ── Task list / single-task query helpers ─────────────────────────────────
+
+  /** GET a paginated task list from any endpoint. */
+  async taskList(endpoint: string, params: KlingListParams = {}): Promise<KlingTaskListResult> {
+    const p: Record<string, string> = {}
+    if (params.pageNum !== undefined) p.pageNum = String(params.pageNum)
+    if (params.pageSize !== undefined) p.pageSize = String(params.pageSize)
+    const json = await this.httpGet(endpoint, p)
+    const data = json.data as Record<string, unknown>
+    return { tasks: (data.tasks ?? []) as KlingTaskListResult['tasks'] }
+  }
+
+  /** GET a single task by ID from any endpoint and run it through an extractor. */
+  async taskGet<T>(endpoint: string, taskId: string, extractor: Extractor<T>): Promise<T> {
+    const json = await this.httpPoll(endpoint, taskId)
+    return extractor(json.data)
+  }
+
+  // ── Voice management ──────────────────────────────────────────────────────
+
+  async listVoices(params: KlingListParams = {}): Promise<KlingVoiceListResult> {
+    const p: Record<string, string> = {}
+    if (params.pageNum !== undefined) p.pageNum = String(params.pageNum)
+    if (params.pageSize !== undefined) p.pageSize = String(params.pageSize)
+    const json = await this.httpGet('v1/general/custom-voices', p)
+    const data = json.data as Record<string, unknown>
+    return { voices: (data.voices ?? []) as KlingVoiceListResult['voices'] }
+  }
+
+  async listPresetVoices(params: KlingListParams = {}): Promise<KlingVoiceListResult> {
+    const p: Record<string, string> = {}
+    if (params.pageNum !== undefined) p.pageNum = String(params.pageNum)
+    if (params.pageSize !== undefined) p.pageSize = String(params.pageSize)
+    const json = await this.httpGet('v1/general/presets-voices', p)
+    const data = json.data as Record<string, unknown>
+    return { voices: (data.voices ?? []) as KlingVoiceListResult['voices'] }
+  }
+
+  async queryVoice(taskId: string): Promise<KlingVoiceResult> {
+    const json = await this.httpPoll('v1/general/custom-voices', taskId)
+    return extractVoices(json.data)
+  }
+
+  async deleteVoice(voiceId: string): Promise<void> {
+    await this.httpSubmit('v1/general/delete-voices', { voice_id: voiceId })
+  }
+
+  // ── Element single-task query ─────────────────────────────────────────────
+
+  async getElement(taskId: string): Promise<ElementResult> {
+    const json = await this.httpPoll('v1/general/advanced-custom-elements', taskId)
+    return extractElement(json.data)
+  }
+
+  // ── Multi-elements video workflow ─────────────────────────────────────────
+
+  async initMultiElementsSelection(input: MultiElementsInitInput): Promise<MultiElementsInitResult> {
+    const body: Record<string, unknown> = {}
+    if (input.video_id !== undefined) body.video_id = input.video_id
+    if (input.video_url !== undefined) body.video_url = input.video_url
+    const json = await this.httpSubmit('v1/videos/multi-elements/init-selection', body)
+    return json.data as unknown as MultiElementsInitResult
+  }
+
+  async addSelectionArea(input: MultiElementsAddSelectionInput): Promise<MultiElementsSelectionResult> {
+    const json = await this.httpSubmit('v1/videos/multi-elements/add-selection', input as unknown as Record<string, unknown>)
+    return json.data as unknown as MultiElementsSelectionResult
+  }
+
+  async deleteSelectionArea(input: MultiElementsDeleteSelectionInput): Promise<MultiElementsSelectionResult> {
+    const json = await this.httpSubmit('v1/videos/multi-elements/delete-selection', input as unknown as Record<string, unknown>)
+    return json.data as unknown as MultiElementsSelectionResult
+  }
+
+  async clearSelectionArea(input: MultiElementsClearSelectionInput): Promise<void> {
+    await this.httpSubmit('v1/videos/multi-elements/clear-selection', { session_id: input.session_id })
+  }
+
+  async previewSelection(input: MultiElementsPreviewInput): Promise<MultiElementsPreviewResult> {
+    const json = await this.httpSubmit('v1/videos/multi-elements/preview-selection', { session_id: input.session_id })
+    return json.data as unknown as MultiElementsPreviewResult
+  }
+
+  async queryMultiElementsTask(taskId: string): Promise<KlingTaskListResult['tasks'][0]> {
+    const json = await this.httpPoll('v1/videos/multi-elements', taskId)
+    return json.data
+  }
+
+  async listMultiElementsTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+    return this.taskList('v1/videos/multi-elements', params)
   }
 
   // ── Execute ──────────────────────────────────────────────────────────────

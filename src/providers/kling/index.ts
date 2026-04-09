@@ -11,8 +11,15 @@ export type {
   MultiShotInput, ReferenceToImageInput, ExpandImageInput,
   ExtendVideoInput, IdentifyFaceInput, ImageRecognizeInput,
   ReferenceToVideoInput, AccountCostsInput, AccountCostsResult, ResourcePackInfo,
+  CreateElementInput, ElementResult, ElementListInput, ElementListResult, DeleteElementInput, ElementTag,
   KlingVideoResult, KlingImageResult, KlingAudioResult, KlingJsonResult,
   KlingFaceResult, KlingMultiShotResult, KlingVoiceResult, KlingVideoAudioResult,
+  KlingListParams, KlingVoiceListResult, KlingTaskListResult, VoiceInfo,
+  MultiElementsInitInput, MultiElementsInitResult, MultiElementsPoint,
+  MultiElementsAddSelectionInput, MultiElementsSelectionResult,
+  MultiElementsDeleteSelectionInput, MultiElementsClearSelectionInput,
+  MultiElementsPreviewInput, MultiElementsPreviewResult,
+  MultiElementsGenerateInput,
 } from './types.js'
 export {
   KlingError, KlingAuthError, KlingRateLimitError,

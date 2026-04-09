@@ -6,6 +6,22 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-04-09
+
+### Added
+
+- **Kling voice management**: `listVoices()`, `listPresetVoices()`, `queryVoice(taskId)`, `deleteVoice(voiceId)` — covers `GET /v1/general/custom-voices`, `GET /v1/general/presets-voices`, `GET /v1/general/custom-voices/{task_id}`, and `POST /v1/general/delete-voices`. New types: `KlingListParams`, `KlingVoiceListResult`, `VoiceInfo`.
+- **Kling element single-task query**: `getElement(taskId)` — `GET /v1/general/advanced-custom-elements/{task_id}` returning `ElementResult`.
+- **Kling multi-elements video workflow**: Six step functions — `initMultiElementsSelection()`, `addSelectionArea()`, `deleteSelectionArea()`, `clearSelectionArea()`, `previewSelection()`, `generateMultiElementsVideo()` — plus `queryMultiElementsTask()` and `listMultiElementsTasks()`. New types: `MultiElementsInitInput/Result`, `MultiElementsAddSelectionInput`, `MultiElementsSelectionResult`, `MultiElementsDeleteSelectionInput`, `MultiElementsClearSelectionInput`, `MultiElementsPreviewInput/Result`, `MultiElementsGenerateInput`.
+- **13 list query functions**: `listLipSyncTasks`, `listTextToAudioTasks`, `listVideoEffectsTasks`, `listImageGenerationTasks`, `listOmniVideoTasks`, `listMultiShotTasks`, `listImageToVideoTasks`, `listOmniImageTasks`, `listReferenceToImageTasks`, `listVirtualTryOnTasks`, `listMotionControlTasks`, `listExtendVideoTasks`, `listAvatarTasks` — paginated task history for every generation endpoint. New type: `KlingTaskListResult`.
+- **13 single-task query functions**: `getLipSyncTask`, `getTextToAudioTask`, `getVideoEffectsTask`, `getImageGenerationTask`, `getOmniVideoTask`, `getMultiShotTask`, `getImageToVideoTask`, `getOmniImageTask`, `getReferenceToImageTask`, `getVirtualTryOnTask`, `getMotionControlTask`, `getExtendVideoTask`, `getAvatarTask` — fetch a task result by ID using the same typed extractors as generation.
+
+## [2.0.2] - 2026-04-09
+
+### Added
+
+- **Kling element library**: Four new functions — `createElement()`, `listElements()`, `listPresetElements()`, `deleteElement()`. Covers `POST /v1/general/advanced-custom-elements` (async, polls until ready), `GET` list/single, and `POST /v1/general/delete-elements`. Typed inputs `CreateElementInput`, `ElementListInput`, `DeleteElementInput` and outputs `ElementResult`, `ElementListResult`, `ElementTag`.
+
 ## [2.0.1] - 2026-04-09
 
 ### Added

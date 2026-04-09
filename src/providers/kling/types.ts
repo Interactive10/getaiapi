@@ -242,6 +242,64 @@ export interface KlingVideoAudioResult {
   audios: Array<{ id: string; url_mp3?: string; url_wav?: string; duration_mp3?: string; duration_wav?: string }>
 }
 
+// ── Element ───────────────────────────────────────────────────────────────────
+
+export interface CreateElementInput extends PollOptions {
+  element_name: string
+  element_description: string
+  /** `"image_refer"` = multi-image based; `"video_refer"` = video character based. */
+  reference_type: 'image_refer' | 'video_refer'
+  /** Required when reference_type is `"image_refer"`. */
+  element_image_list?: {
+    frontal_image: string
+    refer_images?: Array<{ image_url: string }>
+  }
+  /** Required when reference_type is `"video_refer"`. */
+  element_video_list?: {
+    refer_videos: Array<{ video_url: string }>
+  }
+  element_voice_id?: string
+  tag_list?: Array<{ tag_id: string }>
+  callback_url?: string
+  external_task_id?: string
+}
+
+export interface ElementTag {
+  tag_id: string
+  tag_name?: string
+}
+
+export interface ElementResult {
+  element_id: string
+  element_name: string
+  element_description: string
+  reference_type: 'image_refer' | 'video_refer'
+  status: string
+  owned_by?: string
+  element_voice_id?: string
+  tag_list?: ElementTag[]
+  element_image_list?: {
+    frontal_image: string
+    refer_images?: Array<{ image_url: string }>
+  }
+  element_video_list?: {
+    refer_videos: Array<{ video_url: string }>
+  }
+}
+
+export interface ElementListInput {
+  pageNum?: number
+  pageSize?: number
+}
+
+export interface ElementListResult {
+  elements: ElementResult[]
+}
+
+export interface DeleteElementInput {
+  element_id: string
+}
+
 // ── Account ───────────────────────────────────────────────────────────────────
 
 export interface AccountCostsInput {
@@ -269,6 +327,101 @@ export interface ResourcePackInfo {
 
 export interface AccountCostsResult {
   resource_pack_subscribe_infos: ResourcePackInfo[]
+}
+
+// ── Pagination ────────────────────────────────────────────────────────────────
+
+export interface KlingListParams {
+  pageNum?: number
+  pageSize?: number
+}
+
+// ── Voice List ────────────────────────────────────────────────────────────────
+
+export interface VoiceInfo {
+  voice_id: string
+  voice_name: string
+  trial_url?: string
+  owned_by?: string
+  status?: string
+}
+
+export interface KlingVoiceListResult {
+  voices: VoiceInfo[]
+}
+
+// ── Task List (generic) ───────────────────────────────────────────────────────
+
+export interface KlingTaskListResult {
+  tasks: Array<Record<string, unknown>>
+}
+
+// ── Multi-Elements Video ──────────────────────────────────────────────────────
+
+export interface MultiElementsInitInput {
+  video_id?: string
+  video_url?: string
+}
+
+export interface MultiElementsInitResult {
+  status: number
+  session_id: string
+  fps?: number
+  original_duration?: number
+  width?: number
+  height?: number
+  total_frame?: number
+  normalized_video?: string
+}
+
+export interface MultiElementsPoint {
+  x: number
+  y: number
+}
+
+export interface MultiElementsAddSelectionInput {
+  session_id: string
+  frame_index: number
+  points: MultiElementsPoint[]
+}
+
+export interface MultiElementsSelectionResult {
+  rle_mask?: unknown
+  png_mask?: string
+}
+
+export interface MultiElementsDeleteSelectionInput {
+  session_id: string
+  frame_index: number
+  points: MultiElementsPoint[]
+}
+
+export interface MultiElementsClearSelectionInput {
+  session_id: string
+}
+
+export interface MultiElementsPreviewInput {
+  session_id: string
+}
+
+export interface MultiElementsPreviewResult {
+  video?: string
+  video_cover?: string
+  tracking_output?: unknown
+}
+
+export interface MultiElementsGenerateInput extends PollOptions {
+  session_id: string
+  edit_mode: 'addition' | 'swap' | 'removal'
+  image_list?: Array<{ image: string }>
+  prompt: string
+  negative_prompt?: string
+  model_name?: string
+  mode?: 'std' | 'pro'
+  duration?: '5' | '10'
+  watermark_info?: { enabled: boolean }
+  callback_url?: string
+  external_task_id?: string
 }
 
 // ── Internal ─────────────────────────────────────────────────────────────────

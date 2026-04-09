@@ -16,7 +16,7 @@ npm install getaiapi
 
 ## Kling AI
 
-69 models across 20 endpoints. Each model is a typed function with Kling-native field names.
+69 generation models plus 45 management, list, and query functions. Each model is a typed function with Kling-native field names.
 
 ### Setup
 
@@ -577,6 +577,138 @@ for (const pack of result.resource_pack_subscribe_infos) {
   }>
 }
 ```
+
+### Element Library
+
+Create reusable characters/objects (elements) from images or video, then reference them in generation tasks via `element_list`.
+
+```typescript
+// Create a custom element (async — polls until ready)
+const el = await kling.createElement({
+  element_name: 'My Character',
+  element_description: 'A hero in a red cape',
+  reference_type: 'image_refer',
+  element_image_list: {
+    frontal_image: 'https://example.com/frontal.jpg',
+    refer_images: [{ image_url: 'https://example.com/side.jpg' }],
+  },
+})
+
+// Use element_id in video generation
+await kling.imageToVideoV2_1Master({
+  image: 'https://example.com/scene.jpg',
+  prompt: 'Character walks forward',
+  element_list: [{ id: el.element_id, image: 'https://example.com/frontal.jpg' }],
+})
+
+// List all custom elements (paginated)
+const { elements } = await kling.listElements({ pageNum: 1, pageSize: 30 })
+
+// List official preset elements
+const { elements: presets } = await kling.listPresetElements()
+
+// Delete a custom element
+await kling.deleteElement({ element_id: el.element_id })
+```
+
+**`createElement` input: `CreateElementInput`**
+
+```typescript
+{
+  element_name: string                          // required — max 20 chars
+  element_description: string                   // required — max 100 chars
+  reference_type: 'image_refer' | 'video_refer' // required
+  element_image_list?: {                        // required when image_refer
+    frontal_image: string                       // front-facing image URL or base64
+    refer_images?: Array<{ image_url: string }> // 1–3 additional angles
+  }
+  element_video_list?: {                        // required when video_refer
+    refer_videos: Array<{ video_url: string }>  // 1 video, .mp4/.mov, 3–8s
+  }
+  element_voice_id?: string
+  tag_list?: Array<{ tag_id: string }>          // o_101–o_108
+  callback_url?: string
+  external_task_id?: string
+  timeout?: number                              // poll timeout ms
+}
+```
+
+**`createElement` output: `ElementResult`**
+
+```typescript
+{
+  element_id: string
+  element_name: string
+  element_description: string
+  reference_type: 'image_refer' | 'video_refer'
+  status: string
+  owned_by?: string
+  element_voice_id?: string
+  tag_list?: Array<{ tag_id: string; tag_name?: string }>
+  element_image_list?: { frontal_image: string; refer_images?: Array<{ image_url: string }> }
+  element_video_list?: { refer_videos: Array<{ video_url: string }> }
+}
+```
+
+### Voice Management
+
+```typescript
+import { kling } from 'getaiapi'
+
+// List custom voices (paginated)
+const { voices } = await kling.listVoices({ pageNum: 1, pageSize: 30 })
+
+// List preset voices from Kling's library
+const { voices: presets } = await kling.listPresetVoices()
+
+// Query a single voice creation task
+const result = await kling.queryVoice('task-id')
+
+// Delete a custom voice
+await kling.deleteVoice('voice-id')
+```
+
+### Multi-Elements Video Workflow
+
+```typescript
+import { kling } from 'getaiapi'
+
+// Step 1: Initialize video
+const { session_id } = await kling.initMultiElementsSelection({ video_url: 'https://...' })
+
+// Step 2: Click points to select an area
+await kling.addSelectionArea({ session_id, frame_index: 10, points: [{ x: 0.5, y: 0.5 }] })
+
+// Step 5: Preview selection
+const preview = await kling.previewSelection({ session_id })
+
+// Step 6: Generate edited video (polls until complete)
+const video = await kling.generateMultiElementsVideo({
+  session_id,
+  edit_mode: 'swap',
+  image_list: [{ image: 'https://...' }],
+  prompt: 'swap <<<image_1>>> for element from <<<video_1>>>',
+})
+```
+
+### List & Query Historical Tasks
+
+Every generation endpoint has a list function (paginated) and a single-task query function:
+
+```typescript
+// List recent tasks (all generation types)
+const { tasks } = await kling.listImageToVideoTasks({ pageNum: 1, pageSize: 20 })
+const { tasks: videoTasks } = await kling.listTextToAudioTasks()
+
+// Query a single task result by ID (returns same typed result as the generation function)
+const video = await kling.getImageToVideoTask('task-id')     // KlingVideoResult
+const audio = await kling.getTextToAudioTask('task-id')      // KlingAudioResult
+const image = await kling.getImageGenerationTask('task-id')  // KlingImageResult
+```
+
+Available list functions: `listLipSyncTasks`, `listTextToAudioTasks`, `listVideoEffectsTasks`, `listImageGenerationTasks`, `listOmniVideoTasks`, `listMultiShotTasks`, `listImageToVideoTasks`, `listOmniImageTasks`, `listReferenceToImageTasks`, `listVirtualTryOnTasks`, `listMotionControlTasks`, `listExtendVideoTasks`, `listAvatarTasks`.
+
+Available query functions: `getLipSyncTask`, `getTextToAudioTask`, `getVideoEffectsTask`, `getImageGenerationTask`, `getOmniVideoTask`, `getMultiShotTask`, `getImageToVideoTask`, `getOmniImageTask`, `getReferenceToImageTask`, `getVirtualTryOnTask`, `getMotionControlTask`, `getExtendVideoTask`, `getAvatarTask`.
 
 ## Output Types
 

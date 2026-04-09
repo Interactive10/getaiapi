@@ -105,9 +105,59 @@ Returns `video` (video with mask overlay), `video_cover` (cover image), and `tra
 
 ### Step 6: Create Editing Task
 
-**POST** `/v1/videos/multi-elements/generation`
+**POST** `/v1/videos/multi-elements`
 
-(Refer to the Kling Multi-Elements Generation API for the full creation endpoint details.)
+#### Request Body
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `model_name` | `string` | Optional | `kling-v1-6` | Model name. Enum: `kling-v1-6` |
+| `session_id` | `string` | Required |  | Session ID from initialization, unchanged during editing operations |
+| `edit_mode` | `string` | Required |  | Operation type. Enum: `addition`, `swap`, `removal` |
+| `image_list` | `array` | Optional |  | Cropped reference images. Required for `addition` (1–2 images) and `swap` (exactly 1 image). Not needed for `removal`. Format: `[{ "image": "url_or_base64" }]`. Formats: .jpg/.jpeg/.png. Size: ≤10MB. Dimensions: ≥300px. Aspect ratio: 1:2.5 to 2.5:1. |
+| `image_list[].image` | `string` | Required (if image_list provided) |  | Image URL or Base64 string (raw, no `data:` prefix) |
+| `prompt` | `string` | Required |  | Positive prompt. Use `<<<video_1>>>` and `<<<image_1>>>` to reference inputs. Max 2,500 characters. |
+| `negative_prompt` | `string` | Optional |  | Negative prompt. Max 2,500 characters. |
+| `mode` | `string` | Optional | `std` | Video generation mode. Enum: `std` (standard, cost-effective), `pro` (high-quality, enhanced rendering) |
+| `duration` | `string` | Optional | `5` | Video duration in seconds. Enum: `5`, `10`. For 5s: input must be 2-5s. For 10s: input must be 7-10s. |
+| `watermark_info` | `object` | Optional |  | Watermark config. Format: `{ "enabled": boolean }` |
+| `callback_url` | `string` | Optional |  | Callback URL for task status notifications |
+| `external_task_id` | `string` | Optional |  | Custom task ID. Must be unique per user. |
+
+#### edit_mode reference
+
+| Mode | image_list | Description |
+|------|-----------|-------------|
+| `addition` | Required, 1–2 images | Add an element from reference images into the video |
+| `swap` | Required, exactly 1 image | Replace an element in the video with one from the reference image |
+| `removal` | Not required | Remove a selected element from the video |
+
+#### Prompt templates
+
+**addition:** `Using the context of <<<video_1>>>, seamlessly add [element] from <<<image_1>>>`
+
+**swap:** `swap [element] from <<<image_1>>> for [element] from <<<video_1>>>`
+
+**removal:** `Delete [element] from <<<video_1>>>`
+
+#### Response
+
+```json
+{
+  "code": 0,
+  "message": "string",
+  "request_id": "string",
+  "data": {
+    "task_id": "string",
+    "task_status": "string",
+    "task_info": { "external_task_id": "string" },
+    "created_at": 1722769557708,
+    "updated_at": 1722769557708
+  }
+}
+```
+
+`task_status` enum: `submitted`, `processing`, `succeed`, `failed`
 
 ### Query Task (Single)
 

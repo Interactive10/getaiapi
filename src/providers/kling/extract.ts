@@ -1,6 +1,7 @@
 import type {
   KlingVideoResult, KlingImageResult, KlingAudioResult, KlingJsonResult,
   KlingFaceResult, KlingMultiShotResult, KlingVoiceResult, KlingVideoAudioResult,
+  ElementResult,
 } from './types.js'
 
 export type Extractor<T> = (data: Record<string, unknown>) => T
@@ -63,6 +64,26 @@ export function extractVoices(data: Record<string, unknown>): KlingVoiceResult {
   const taskResult = data.task_result as Record<string, unknown> | undefined
   const voices = (taskResult?.voices ?? []) as KlingVoiceResult['voices']
   return { task_id: data.task_id as string, voices }
+}
+
+/**
+ * Extracts element data from poll response.
+ * Assumption: element fields (element_id, element_name, etc.) are directly on data,
+ * not nested inside data.task_result. Verify against live API if extraction returns undefined.
+ */
+export function extractElement(data: Record<string, unknown>): ElementResult {
+  return {
+    element_id: data.element_id as string,
+    element_name: data.element_name as string,
+    element_description: data.element_description as string,
+    reference_type: data.reference_type as ElementResult['reference_type'],
+    status: data.status as string,
+    owned_by: data.owned_by as string | undefined,
+    element_voice_id: data.element_voice_id as string | undefined,
+    tag_list: data.tag_list as ElementResult['tag_list'],
+    element_image_list: data.element_image_list as ElementResult['element_image_list'],
+    element_video_list: data.element_video_list as ElementResult['element_video_list'],
+  }
 }
 
 /** Extracts video-to-audio response: both videos[] and audios[]. */

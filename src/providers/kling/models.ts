@@ -7,10 +7,17 @@ import type {
   MultiShotInput, ReferenceToImageInput, ExpandImageInput,
   ExtendVideoInput, IdentifyFaceInput, ImageRecognizeInput,
   ReferenceToVideoInput, AccountCostsInput, AccountCostsResult,
+  CreateElementInput, ElementResult, ElementListInput, ElementListResult, DeleteElementInput,
   KlingVideoResult, KlingImageResult, KlingAudioResult, KlingJsonResult,
   KlingFaceResult, KlingMultiShotResult, KlingVoiceResult, KlingVideoAudioResult,
+  KlingListParams, KlingVoiceListResult, KlingTaskListResult,
+  MultiElementsInitInput, MultiElementsInitResult,
+  MultiElementsAddSelectionInput, MultiElementsSelectionResult,
+  MultiElementsDeleteSelectionInput, MultiElementsClearSelectionInput,
+  MultiElementsPreviewInput, MultiElementsPreviewResult,
+  MultiElementsGenerateInput,
 } from './types.js'
-import { extractVideos, extractImages, extractAudios, extractJson, extractFace, extractMultiShot, extractVoices, extractVideoAudio } from './extract.js'
+import { extractVideos, extractImages, extractAudios, extractJson, extractFace, extractMultiShot, extractVoices, extractVideoAudio, extractElement } from './extract.js'
 
 /** Builds all 69 typed model functions bound to a client instance. */
 export function createModels(client: KlingClient) {
@@ -292,6 +299,183 @@ export function createModels(client: KlingClient) {
 
     accountCosts(input: AccountCostsInput): Promise<AccountCostsResult> {
       return client.accountCosts(input)
+    },
+
+    // ── elements ──────────────────────────────────────────────────────────
+
+    /** Create a custom element (character/object) from images or video. Async — polls until ready. */
+    createElement(input: CreateElementInput): Promise<ElementResult> {
+      return client.execute('v1/general/advanced-custom-elements', {}, input, extractElement)
+    },
+
+    /** List all custom elements under the account. */
+    listElements(input: ElementListInput = {}): Promise<ElementListResult> {
+      return client.elementList(input)
+    },
+
+    /** List official preset elements from the Kling element library. */
+    listPresetElements(): Promise<ElementListResult> {
+      return client.presetElementList()
+    },
+
+    /** Delete a custom element by element_id. */
+    deleteElement(input: DeleteElementInput): Promise<void> {
+      return client.deleteElement(input)
+    },
+
+    // ── voice management ──────────────────────────────────────────────────
+
+    /** List custom voices cloned under the account. */
+    listVoices(params: KlingListParams = {}): Promise<KlingVoiceListResult> {
+      return client.listVoices(params)
+    },
+
+    /** List official preset voices from the Kling voice library. */
+    listPresetVoices(params: KlingListParams = {}): Promise<KlingVoiceListResult> {
+      return client.listPresetVoices(params)
+    },
+
+    /** Query a single custom voice creation task by task_id. */
+    queryVoice(taskId: string): Promise<KlingVoiceResult> {
+      return client.queryVoice(taskId)
+    },
+
+    /** Delete a custom voice by voice_id. */
+    deleteVoice(voiceId: string): Promise<void> {
+      return client.deleteVoice(voiceId)
+    },
+
+    // ── element single-task query ─────────────────────────────────────────
+
+    /** Query a single custom element creation task by task_id. */
+    getElement(taskId: string): Promise<ElementResult> {
+      return client.getElement(taskId)
+    },
+
+    // ── multi-elements video workflow ──────────────────────────────────────
+
+    /** Step 1: Initialize a video for multi-elements editing. Returns session_id. */
+    initMultiElementsSelection(input: MultiElementsInitInput): Promise<MultiElementsInitResult> {
+      return client.initMultiElementsSelection(input)
+    },
+
+    /** Step 2: Add a selection area by clicking points on a frame. */
+    addSelectionArea(input: MultiElementsAddSelectionInput): Promise<MultiElementsSelectionResult> {
+      return client.addSelectionArea(input)
+    },
+
+    /** Step 3: Delete a previously added selection area. */
+    deleteSelectionArea(input: MultiElementsDeleteSelectionInput): Promise<MultiElementsSelectionResult> {
+      return client.deleteSelectionArea(input)
+    },
+
+    /** Step 4: Clear all selections for a session. */
+    clearSelectionArea(input: MultiElementsClearSelectionInput): Promise<void> {
+      return client.clearSelectionArea(input)
+    },
+
+    /** Step 5: Preview selection with mask overlay. */
+    previewSelection(input: MultiElementsPreviewInput): Promise<MultiElementsPreviewResult> {
+      return client.previewSelection(input)
+    },
+
+    /** Step 6: Generate the final multi-elements edited video. Polls until complete. */
+    generateMultiElementsVideo(input: MultiElementsGenerateInput): Promise<KlingVideoResult> {
+      return client.execute('v1/videos/multi-elements', { model_name: 'kling-v1-6' }, input, extractVideos)
+    },
+
+    /** Query a single multi-elements generation task by task_id. */
+    queryMultiElementsTask(taskId: string): Promise<KlingTaskListResult['tasks'][0]> {
+      return client.queryMultiElementsTask(taskId)
+    },
+
+    /** List multi-elements generation tasks. */
+    listMultiElementsTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+      return client.listMultiElementsTasks(params)
+    },
+
+    // ── list queries ───────────────────────────────────────────────────────
+
+    listLipSyncTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+      return client.taskList('v1/videos/advanced-lip-sync', params)
+    },
+    listTextToAudioTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+      return client.taskList('v1/audio/text-to-audio', params)
+    },
+    listVideoEffectsTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+      return client.taskList('v1/videos/effects', params)
+    },
+    listImageGenerationTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+      return client.taskList('v1/images/generations', params)
+    },
+    listOmniVideoTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+      return client.taskList('v1/videos/omni-video', params)
+    },
+    listMultiShotTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+      return client.taskList('v1/general/ai-multi-shot', params)
+    },
+    listImageToVideoTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+      return client.taskList('v1/videos/image2video', params)
+    },
+    listOmniImageTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+      return client.taskList('v1/images/omni-image', params)
+    },
+    listReferenceToImageTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+      return client.taskList('v1/images/multi-image2image', params)
+    },
+    listVirtualTryOnTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+      return client.taskList('v1/images/kolors-virtual-try-on', params)
+    },
+    listMotionControlTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+      return client.taskList('v1/videos/motion-control', params)
+    },
+    listExtendVideoTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+      return client.taskList('v1/videos/video-extend', params)
+    },
+    listAvatarTasks(params: KlingListParams = {}): Promise<KlingTaskListResult> {
+      return client.taskList('v1/videos/avatar/image2video', params)
+    },
+
+    // ── single-task queries ────────────────────────────────────────────────
+
+    getLipSyncTask(taskId: string): Promise<KlingVideoResult> {
+      return client.taskGet('v1/videos/advanced-lip-sync', taskId, extractVideos)
+    },
+    getTextToAudioTask(taskId: string): Promise<KlingAudioResult> {
+      return client.taskGet('v1/audio/text-to-audio', taskId, extractAudios)
+    },
+    getVideoEffectsTask(taskId: string): Promise<KlingVideoResult> {
+      return client.taskGet('v1/videos/effects', taskId, extractVideos)
+    },
+    getImageGenerationTask(taskId: string): Promise<KlingImageResult> {
+      return client.taskGet('v1/images/generations', taskId, extractImages)
+    },
+    getOmniVideoTask(taskId: string): Promise<KlingVideoResult> {
+      return client.taskGet('v1/videos/omni-video', taskId, extractVideos)
+    },
+    getMultiShotTask(taskId: string): Promise<KlingMultiShotResult> {
+      return client.taskGet('v1/general/ai-multi-shot', taskId, extractMultiShot)
+    },
+    getImageToVideoTask(taskId: string): Promise<KlingVideoResult> {
+      return client.taskGet('v1/videos/image2video', taskId, extractVideos)
+    },
+    getOmniImageTask(taskId: string): Promise<KlingImageResult> {
+      return client.taskGet('v1/images/omni-image', taskId, extractImages)
+    },
+    getReferenceToImageTask(taskId: string): Promise<KlingImageResult> {
+      return client.taskGet('v1/images/multi-image2image', taskId, extractImages)
+    },
+    getVirtualTryOnTask(taskId: string): Promise<KlingImageResult> {
+      return client.taskGet('v1/images/kolors-virtual-try-on', taskId, extractImages)
+    },
+    getMotionControlTask(taskId: string): Promise<KlingVideoResult> {
+      return client.taskGet('v1/videos/motion-control', taskId, extractVideos)
+    },
+    getExtendVideoTask(taskId: string): Promise<KlingVideoResult> {
+      return client.taskGet('v1/videos/video-extend', taskId, extractVideos)
+    },
+    getAvatarTask(taskId: string): Promise<KlingVideoResult> {
+      return client.taskGet('v1/videos/avatar/image2video', taskId, extractVideos)
     },
   }
 }

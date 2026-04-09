@@ -9,7 +9,7 @@ Quality tracking across disciplines. Updated on every ticket transition event.
 | PM | 0 |
 | Architect | 0 |
 | PO | 0 |
-| Engineering | 0 |
+| Engineering | 3 |
 | UX | 0 |
 | Security | 0 |
 | QA | 0 |
@@ -57,3 +57,6 @@ Quality tracking across disciplines. Updated on every ticket transition event.
 
 | Date | Ticket | Event | Discipline | Points | Reason |
 |------|--------|-------|------------|--------|--------|
+| 2026-04-09 | 166 | Clean UX pass | Engineering | +1 | Backend-only ticket, passed UX on first attempt |
+| 2026-04-09 | 166 | Clean security pass | Engineering | +1 | No vulnerabilities found, passed first attempt |
+| 2026-04-09 | 166 | Clean QA pass | Engineering | +1 | All 11 ACs verified, 20,746 tests pass |
