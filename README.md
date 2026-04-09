@@ -535,6 +535,49 @@ const result = await kling.imageRecognize({
 }
 ```
 
+### Account Costs
+
+Query resource package balances under your account. Free to call; QPS ≤ 1. Note: `remaining_quantity` has a 12-hour reporting delay.
+
+```typescript
+const result = await kling.accountCosts({
+  start_time: Date.now() - 86_400_000, // last 24h
+  end_time: Date.now(),
+})
+
+for (const pack of result.resource_pack_subscribe_infos) {
+  console.log(pack.resource_pack_name, pack.remaining_quantity, pack.status)
+}
+```
+
+**Input: `AccountCostsInput`**
+
+```typescript
+{
+  start_time: number             // required — Unix ms
+  end_time: number               // required — Unix ms
+  resource_pack_name?: string    // optional — filter by exact package name
+}
+```
+
+**Output: `AccountCostsResult`**
+
+```typescript
+{
+  resource_pack_subscribe_infos: Array<{
+    resource_pack_name: string
+    resource_pack_id: string
+    resource_pack_type: 'decreasing_total' | 'constant_period'
+    total_quantity: number
+    remaining_quantity: number   // 12h delay
+    purchase_time: number
+    effective_time: number
+    invalid_time: number
+    status: 'toBeOnline' | 'online' | 'expired' | 'runOut'
+  }>
+}
+```
+
 ## Output Types
 
 All functions return typed results based on output modality:

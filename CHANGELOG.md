@@ -6,6 +6,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-04-09
+
+### Added
+
+- **Kling account costs endpoint**: `kling.accountCosts()` — `GET /account/costs` with typed `AccountCostsInput`, `AccountCostsResult`, and `ResourcePackInfo`. Returns resource package list with remaining balances, status, and expiry times.
+- **`KlingRateLimitError` fields**: Added `bodyCode` and `detail` properties for richer rate-limit diagnostics.
+- **Kling skills**: `kling-account` and `kling-rate-limits` SKILL.md docs covering the account API and concurrency rules.
+
 ## [2.0.0] - 2026-04-05
 
 ### Added
