@@ -1,4 +1,4 @@
-import type { KlingConfig, KlingApiResponse, PollOptions } from './types.js'
+import type { KlingConfig, KlingApiResponse, PollOptions, AccountCostsInput, AccountCostsResult } from './types.js'
 import { KlingAuthError, KlingRateLimitError, KlingApiError, KlingTimeoutError, KlingTaskFailedError } from './errors.js'
 import { buildAuthHeaders } from './auth.js'
 import type { Extractor } from './extract.js'
@@ -62,24 +62,35 @@ export class KlingClient {
   private async handleErrors(response: Response, endpoint: string): Promise<void> {
     if (response.ok) return
 
-    if (response.status === 401) throw new KlingAuthError('Kling returned 401 Unauthorized.')
-    if (response.status === 429) {
-      const retryAfter = response.headers.get('retry-after')
-      throw new KlingRateLimitError(retryAfter ? parseInt(retryAfter, 10) * 1000 : 60000)
-    }
-
     let raw: unknown
     try { raw = await response.json() } catch { raw = await response.text().catch(() => null) }
+
+    console.error(`[kling] ${response.status} on ${endpoint}:`, JSON.stringify(raw))
+
+    if (response.status === 401) throw new KlingAuthError('Kling returned 401 Unauthorized.')
+    if (response.status === 429) {
+      const body = raw as Record<string, unknown> | null
+      const code = body?.code as number | undefined
+      const message = (body?.message as string) ?? 'Rate limited'
+      const retryAfter = response.headers.get('retry-after')
+      throw new KlingRateLimitError(
+        retryAfter ? parseInt(retryAfter, 10) * 1000 : 60000,
+        code,
+        message,
+      )
+    }
+
     throw new KlingApiError(endpoint, response.status, raw)
   }
 
   private handleBodyErrors(json: KlingApiResponse, endpoint: string): void {
     if (json.code === 0) return
+    console.error(`[kling] body error on ${endpoint}: code=${json.code} message=${json.message}`)
     if (json.code >= 1000 && json.code <= 1004) {
       throw new KlingAuthError(`Kling auth error code ${json.code}: ${json.message}`)
     }
     if ((json.code >= 1100 && json.code <= 1102) || (json.code >= 1302 && json.code <= 1304)) {
-      throw new KlingRateLimitError(5000)
+      throw new KlingRateLimitError(5000, json.code, json.message)
     }
     throw new KlingApiError(endpoint, json.code, json)
   }
@@ -99,6 +110,20 @@ export class KlingClient {
     return json
   }
 
+  private async httpGet(endpoint: string, params: Record<string, string>): Promise<KlingApiResponse> {
+    const auth = this.resolveAuth()
+    const qs = new URLSearchParams(params).toString()
+    const url = `${API_BASE}/${endpoint}?${qs}`
+    const response = await fetch(url, {
+      headers: buildAuthHeaders(auth.accessKey, auth.secretKey),
+      signal: AbortSignal.timeout(this.fetchTimeoutMs),
+    })
+    await this.handleErrors(response, endpoint)
+    const json = await response.json() as KlingApiResponse
+    this.handleBodyErrors(json, endpoint)
+    return json
+  }
+
   private async httpPoll(endpoint: string, taskId: string): Promise<KlingApiResponse> {
     const auth = this.resolveAuth()
     const url = `${API_BASE}/${endpoint}/${taskId}`
@@ -110,6 +135,23 @@ export class KlingClient {
     const json = await response.json() as KlingApiResponse
     this.handleBodyErrors(json, endpoint)
     return json
+  }
+
+  // ── Account ──────────────────────────────────────────────────────────────
+
+  async accountCosts(input: AccountCostsInput): Promise<AccountCostsResult> {
+    const params: Record<string, string> = {
+      start_time: String(input.start_time),
+      end_time: String(input.end_time),
+    }
+    if (input.resource_pack_name !== undefined) {
+      params.resource_pack_name = input.resource_pack_name
+    }
+    const json = await this.httpGet('account/costs', params)
+    const data = json.data as Record<string, unknown>
+    return {
+      resource_pack_subscribe_infos: (data.resource_pack_subscribe_infos ?? []) as AccountCostsResult['resource_pack_subscribe_infos'],
+    }
   }
 
   // ── Execute ──────────────────────────────────────────────────────────────

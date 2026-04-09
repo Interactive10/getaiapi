@@ -10,7 +10,7 @@ export type {
   TtsInput, VideoToAudioInput, TextToAudioInput, CreateVoiceInput,
   MultiShotInput, ReferenceToImageInput, ExpandImageInput,
   ExtendVideoInput, IdentifyFaceInput, ImageRecognizeInput,
-  ReferenceToVideoInput,
+  ReferenceToVideoInput, AccountCostsInput, AccountCostsResult, ResourcePackInfo,
   KlingVideoResult, KlingImageResult, KlingAudioResult, KlingJsonResult,
   KlingFaceResult, KlingMultiShotResult, KlingVoiceResult, KlingVideoAudioResult,
 } from './types.js'

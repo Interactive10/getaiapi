@@ -6,7 +6,7 @@ import type {
   TtsInput, VideoToAudioInput, TextToAudioInput, CreateVoiceInput,
   MultiShotInput, ReferenceToImageInput, ExpandImageInput,
   ExtendVideoInput, IdentifyFaceInput, ImageRecognizeInput,
-  ReferenceToVideoInput,
+  ReferenceToVideoInput, AccountCostsInput, AccountCostsResult,
   KlingVideoResult, KlingImageResult, KlingAudioResult, KlingJsonResult,
   KlingFaceResult, KlingMultiShotResult, KlingVoiceResult, KlingVideoAudioResult,
 } from './types.js'
@@ -286,6 +286,12 @@ export function createModels(client: KlingClient) {
 
     referenceToVideo(input: ReferenceToVideoInput): Promise<KlingVideoResult> {
       return client.execute('v1/videos/multi-image2video', { model_name: 'kling-v1-6' }, input, extractVideos)
+    },
+
+    // ── account ───────────────────────────────────────────────────────────
+
+    accountCosts(input: AccountCostsInput): Promise<AccountCostsResult> {
+      return client.accountCosts(input)
     },
   }
 }

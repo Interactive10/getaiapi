@@ -16,10 +16,17 @@ export class KlingAuthError extends KlingError {
 
 export class KlingRateLimitError extends KlingError {
   readonly retryAfterMs: number
-  constructor(retryAfterMs: number) {
-    super('RATE_LIMIT', `Rate limited by Kling. Retry after ${retryAfterMs}ms.`)
+  readonly bodyCode: number | undefined
+  readonly detail: string
+  constructor(retryAfterMs: number, bodyCode?: number, detail?: string) {
+    const msg = detail
+      ? `Kling 429 (code ${bodyCode ?? 'unknown'}): ${detail}. Retry after ${retryAfterMs}ms.`
+      : `Rate limited by Kling. Retry after ${retryAfterMs}ms.`
+    super('RATE_LIMIT', msg)
     this.name = 'KlingRateLimitError'
     this.retryAfterMs = retryAfterMs
+    this.bodyCode = bodyCode
+    this.detail = detail ?? 'Rate limited'
   }
 }
 

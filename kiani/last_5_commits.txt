@@ -1,5 +1,35 @@
 === Last 5 Commits ===
 
+--- Commit: d579339 ---
+Date: 2026-04-05 15:07:10 +0400
+Author: arash
+Message: fix: update docs and tests for ticket 165 extractor and type fixes
+
+Update CHANGELOG and README to reflect new output types
+(KlingFaceResult, KlingMultiShotResult, KlingVoiceResult,
+KlingVideoAudioResult), corrected input types (VideoToAudioInput,
+TextToAudioInput, IdentifyFaceInput), and sync identifyFace endpoint.
+Add tests for createVoice, textToAudio, and videoToAudio extractors.
+Remove stale ticket 164.
+
+
+--- Commit: 9315738 ---
+Date: 2026-04-05 14:56:39 +0400
+Author: arash
+Message: feat: v2 kling provider with typed extractors, deprecate v1 adapters
+
+Move all v1 code (adapters, registry, scripts, tests) to deprecated/.
+Add native kling provider (src/providers/kling/) with typed client,
+JWT auth, 69 model functions, exponential-backoff polling, and custom
+error hierarchy.
+
+Fix 9 extractor and type bugs (ticket 165): identifyFace now sync
+(no polling), multiShot preserves url_1/url_2/url_3, createVoice
+reads voices[] not audios[], textToAudio/videoToAudio normalize
+url_mp3/url_wav fields, input types corrected for VideoToAudio,
+TextToAudio, and IdentifyFace. Four new result types exported.
+
+
 --- Commit: c3f3747 ---
 Date: 2026-04-04 13:47:19 +0400
 Author: arash
@@ -41,33 +71,123 @@ No phantom params (seed/guidance/steps/format/quality/safety) on any
 kling entry. 37 unit tests across 4 test files. Bump to 1.3.0.
 
 
---- Commit: 2005ef1 ---
-Date: 2026-04-03 18:22:10 +0400
-Author: arash
-Message: feat: refactor kling adapter with dynamic output parsing, condense skill docs, and add implementation tickets
-
-Rework parseOutput to use dynamic extract_path navigation instead of
-hardcoded path matching. Add sync endpoint detection for TTS and
-image-recognize. Remove kling-provider meta-docs (consolidated into
-per-endpoint skills). Clean up duplicate registry entries. Add tickets
-151-161 for native kling provider implementation.
-
-
---- Commit: 8f1bc97 ---
-Date: 2026-04-03 13:52:03 +0400
-Author: arash
-Message: feat: add shared fetch helper with timeout and optional logging
-
-All 12 provider fetch calls now go through fetchWithTimeout() with a
-configurable AbortSignal.timeout (default 30s). Fixes Kling adapter
-hanging indefinitely when the server doesn't respond.
-
-Adds configureFetch() for timeout and request/response logging with
-auth header redaction. Configurable via configure({ fetch: { ... } })
-or standalone. Bump to 1.2.0.
-
-
 === Diffs ===
+
+--- d579339: fix: update docs and tests for ticket 165 extractor and type fixes ---
+ CHANGELOG.md                                       |   9 +-
+ README.md                                          |  83 +++++--
+ .../tickets/proposals/164-kling-v2-runtime-bugs.md | 275 ---------------------
+ src/providers/kling/kling.test.ts                  |  96 ++++++-
+ 4 files changed, 167 insertions(+), 296 deletions(-)
+
+--- 9315738: feat: v2 kling provider with typed extractors, deprecate v1 adapters ---
+ CHANGELOG.md                                       |   22 +
+ README.md                                          |  842 ++++----
+ {registry => deprecated/registry}/.gitkeep         |    0
+ {registry => deprecated/registry}/registry.json    |    0
+ {scripts => deprecated/scripts}/.gitkeep           |    0
+ {scripts => deprecated/scripts}/catalog.ts         |    0
+ {scripts => deprecated/scripts}/find-duplicates.js |    0
+ .../scripts}/generate-models-md.js                 |    0
+ .../scripts}/generate-registry.ts                  |    0
+ .../scripts}/validate-registry.js                  |    0
+ {src => deprecated/src}/adapters/.gitkeep          |    0
+ {src => deprecated/src}/adapters/base.ts           |    0
+ {src => deprecated/src}/adapters/fal-ai.ts         |    0
+ {src => deprecated/src}/adapters/kling.ts          |    0
+ {src => deprecated/src}/adapters/openrouter.ts     |    0
+ {src => deprecated/src}/adapters/replicate.ts      |    0
+ {src => deprecated/src}/adapters/wavespeed.ts      |    0
+ {src => deprecated/src}/auth.ts                    |    0
+ deprecated/src/cli.ts                              |  255 +++
+ {src => deprecated/src}/configure.ts               |    0
+ {src => deprecated/src}/discovery.ts               |    0
+ {src => deprecated/src}/errors.ts                  |    0
+ {src => deprecated/src}/fetch.ts                   |    0
+ {src => deprecated/src}/gateway.ts                 |    0
+ deprecated/src/index.ts                            |   64 +
+ {src => deprecated/src}/mapper.ts                  |    0
+ {src => deprecated/src}/registry.ts                |    0
+ {src => deprecated/src}/retry.ts                   |    0
+ {src => deprecated/src}/s3-signer.ts               |    0
+ {src => deprecated/src}/storage.ts                 |    0
+ {src => deprecated/src}/types.ts                   |    0
+ {tests => deprecated/tests}/catalog/.gitkeep       |    0
+ {tests => deprecated/tests}/e2e/.gitkeep           |    0
+ {tests => deprecated/tests}/e2e/smoke.test.ts      |    0
+ .../tests}/fixtures/fal-ai/text-to-image/.gitkeep  |    0
+ .../fal-ai/text-to-image/flux-schnell.json         |    0
+ .../fixtures/fal-ai/video-swap/pixverse-swap.json  |    0
+ .../text-generation/chat-completion.json           |    0
+ .../fixtures/replicate/text-to-image/.gitkeep      |    0
+ .../replicate/text-to-image/flux-schnell.json      |    0
+ .../fixtures/wavespeed/text-to-image/.gitkeep      |    0
+ .../wavespeed/text-to-image/z-image-turbo.json     |    0
+ {tests => deprecated/tests}/integration/.gitkeep   |    0
+ .../tests}/integration/discovery.test.ts           |    0
+ .../tests}/integration/generate.test.ts            |    0
+ .../tests}/integration/provider-routing.test.ts    |    0
+ .../tests}/integration/submit-poll.test.ts         |    0
+ {tests => deprecated/tests}/unit/adapters/.gitkeep |    0
+ .../tests}/unit/adapters/fal-ai-extended.test.ts   |    0
+ .../tests}/unit/adapters/fal-ai-url-parity.test.ts |    0
+ .../tests}/unit/adapters/fal-ai.test.ts            |    0
+ .../tests}/unit/adapters/openrouter.test.ts        |    0
+ .../unit/adapters/replicate-extended.test.ts       |    0
+ .../tests}/unit/adapters/replicate.test.ts         |    0
+ .../unit/adapters/wavespeed-extended.test.ts       |    0
+ .../tests}/unit/adapters/wavespeed.test.ts         |    0
+ .../tests}/unit/audit-vs-registry.test.ts          |    0
+ {tests => deprecated/tests}/unit/auth.test.ts      |    0
+ {tests => deprecated/tests}/unit/cli.test.ts       |    0
+ {tests => deprecated/tests}/unit/configure.test.ts |    0
+ {tests => deprecated/tests}/unit/fetch.test.ts     |    0
+ .../tests}/unit/models/kling-native-audio.test.ts  |    0
+ .../models/kling-native-image-generation.test.ts   |    0
+ .../tests}/unit/models/kling-native-misc.test.ts   |    0
+ .../tests}/unit/models/kling-native-video.test.ts  |    0
+ .../unit/models/kling-param-alignment.test.ts      |    0
+ .../unit/models/kling-video-create-voice.test.ts   |    0
+ .../kling-video-v3-pro-image-to-video.test.ts      |    0
+ .../kling-video-v3-pro-motion-control.test.ts      |    0
+ .../tests}/unit/models/nano-banana-2-edit.test.ts  |    0
+ .../tests}/unit/models/nano-banana-2.test.ts       |    0
+ .../unit/models/openrouter-new-models.test.ts      |    0
+ .../tests}/unit/models/pixverse-lipsync.test.ts    |    0
+ .../tests}/unit/models/pixverse-swap.test.ts       |    0
+ .../unit/models/wan-v2.2-14b-animate-move.test.ts  |    0
+ .../models/wan-v2.2-14b-animate-replace.test.ts    |    0
+ .../tests}/unit/registry-integrity.test.ts         |    0
+ .../tests}/unit/retry-extended.test.ts             |    0
+ {tests => deprecated/tests}/unit/retry.test.ts     |    0
+ {tests => deprecated/tests}/unit/s3-signer.test.ts |    0
+ {tests => deprecated/tests}/unit/storage.test.ts   |    0
+ .../tests}/unit/types/provider-type-safety.test.ts |    0
+ kiani/brainstorm.md                                |   26 +-
+ kiani/last_5_commits.txt                           | 2074 +-------------------
+ kiani/primerPrompt.md                              |    2 +-
+ kiani/tickets/README.md                            |    6 +
+ .../160-kling-native-multi-elements-video.md       |    2 +-
+ .../161-kling-native-element-library.md            |    2 +-
+ .../162-kling-param-map-alignment.md               |    1 +
+ kiani/tickets/done/163-kling-v2-skill-alignment.md |  374 ++++
+ .../tickets/proposals/164-kling-v2-runtime-bugs.md |  275 +++
+ .../165-kling-v2-extractor-and-type-fixes.md       |  104 +
+ package.json                                       |   10 +-
+ src/cli.ts                                         |  259 +--
+ src/env.ts                                         |   43 +
+ src/index.ts                                       |   89 +-
+ src/providers/kling/auth.ts                        |   24 +
+ src/providers/kling/client.ts                      |  172 ++
+ src/providers/kling/errors.ts                      |   53 +
+ src/providers/kling/extract.ts                     |   81 +
+ src/providers/kling/index.ts                       |   40 +
+ src/providers/kling/kling.test.ts                  |  628 ++++++
+ src/providers/kling/models.ts                      |  291 +++
+ src/providers/kling/types.ts                       |  252 +++
+ tsconfig.json                                      |    6 +-
+ vitest.config.ts                                   |    6 +-
+ 106 files changed, 3212 insertions(+), 2791 deletions(-)
 
 --- c3f3747: fix: align kling param_map with fal-ai canonical names and add provider-scoped type safety ---
  CHANGELOG.md                                       |  13 +
@@ -106,62 +226,3 @@ or standalone. Bump to 1.2.0.
  tests/unit/models/kling-native-misc.test.ts        |  226 +++
  tests/unit/models/kling-native-video.test.ts       |  174 +++
  17 files changed, 2259 insertions(+), 99 deletions(-)
-
---- 2005ef1: feat: refactor kling adapter with dynamic output parsing, condense skill docs, and add implementation tickets ---
- .../providers/kling/kling-ai-multi-shot/SKILL.md   |  246 +--
- kiani/skills/providers/kling/kling-avatar/SKILL.md |  271 +--
- .../skills/providers/kling/kling-element/SKILL.md  |  290 +---
- .../providers/kling/kling-extend-image/SKILL.md    |  288 +---
- .../providers/kling/kling-extend-video/SKILL.md    |  279 +---
- .../kling/kling-image-generation/SKILL.md          |  286 +---
- .../providers/kling/kling-image-omni/SKILL.md      |  283 +---
- .../providers/kling/kling-image-recognize/SKILL.md |  361 +---
- .../providers/kling/kling-image-to-video/SKILL.md  |  344 +---
- .../skills/providers/kling/kling-lip-sync/SKILL.md |  294 +---
- .../providers/kling/kling-motion-control/SKILL.md  |  285 +---
- .../kling/kling-multi-elements-video/SKILL.md      |  321 +---
- .../providers/kling/kling-provider/ADAPTER.md      |  349 ----
- .../providers/kling/kling-provider/MODELS.md       |  235 ---
- .../providers/kling/kling-provider/REGISTRY.md     |  451 -----
- .../skills/providers/kling/kling-provider/SETUP.md |  175 --
- .../skills/providers/kling/kling-provider/SKILL.md |   48 -
- .../kling/kling-reference-to-image/SKILL.md        |  278 +---
- .../kling/kling-reference-to-video/SKILL.md        |  282 +---
- .../providers/kling/kling-text-to-audio/SKILL.md   |  250 +--
- .../providers/kling/kling-text-to-video/SKILL.md   |  309 +---
- kiani/skills/providers/kling/kling-tts/SKILL.md    |  249 +--
- .../providers/kling/kling-video-effects/SKILL.md   |  266 +--
- .../providers/kling/kling-video-omni/SKILL.md      |  310 +---
- .../providers/kling/kling-video-to-audio/SKILL.md  |  260 +--
- .../providers/kling/kling-virtual-try-on/SKILL.md  |  260 +--
- .../providers/kling/kling-voice-clone/SKILL.md     |  286 +---
- .../todo/151-kling-native-image-generation.md      |  105 ++
- ...152-kling-native-omni-image-reference-extend.md |  122 ++
- .../todo/153-kling-native-virtual-try-on.md        |   93 ++
- .../todo/154-kling-native-text-image-to-video.md   |  151 ++
- ...155-kling-native-omni-video-reference-extend.md |  126 ++
- .../156-kling-native-motion-control-effects.md     |  112 ++
- .../todo/157-kling-native-avatar-lipsync.md        |  119 ++
- kiani/tickets/todo/158-kling-native-audio-suite.md |  128 ++
- .../159-kling-native-image-recognize-multishot.md  |  119 ++
- .../todo/160-kling-native-multi-elements-video.md  |  111 ++
- .../todo/161-kling-native-element-library.md       |  122 ++
- registry/registry.json                             | 1753 +-------------------
- src/adapters/kling.ts                              |   93 +-
- 40 files changed, 2450 insertions(+), 8260 deletions(-)
-
---- 8f1bc97: feat: add shared fetch helper with timeout and optional logging ---
- CHANGELOG.md               |  14 +++++
- package-lock.json          |   4 +-
- package.json               |   2 +-
- src/adapters/fal-ai.ts     |   7 ++-
- src/adapters/kling.ts      |   5 +-
- src/adapters/openrouter.ts |   3 +-
- src/adapters/replicate.ts  |   9 +--
- src/adapters/wavespeed.ts  |   5 +-
- src/configure.ts           |   4 ++
- src/fetch.ts               | 104 +++++++++++++++++++++++++++++++
- src/index.ts               |   4 ++
- src/types.ts               |  23 +++++++
- tests/unit/fetch.test.ts   | 152 +++++++++++++++++++++++++++++++++++++++++++++
- 13 files changed, 321 insertions(+), 15 deletions(-)

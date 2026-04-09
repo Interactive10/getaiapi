@@ -242,6 +242,35 @@ export interface KlingVideoAudioResult {
   audios: Array<{ id: string; url_mp3?: string; url_wav?: string; duration_mp3?: string; duration_wav?: string }>
 }
 
+// ── Account ───────────────────────────────────────────────────────────────────
+
+export interface AccountCostsInput {
+  /** Query start time, Unix timestamp in ms. */
+  start_time: number
+  /** Query end time, Unix timestamp in ms. */
+  end_time: number
+  /** Optional filter by exact resource package name. */
+  resource_pack_name?: string
+}
+
+export interface ResourcePackInfo {
+  resource_pack_name: string
+  resource_pack_id: string
+  /** `"decreasing_total"` = fixed pool; `"constant_period"` = periodic refresh. */
+  resource_pack_type: 'decreasing_total' | 'constant_period'
+  total_quantity: number
+  /** Remaining units — has a 12-hour reporting delay. */
+  remaining_quantity: number
+  purchase_time: number
+  effective_time: number
+  invalid_time: number
+  status: 'toBeOnline' | 'online' | 'expired' | 'runOut'
+}
+
+export interface AccountCostsResult {
+  resource_pack_subscribe_infos: ResourcePackInfo[]
+}
+
 // ── Internal ─────────────────────────────────────────────────────────────────
 
 export interface KlingApiResponse {
