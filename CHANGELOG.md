@@ -6,6 +6,16 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.1.1] - 2026-04-10
+
+### Fixed
+
+- **`element_list` type**: Changed item shape from `{ id: string; image: string }` to `{ element_id: number }` across `ImageToVideoInput`, `OmniVideoInput`, and `MotionControlInput` to match the Kling API spec (`element_id` is a `long`, no `image` field).
+
+### Changed
+
+- **README**: Updated all `element_list` type signatures and usage examples to match corrected shape. Added "Character Speaking with Custom Voice" section documenting three use cases: avatar with TTS audio (A), element-only video (B), and voice-only video (C). Clarified that `element_list` and `voice_list` are mutually exclusive.
+
 ## [2.1.0] - 2026-04-09
 
 ### Added

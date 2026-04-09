@@ -115,8 +115,8 @@ const result = await kling.imageToVideoV3Pro({
   cfg_scale?: number
   sound?: 'on' | 'off'
   image_tail?: string         // end frame image URL
-  voice_list?: Array<{ voice_id: string }>
-  element_list?: Array<{ id: string; image: string }>
+  voice_list?: Array<{ voice_id: string }>   // mutually exclusive with element_list
+  element_list?: Array<{ element_id: number }> // mutually exclusive with voice_list
 }
 ```
 
@@ -163,7 +163,7 @@ const result = await kling.omniVideoO3ProTextToVideo({
   aspect_ratio?: string
   cfg_scale?: number
   sound?: 'on' | 'off'
-  element_list?: Array<{ id: string; image: string }>
+  element_list?: Array<{ element_id: number }>
 }
 ```
 
@@ -320,7 +320,7 @@ const result = await kling.motionControlV3Pro({
   prompt?: string
   keep_original_sound?: boolean
   character_orientation?: string
-  element_list?: Array<{ id: string; image: string }>
+  element_list?: Array<{ element_id: number }>
 }
 ```
 
@@ -595,10 +595,10 @@ const el = await kling.createElement({
 })
 
 // Use element_id in video generation
-await kling.imageToVideoV2_1Master({
+await kling.imageToVideoV3Pro({
   image: 'https://example.com/scene.jpg',
   prompt: 'Character walks forward',
-  element_list: [{ id: el.element_id, image: 'https://example.com/frontal.jpg' }],
+  element_list: [{ element_id: Number(el.element_id) }],
 })
 
 // List all custom elements (paginated)
@@ -666,6 +666,57 @@ const result = await kling.queryVoice('task-id')
 
 // Delete a custom voice
 await kling.deleteVoice('voice-id')
+```
+
+### Character Speaking with Custom Voice
+
+`element_list` and `voice_list` are mutually exclusive on all video endpoints — you cannot pass both at once. To get a character (element) to speak in their own custom voice, use a two-step approach: generate TTS audio first, then drive an avatar with the character's image.
+
+**Use case A — Character video with custom voice (avatar)**
+
+```typescript
+import { kling } from 'getaiapi'
+
+// Step 1: Generate speech audio from your custom voice
+const audio = await kling.tts({
+  text: 'Hello, welcome to my world.',
+  voice_id: 'your-custom-voice-id',
+  voice_language: 'en',
+})
+
+// Step 2: Animate the character image with that audio (lip-synced)
+const video = await kling.avatarV2Pro({
+  image: element.element_image_list.frontal_image, // element's frontal image
+  audio_id: audio.audios[0].id,                   // TTS result audio ID
+  prompt: 'looking at the camera, friendly expression',
+})
+
+console.log(video.videos[0].url)
+```
+
+**Use case B — Character video with element (no custom voice)**
+
+When you only need visual character consistency and don't need a specific voice:
+
+```typescript
+const video = await kling.imageToVideoV3Pro({
+  image: 'https://example.com/scene.jpg',
+  prompt: 'Character walks through a forest',
+  element_list: [{ element_id: Number(el.element_id) }],
+  sound: 'on',  // Kling generates audio automatically
+})
+```
+
+**Use case C — Character video with voice (no element)**
+
+When you only need a specific voice track and don't need element-based character consistency:
+
+```typescript
+const video = await kling.imageToVideoV3Pro({
+  image: 'https://example.com/character.jpg',
+  prompt: '<<<voice_1>>> Hello, welcome to my world.',
+  voice_list: [{ voice_id: 'your-custom-voice-id' }],
+})
 ```
 
 ### Multi-Elements Video Workflow
