@@ -51,6 +51,7 @@ export interface OmniVideoInput extends PollOptions {
   aspect_ratio?: string
   cfg_scale?: number
   sound?: 'on' | 'off'
+  voice_list?: Array<{ voice_id: string }>
   element_list?: Array<{ element_id: number }>
   options?: Record<string, unknown>
 }

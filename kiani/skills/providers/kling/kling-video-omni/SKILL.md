@@ -26,7 +26,7 @@ Generate videos using multi-modal prompts combining text, images, elements, and 
 | `model_name` | `string` | Optional | `kling-video-o1` | Model Name. Enum: `kling-video-o1`, `kling-v3-omni` |
 | `multi_shot` | `boolean` | Optional | `false` | Generate multi-shot video. When true: prompt is invalid, start/end frames not supported. |
 | `shot_type` | `string` | Optional |  | Storyboard method. Enum: `customize`, `intelligence`. Required when multi_shot is true. |
-| `prompt` | `string` | Optional |  | Text prompt. Max 2500 characters. Use `<<<image_1>>>`, `<<<element_1>>>`, `<<<video_1>>>` to reference assets. Required when multi_shot is false or shot_type is intelligence. |
+| `prompt` | `string` | Optional |  | Text prompt. Max 2500 characters. Use `<<<image_1>>>`, `<<<element_1>>>`, `<<<video_1>>>`, `<<<voice_1>>>` to reference assets. `<<<voice_N>>>` follows the same sequence as `voice_list`; use simple grammar (e.g. `The man <<<voice_1>>> said, "Hello."`). When `voice_list` is provided and a voice is referenced, billed as "with voice generation". Required when multi_shot is false or shot_type is intelligence. |
 | `multi_prompt` | `array` | Optional |  | Storyboard prompts. Up to 6 storyboards. Required when multi_shot is true and shot_type is customize. |
 | `multi_prompt[].index` | `int` | Required |  | Shot sequence number |
 | `multi_prompt[].prompt` | `string` | Required |  | Prompt (max 512 chars) |
@@ -34,6 +34,8 @@ Generate videos using multi-modal prompts combining text, images, elements, and 
 | `image_list` | `array` | Optional |  | Reference images. Can serve as element/scene/style references or as first/end frames. Formats: .jpg/.jpeg/.png, <=10MB, min 300px. With reference video: sum of images+elements <=4. Without: <=7. |
 | `image_list[].image_url` | `string` | Required |  | Image URL or Base64 |
 | `image_list[].type` | `string` | Optional |  | Frame type. Enum: `first_frame`, `end_frame`. Only set when using as start/end frame. |
+| `voice_list` | `array` | Optional |  | Reference voices. Up to 2. When used, `sound` must be `on`. Reference in prompt via `<<<voice_1>>>`, `<<<voice_2>>>` (same sequence as array). Task billed as "with voice generation" when prompt references a voice. |
+| `voice_list[].voice_id` | `string` | Required |  | Voice ID |
 | `element_list` | `array` | Optional |  | Reference elements. Max 3 with first frame; kling-v3-omni supports 3 with start+end frames. With reference video: sum of images+elements <=4. Without: <=7. |
 | `element_list[].element_id` | `long` | Required |  | Element ID |
 | `video_list` | `array` | Optional |  | Reference videos. Max 1 video. Formats: MP4/MOV, >=3s, 720px-2160px, 24-60fps, <=200MB. When present, sound parameter can only be `off`. |

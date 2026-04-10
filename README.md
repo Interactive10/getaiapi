@@ -156,13 +156,14 @@ const result = await kling.omniVideoO3ProTextToVideo({
 
 ```typescript
 {
-  prompt: string              // required
+  prompt: string              // required. Use <<<element_1>>>, <<<voice_1>>>, <<<image_1>>>, <<<video_1>>> to reference assets
   image?: string
   negative_prompt?: string
   duration?: string
   aspect_ratio?: string
   cfg_scale?: number
   sound?: 'on' | 'off'
+  voice_list?: Array<{ voice_id: string }>    // max 2; requires sound: 'on'
   element_list?: Array<{ element_id: number }>
 }
 ```
@@ -670,54 +671,67 @@ await kling.deleteVoice('voice-id')
 
 ### Character Speaking with Custom Voice
 
-`element_list` and `voice_list` are mutually exclusive on all video endpoints — you cannot pass both at once. To get a character (element) to speak in their own custom voice, use a two-step approach: generate TTS audio first, then drive an avatar with the character's image.
+**Use case A — Element + voice talking head (omni-video)**
 
-**Use case A — Character video with custom voice (avatar)**
+Pass both `element_list` and `voice_list` together on `omniVideo*` functions. Reference them in the prompt with `<<<element_1>>>` and `<<<voice_1>>>`. Requires `sound: 'on'`.
 
 ```typescript
 import { kling } from 'getaiapi'
 
-// Step 1: Generate speech audio from your custom voice
+const video = await kling.omniVideoO3ProTextToVideo({
+  prompt: '<<<element_1>>> <<<voice_1>>> said, "Think of it like a massive group chat."',
+  sound: 'on',
+  element_list: [{ element_id: 307723399526301 }],
+  voice_list: [{ voice_id: '870470675470499933' }],
+  aspect_ratio: '9:16',
+  duration: '5',
+})
+
+console.log(video.videos[0].url)
+```
+
+**Use case B — Avatar with TTS audio (lip-synced)**
+
+When you need precise lip sync from a custom voice, generate TTS audio first then pass it to Avatar:
+
+```typescript
+// Step 1: Generate speech audio
 const audio = await kling.tts({
   text: 'Hello, welcome to my world.',
   voice_id: 'your-custom-voice-id',
   voice_language: 'en',
 })
 
-// Step 2: Animate the character image with that audio (lip-synced)
+// Step 2: Animate the character's frontal image with that audio
 const video = await kling.avatarV2Pro({
-  image: element.element_image_list.frontal_image, // element's frontal image
-  audio_id: audio.audios[0].id,                   // TTS result audio ID
+  image: element.element_image_list.frontal_image,
+  audio_id: audio.audios[0].id,
   prompt: 'looking at the camera, friendly expression',
 })
-
-console.log(video.videos[0].url)
 ```
 
-**Use case B — Character video with element (no custom voice)**
-
-When you only need visual character consistency and don't need a specific voice:
+**Use case C — Element only (no custom voice)**
 
 ```typescript
 const video = await kling.imageToVideoV3Pro({
   image: 'https://example.com/scene.jpg',
   prompt: 'Character walks through a forest',
   element_list: [{ element_id: Number(el.element_id) }],
-  sound: 'on',  // Kling generates audio automatically
 })
 ```
 
-**Use case C — Character video with voice (no element)**
-
-When you only need a specific voice track and don't need element-based character consistency:
+**Use case D — Voice only (no element)**
 
 ```typescript
-const video = await kling.imageToVideoV3Pro({
-  image: 'https://example.com/character.jpg',
-  prompt: '<<<voice_1>>> Hello, welcome to my world.',
+const video = await kling.omniVideoO3ProTextToVideo({
+  prompt: '<<<voice_1>>> said, "Hello, welcome."',
+  sound: 'on',
   voice_list: [{ voice_id: 'your-custom-voice-id' }],
+  aspect_ratio: '16:9',
 })
 ```
+
+> **Note:** On `imageToVideo*` functions, `element_list` and `voice_list` are mutually exclusive. On `omniVideo*` functions, both can be passed together.
 
 ### Multi-Elements Video Workflow
 

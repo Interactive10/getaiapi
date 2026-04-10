@@ -6,6 +6,18 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.1.2] - 2026-04-10
+
+### Added
+
+- **`OmniVideoInput.voice_list`**: Added `voice_list?: Array<{ voice_id: string }>` to `OmniVideoInput` — omni-video functions now accept both `element_list` and `voice_list` simultaneously, enabling element + custom voice talking head generation in a single call.
+- **`getaiapi-kling` skill**: New internal skill document covering every exported function, input/output types, usage examples, and multi-step workflows (lip sync, multi-elements, talking head).
+
+### Changed
+
+- **README**: Updated `OmniVideoInput` type block to include `voice_list` and prompt reference syntax (`<<<element_1>>>`, `<<<voice_1>>>`). Rewrote "Character Speaking with Custom Voice" section with four use cases: (A) element + voice in omni-video, (B) avatar + TTS lip sync, (C) element only, (D) voice only. Corrected prior claim that `element_list` and `voice_list` are mutually exclusive on all endpoints — they are only mutually exclusive on `imageToVideo*` functions.
+- **Kling omni-video SKILL.md**: Added `voice_list` / `voice_list[].voice_id` rows to request table; updated prompt description with `<<<voice_N>>>` syntax, `sound: on` requirement, billing note, and simple-grammar guidance.
+
 ## [2.1.1] - 2026-04-10
 
 ### Fixed
