@@ -1,5 +1,41 @@
 === Last 5 Commits ===
 
+--- Commit: 0aec921 ---
+Date: 2026-04-10 01:00:45 +0400
+Author: arash
+Message: fix: correct element_list field name and type to match Kling API spec
+
+element_list item shape was { id: string; image: string } but Kling API
+expects { element_id: number }. Updated ImageToVideoInput, OmniVideoInput,
+and MotionControlInput types plus all README examples. Added README section
+documenting element/voice mutual exclusivity and the two-step avatar+TTS
+workaround. Bump to 2.1.1.
+
+
+--- Commit: 3104221 ---
+Date: 2026-04-10 00:49:39 +0400
+Author: arash
+Message: fix: correct element_list field name and type to match Kling API spec
+
+element_list items use element_id (long) not id (string), and have no
+image field. Fix across ImageToVideoInput, OmniVideoInput, and
+MotionControlInput. Also fix TS2352 cast error in kling.test.ts.
+
+
+--- Commit: 44f52f7 ---
+Date: 2026-04-09 14:43:14 +0400
+Author: arash
+Message: feat: add 39 Kling management, list, and query APIs (v2.1.0)
+
+Add voice management (listVoices, listPresetVoices, queryVoice, deleteVoice),
+element single-task query (getElement), full 8-step multi-elements video workflow
+(init/add/delete/clear/preview/generate + query/list), 13 paginated list endpoints,
+and 13 single-task query endpoints covering every generation type.
+
+Two shared client helpers (taskList, taskGet) keep the implementation concise.
+All 39 functions exported from index.ts with full TypeScript types. 20,752 tests passing.
+
+
 --- Commit: df85fd0 ---
 Date: 2026-04-09 12:50:27 +0400
 Author: arash
@@ -18,51 +54,37 @@ Expand KlingRateLimitError with bodyCode and detail fields.
 Add kling-account and kling-rate-limits SKILL.md docs.
 
 
---- Commit: d579339 ---
-Date: 2026-04-05 15:07:10 +0400
-Author: arash
-Message: fix: update docs and tests for ticket 165 extractor and type fixes
-
-Update CHANGELOG and README to reflect new output types
-(KlingFaceResult, KlingMultiShotResult, KlingVoiceResult,
-KlingVideoAudioResult), corrected input types (VideoToAudioInput,
-TextToAudioInput, IdentifyFaceInput), and sync identifyFace endpoint.
-Add tests for createVoice, textToAudio, and videoToAudio extractors.
-Remove stale ticket 164.
-
-
---- Commit: 9315738 ---
-Date: 2026-04-05 14:56:39 +0400
-Author: arash
-Message: feat: v2 kling provider with typed extractors, deprecate v1 adapters
-
-Move all v1 code (adapters, registry, scripts, tests) to deprecated/.
-Add native kling provider (src/providers/kling/) with typed client,
-JWT auth, 69 model functions, exponential-backoff polling, and custom
-error hierarchy.
-
-Fix 9 extractor and type bugs (ticket 165): identifyFace now sync
-(no polling), multiShot preserves url_1/url_2/url_3, createVoice
-reads voices[] not audios[], textToAudio/videoToAudio normalize
-url_mp3/url_wav fields, input types corrected for VideoToAudio,
-TextToAudio, and IdentifyFace. Four new result types exported.
-
-
---- Commit: c3f3747 ---
-Date: 2026-04-04 13:47:19 +0400
-Author: arash
-Message: fix: align kling param_map with fal-ai canonical names and add provider-scoped type safety
-
-Add 165 missing param_map entries across 62 dual-provider kling models
-so canonical param names translate to Kling-native field names
-(end_image_url→image_tail, generate_audio→sound, voice_ids→voice_list,
-elements→element_list, keep_audio→keep_original_sound). Fix mapInput()
-to apply param_map renames to options keys. Add value transforms for
-kling (boolean→string, array→objects). Make GenerateRequest generic on
-provider for compile-time options narrowing. 20 new tests. Bump 1.3.1.
-
-
 === Diffs ===
+
+--- 0aec921: fix: correct element_list field name and type to match Kling API spec ---
+ CHANGELOG.md      | 10 +++++++++
+ README.md         | 63 +++++++++++++++++++++++++++++++++++++++++++++++++------
+ package-lock.json |  2 +-
+ package.json      |  2 +-
+ 4 files changed, 69 insertions(+), 8 deletions(-)
+
+--- 3104221: fix: correct element_list field name and type to match Kling API spec ---
+ src/providers/kling/kling.test.ts | 2 +-
+ src/providers/kling/types.ts      | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+--- 44f52f7: feat: add 39 Kling management, list, and query APIs (v2.1.0) ---
+ CHANGELOG.md                                       |  16 +
+ README.md                                          | 134 ++++++-
+ kiani/last_5_commits.txt                           |  88 ++---
+ kiani/primer.md                                    |  61 ++--
+ .../kling/kling-multi-elements-video/SKILL.md      |  54 ++-
+ .../done/166-kling-missing-management-apis.md      | 210 +++++++++++
+ kiani/tickets/scoreboard.md                        |   5 +-
+ package-lock.json                                  |   8 +-
+ package.json                                       |   2 +-
+ src/providers/kling/client.ts                      | 126 ++++++-
+ src/providers/kling/extract.ts                     |  21 ++
+ src/providers/kling/index.ts                       |   7 +
+ src/providers/kling/kling.test.ts                  | 384 ++++++++++++++++++++-
+ src/providers/kling/models.ts                      | 186 +++++++++-
+ src/providers/kling/types.ts                       | 153 ++++++++
+ 15 files changed, 1359 insertions(+), 96 deletions(-)
 
 --- df85fd0: docs: bump to 2.0.1 and document accountCosts in README and CHANGELOG ---
  CHANGELOG.md      |  8 ++++++++
@@ -81,132 +103,3 @@ provider for compile-time options narrowing. 20 new tests. Bump 1.3.1.
  src/providers/kling/models.ts                      |   8 +-
  src/providers/kling/types.ts                       |  29 +++
  8 files changed, 391 insertions(+), 94 deletions(-)
-
---- d579339: fix: update docs and tests for ticket 165 extractor and type fixes ---
- CHANGELOG.md                                       |   9 +-
- README.md                                          |  83 +++++--
- .../tickets/proposals/164-kling-v2-runtime-bugs.md | 275 ---------------------
- src/providers/kling/kling.test.ts                  |  96 ++++++-
- 4 files changed, 167 insertions(+), 296 deletions(-)
-
---- 9315738: feat: v2 kling provider with typed extractors, deprecate v1 adapters ---
- CHANGELOG.md                                       |   22 +
- README.md                                          |  842 ++++----
- {registry => deprecated/registry}/.gitkeep         |    0
- {registry => deprecated/registry}/registry.json    |    0
- {scripts => deprecated/scripts}/.gitkeep           |    0
- {scripts => deprecated/scripts}/catalog.ts         |    0
- {scripts => deprecated/scripts}/find-duplicates.js |    0
- .../scripts}/generate-models-md.js                 |    0
- .../scripts}/generate-registry.ts                  |    0
- .../scripts}/validate-registry.js                  |    0
- {src => deprecated/src}/adapters/.gitkeep          |    0
- {src => deprecated/src}/adapters/base.ts           |    0
- {src => deprecated/src}/adapters/fal-ai.ts         |    0
- {src => deprecated/src}/adapters/kling.ts          |    0
- {src => deprecated/src}/adapters/openrouter.ts     |    0
- {src => deprecated/src}/adapters/replicate.ts      |    0
- {src => deprecated/src}/adapters/wavespeed.ts      |    0
- {src => deprecated/src}/auth.ts                    |    0
- deprecated/src/cli.ts                              |  255 +++
- {src => deprecated/src}/configure.ts               |    0
- {src => deprecated/src}/discovery.ts               |    0
- {src => deprecated/src}/errors.ts                  |    0
- {src => deprecated/src}/fetch.ts                   |    0
- {src => deprecated/src}/gateway.ts                 |    0
- deprecated/src/index.ts                            |   64 +
- {src => deprecated/src}/mapper.ts                  |    0
- {src => deprecated/src}/registry.ts                |    0
- {src => deprecated/src}/retry.ts                   |    0
- {src => deprecated/src}/s3-signer.ts               |    0
- {src => deprecated/src}/storage.ts                 |    0
- {src => deprecated/src}/types.ts                   |    0
- {tests => deprecated/tests}/catalog/.gitkeep       |    0
- {tests => deprecated/tests}/e2e/.gitkeep           |    0
- {tests => deprecated/tests}/e2e/smoke.test.ts      |    0
- .../tests}/fixtures/fal-ai/text-to-image/.gitkeep  |    0
- .../fal-ai/text-to-image/flux-schnell.json         |    0
- .../fixtures/fal-ai/video-swap/pixverse-swap.json  |    0
- .../text-generation/chat-completion.json           |    0
- .../fixtures/replicate/text-to-image/.gitkeep      |    0
- .../replicate/text-to-image/flux-schnell.json      |    0
- .../fixtures/wavespeed/text-to-image/.gitkeep      |    0
- .../wavespeed/text-to-image/z-image-turbo.json     |    0
- {tests => deprecated/tests}/integration/.gitkeep   |    0
- .../tests}/integration/discovery.test.ts           |    0
- .../tests}/integration/generate.test.ts            |    0
- .../tests}/integration/provider-routing.test.ts    |    0
- .../tests}/integration/submit-poll.test.ts         |    0
- {tests => deprecated/tests}/unit/adapters/.gitkeep |    0
- .../tests}/unit/adapters/fal-ai-extended.test.ts   |    0
- .../tests}/unit/adapters/fal-ai-url-parity.test.ts |    0
- .../tests}/unit/adapters/fal-ai.test.ts            |    0
- .../tests}/unit/adapters/openrouter.test.ts        |    0
- .../unit/adapters/replicate-extended.test.ts       |    0
- .../tests}/unit/adapters/replicate.test.ts         |    0
- .../unit/adapters/wavespeed-extended.test.ts       |    0
- .../tests}/unit/adapters/wavespeed.test.ts         |    0
- .../tests}/unit/audit-vs-registry.test.ts          |    0
- {tests => deprecated/tests}/unit/auth.test.ts      |    0
- {tests => deprecated/tests}/unit/cli.test.ts       |    0
- {tests => deprecated/tests}/unit/configure.test.ts |    0
- {tests => deprecated/tests}/unit/fetch.test.ts     |    0
- .../tests}/unit/models/kling-native-audio.test.ts  |    0
- .../models/kling-native-image-generation.test.ts   |    0
- .../tests}/unit/models/kling-native-misc.test.ts   |    0
- .../tests}/unit/models/kling-native-video.test.ts  |    0
- .../unit/models/kling-param-alignment.test.ts      |    0
- .../unit/models/kling-video-create-voice.test.ts   |    0
- .../kling-video-v3-pro-image-to-video.test.ts      |    0
- .../kling-video-v3-pro-motion-control.test.ts      |    0
- .../tests}/unit/models/nano-banana-2-edit.test.ts  |    0
- .../tests}/unit/models/nano-banana-2.test.ts       |    0
- .../unit/models/openrouter-new-models.test.ts      |    0
- .../tests}/unit/models/pixverse-lipsync.test.ts    |    0
- .../tests}/unit/models/pixverse-swap.test.ts       |    0
- .../unit/models/wan-v2.2-14b-animate-move.test.ts  |    0
- .../models/wan-v2.2-14b-animate-replace.test.ts    |    0
- .../tests}/unit/registry-integrity.test.ts         |    0
- .../tests}/unit/retry-extended.test.ts             |    0
- {tests => deprecated/tests}/unit/retry.test.ts     |    0
- {tests => deprecated/tests}/unit/s3-signer.test.ts |    0
- {tests => deprecated/tests}/unit/storage.test.ts   |    0
- .../tests}/unit/types/provider-type-safety.test.ts |    0
- kiani/brainstorm.md                                |   26 +-
- kiani/last_5_commits.txt                           | 2074 +-------------------
- kiani/primerPrompt.md                              |    2 +-
- kiani/tickets/README.md                            |    6 +
- .../160-kling-native-multi-elements-video.md       |    2 +-
- .../161-kling-native-element-library.md            |    2 +-
- .../162-kling-param-map-alignment.md               |    1 +
- kiani/tickets/done/163-kling-v2-skill-alignment.md |  374 ++++
- .../tickets/proposals/164-kling-v2-runtime-bugs.md |  275 +++
- .../165-kling-v2-extractor-and-type-fixes.md       |  104 +
- package.json                                       |   10 +-
- src/cli.ts                                         |  259 +--
- src/env.ts                                         |   43 +
- src/index.ts                                       |   89 +-
- src/providers/kling/auth.ts                        |   24 +
- src/providers/kling/client.ts                      |  172 ++
- src/providers/kling/errors.ts                      |   53 +
- src/providers/kling/extract.ts                     |   81 +
- src/providers/kling/index.ts                       |   40 +
- src/providers/kling/kling.test.ts                  |  628 ++++++
- src/providers/kling/models.ts                      |  291 +++
- src/providers/kling/types.ts                       |  252 +++
- tsconfig.json                                      |    6 +-
- vitest.config.ts                                   |    6 +-
- 106 files changed, 3212 insertions(+), 2791 deletions(-)
-
---- c3f3747: fix: align kling param_map with fal-ai canonical names and add provider-scoped type safety ---
- CHANGELOG.md                                       |  13 +
- README.md                                          |  27 +-
- .../current/162-kling-param-map-alignment.md       | 154 ++++++++++++
- package-lock.json                                  |  10 +-
- package.json                                       |   2 +-
- registry/registry.json                             | 255 +++++++++++++++----
- src/mapper.ts                                      |  21 +-
- src/types.ts                                       |  21 +-
- tests/unit/models/kling-param-alignment.test.ts    | 273 +++++++++++++++++++++
- tests/unit/types/provider-type-safety.test.ts      |  39 +++
- 10 files changed, 756 insertions(+), 59 deletions(-)
