@@ -1,12 +1,12 @@
 # getaiapi
 
-**One function to call any AI model.**
+**Typed AI provider SDKs. One import per provider.**
 
 [![npm version](https://img.shields.io/npm/v/getaiapi)](https://www.npmjs.com/package/getaiapi)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue.svg)](https://www.typescriptlang.org/)
 
-A unified TypeScript library that wraps 1,890+ AI models across 4 providers into a single `generate()` function. One input shape. One output shape. Any model.
+Each AI provider gets a typed namespace with one function per model. No generic `generate()`, no model strings, no mapping layers. What you type is what gets sent.
 
 ## Install
 
@@ -14,598 +14,892 @@ A unified TypeScript library that wraps 1,890+ AI models across 4 providers into
 npm install getaiapi
 ```
 
-## Quick Start
+## Kling AI
 
-```typescript
-import { generate } from 'getaiapi'
-
-const result = await generate({
-  model: 'flux-schnell',
-  prompt: 'a cat wearing sunglasses'
-})
-
-console.log(result.outputs[0].url)
-```
-
-## More Examples
-
-**Text generation (LLMs)**
-
-```typescript
-const answer = await generate({
-  model: 'claude-sonnet-4-6',
-  prompt: 'Explain quantum computing in one paragraph'
-})
-
-console.log(answer.outputs[0].content)
-```
-
-With system prompt and parameters:
-
-```typescript
-const reply = await generate({
-  model: 'gpt-4o',
-  prompt: 'Write a haiku about TypeScript',
-  options: {
-    system: 'You are a creative poet.',
-    temperature: 0.9,
-    max_tokens: 100,
-  }
-})
-```
-
-**Text-to-video**
-
-```typescript
-const video = await generate({
-  model: 'veo3.1',
-  prompt: 'a timelapse of a flower blooming in a garden'
-})
-```
-
-**Image editing**
-
-```typescript
-const edited = await generate({
-  model: 'gpt-image-1.5-edit',
-  image: 'https://example.com/photo.jpg',
-  prompt: 'add a rainbow in the sky'
-})
-```
-
-**Multi-image references** (e.g., character + location consistency)
-
-```typescript
-const scene = await generate({
-  model: 'google-nano-banana-pro-edit',
-  prompt: 'cinematic shot of the character in the location',
-  image: 'https://example.com/character.jpg',
-  images: [
-    'https://example.com/character.jpg',
-    'https://example.com/location.jpg',
-  ],
-})
-```
-
-**Text-to-speech**
-
-```typescript
-const speech = await generate({
-  model: 'elevenlabs-v3',
-  prompt: 'Hello, welcome to getaiapi.',
-  options: { voice_id: 'rachel' }
-})
-```
-
-**Upscale an image**
-
-```typescript
-const upscaled = await generate({
-  model: 'topaz-upscale-image',
-  image: 'https://example.com/low-res.jpg'
-})
-```
-
-**Remove background**
-
-```typescript
-const cutout = await generate({
-  model: 'birefnet-v2',
-  image: 'https://example.com/portrait.jpg'
-})
-```
-
-## Async Job Control
-
-For long-running jobs (video generation, training), you can submit a job and poll for status separately instead of blocking until completion.
-
-```typescript
-import { submit, poll } from 'getaiapi'
-
-// Submit — returns immediately with the provider's task ID
-const job = await submit({
-  model: 'veo3.1',
-  prompt: 'a timelapse of a flower blooming',
-})
-
-console.log(job.id)     // provider task ID
-console.log(job.status) // 'pending' | 'processing' | 'completed'
-
-// Poll — check status manually (call in a loop, on a timer, etc.)
-let result = await poll(job)
-
-while (result.status === 'pending' || result.status === 'processing') {
-  await new Promise(r => setTimeout(r, 2000))
-  result = await poll(job)
-}
-
-if (result.status === 'completed') {
-  console.log(result.outputs[0].url)
-}
-```
-
-Synchronous providers (like OpenRouter) return `status: 'completed'` from `submit()` immediately -- check status before polling.
-
-`submitAndPoll()` is an alias for `generate()` that makes the blocking behavior explicit:
-
-```typescript
-import { submitAndPoll } from 'getaiapi'
-
-const result = await submitAndPoll({
-  model: 'flux-schnell',
-  prompt: 'a cat in space',
-})
-```
-
-## Configuration
-
-### Option 1: Environment Variables
-
-Set API keys as environment variables. You only need keys for the providers you plan to call.
-
-```bash
-# fal-ai (1,201 models)
-export FAL_KEY="your-fal-key"
-
-# Replicate (687 models)
-export REPLICATE_API_TOKEN="your-replicate-token"
-
-# WaveSpeed (66 models)
-export WAVESPEED_API_KEY="your-wavespeed-key"
-
-# OpenRouter (24 LLM models — Claude, GPT, Gemini, Llama, etc.)
-export OPENROUTER_API_KEY="your-openrouter-key"
-```
-
-### Option 2: Programmatic Configuration
-
-Use `configure()` to set keys in code -- useful when your env vars have different names or keys come from a secrets manager.
-
-```typescript
-import { configure } from 'getaiapi'
-
-configure({
-  keys: {
-    'fal-ai': process.env.MY_FAL_TOKEN,
-    'replicate': process.env.MY_REPLICATE_TOKEN,
-    'wavespeed': process.env.MY_WAVESPEED_TOKEN,
-    'openrouter': process.env.MY_OPENROUTER_TOKEN,
-  },
-})
-```
-
-You can also set keys and storage together:
-
-```typescript
-configure({
-  keys: {
-    'fal-ai': 'your-fal-key',
-  },
-  storage: {
-    accountId: 'your-r2-account',
-    bucketName: 'your-bucket',
-    accessKeyId: 'your-r2-key',
-    secretAccessKey: 'your-r2-secret',
-    publicUrlBase: 'https://cdn.example.com',
-  },
-})
-```
-
-Or set just provider keys with `configureAuth()`:
-
-```typescript
-import { configureAuth } from 'getaiapi'
-
-configureAuth({
-  'fal-ai': myKeyVault.get('fal'),
-  'replicate': myKeyVault.get('replicate'),
-})
-```
-
-Programmatic keys take priority over environment variables. Any provider not set programmatically falls back to its default env var.
-
-Models are automatically filtered to only show providers where you have a valid key configured.
-
-## Model Discovery
-
-```typescript
-import { listModels, resolveModel, deriveCategory } from 'getaiapi'
-
-// List all models
-const all = listModels()
-
-// Filter by input/output modality
-const imageModels = listModels({ input: 'text', output: 'image' })
-
-// Filter by provider
-const falModels = listModels({ provider: 'fal-ai' })
-
-// Search by name
-const fluxModels = listModels({ query: 'flux' })
-
-// Resolve a specific model
-const model = resolveModel('flux-schnell')
-// => { canonical_name, aliases, modality, providers }
-
-// Derive a display label from modality
-deriveCategory(model) // => "text-to-image"
-```
-
-## Modality
-
-Models declare their input and output types via `modality`. There are no fixed categories — modality is the source of truth.
-
-**Input types:** `text`, `image`, `audio`, `video`
-
-**Output types:** `image`, `video`, `audio`, `text`, `3d`, `segmentation`
-
-Common combinations across 1,890+ models:
-
-| Inputs | Outputs | Example |
-|---|---|---|
-| text | image | `flux-schnell`, `ideogram-v3` |
-| text | video | `veo3.1`, `sora-2` |
-| image, text | image | `gpt-image-1.5-edit`, `flux-2-pro-edit` |
-| image, text | video | `kling-video-v3-pro`, `seedance-v1.5-pro` |
-| text | audio | `elevenlabs-v3`, `minimax-music-v2` |
-| text | text | `claude-sonnet-4-6`, `gpt-4o` |
-| image | image | `topaz-upscale-image`, `birefnet-v2` |
-| image | 3d | `trellis-image-to-3d` |
-| audio | text | `whisper` |
-
-## Providers
-
-| Provider | Models | Auth Env Var | Protocol |
-|---|---|---|---|
-| fal-ai | 1,201 | `FAL_KEY` | Native fetch |
-| Replicate | 687 | `REPLICATE_API_TOKEN` | Native fetch |
-| WaveSpeed | 66 | `WAVESPEED_API_KEY` | Native fetch |
-| OpenRouter | 24 | `OPENROUTER_API_KEY` | Native fetch |
-
-Zero external dependencies -- all provider communication uses native `fetch`. Works in Node.js, Vercel Edge, Cloudflare Workers, Deno, Bun, and any ESM runtime -- no `fs` or special bundler config needed.
-
-## API Reference
-
-### `generate(request: GenerateRequest): Promise<GenerateResponse>`
-
-The core function. Resolves the model, maps parameters, calls the provider, and returns a unified response.
-
-**GenerateRequest**
-
-```typescript
-interface GenerateRequest {
-  model: string                                    // required - model name
-  provider?: ProviderName                          // preferred provider (optional)
-  prompt?: string                                  // text prompt
-  image?: string | File                            // input image (URL or File)
-  images?: (string | File)[]                       // multiple reference images
-  audio?: string | File                            // input audio
-  video?: string | File                            // input video
-  negative_prompt?: string                         // what to avoid
-  count?: number                                   // number of outputs
-  size?: string | { width: number; height: number } // output dimensions
-  seed?: number                                    // reproducibility seed
-  guidance?: number                                // guidance scale
-  steps?: number                                   // inference steps
-  strength?: number                                // denoising strength
-  format?: 'png' | 'jpeg' | 'webp' | 'mp4' | 'mp3' | 'wav' | 'obj' | 'glb'
-  quality?: number                                 // output quality
-  safety?: boolean                                 // enable safety checker
-  options?: Record<string, unknown>                // provider-specific overrides
-}
-```
-
-**GenerateResponse**
-
-```typescript
-interface GenerateResponse {
-  id: string
-  model: string
-  provider: string
-  status: 'completed' | 'failed'
-  outputs: OutputItem[]
-  metadata: {
-    seed?: number
-    inference_time_ms?: number
-    cost?: number
-    safety_flagged?: boolean
-    tokens?: number           // total tokens (LLM only)
-    prompt_tokens?: number    // input tokens (LLM only)
-    completion_tokens?: number // output tokens (LLM only)
-  }
-}
-
-interface OutputItem {
-  type: 'image' | 'video' | 'audio' | 'text' | '3d' | 'segmentation'
-  url?: string      // URL for media outputs
-  content?: string  // text content for LLM outputs
-  content_type: string
-  size_bytes?: number
-}
-```
-
-### `submit(request: GenerateRequest): Promise<SubmitResponse>`
-
-Submits a job to the provider and returns immediately without waiting for completion. Returns the provider's task ID and enough context to poll later.
-
-```typescript
-interface SubmitResponse {
-  id: string              // provider's task/request ID
-  model: string           // canonical model name
-  provider: ProviderName  // which provider handled it
-  endpoint: string        // needed for polling
-  status: 'pending' | 'processing' | 'completed'
-}
-```
-
-### `poll(job: SubmitResponse): Promise<PollResponse>`
-
-Checks the status of a submitted job once. Returns current status, and includes mapped outputs and metadata when completed.
-
-```typescript
-interface PollResponse {
-  id: string
-  model: string
-  provider: ProviderName
-  status: 'completed' | 'failed' | 'processing' | 'pending'
-  outputs?: OutputItem[]                   // populated when completed
-  metadata?: GenerateResponse['metadata']  // populated when completed
-  error?: string                           // populated when failed
-}
-```
-
-### `submitAndPoll(request: GenerateRequest): Promise<GenerateResponse>`
-
-Alias for `generate()`. Submits a job and polls until completion. Use this when you want the blocking behavior but want to be explicit about it.
-
-### `listModels(filters?: ListModelsFilters): ModelEntry[]`
-
-Returns all models in the registry. Accepts optional filters:
-
-- `input` -- filter by input modality (e.g. `'text'`, `'image'`, `'audio'`, `'video'`)
-- `output` -- filter by output modality (e.g. `'image'`, `'video'`, `'text'`, `'3d'`)
-- `provider` -- filter by provider (e.g. `'fal-ai'`)
-- `query` -- search canonical names and aliases
-
-### `resolveModel(name: string): ModelEntry`
-
-Resolves a model by name. Accepts canonical names, aliases, and normalized variants. Throws if no match is found.
-
-### `deriveCategory(model: ModelEntry): string`
-
-Derives a display category label from a model's modality (e.g. `"text-to-image"`).
-
-## R2 Storage (Asset Uploads)
-
-getaiapi includes built-in Cloudflare R2 storage support that automatically uploads binary assets before sending them to providers. Two modes are supported:
-
-- **`public`** (default) — requires a publicly readable bucket; returns public URLs (via `publicUrlBase` or the R2 endpoint)
-- **`presigned`** — works with private buckets; returns time-limited presigned GET URLs signed with S3 Signature V4 (no public access needed, `publicUrlBase` is not required)
+69 generation models plus 45 management, list, and query functions. Each model is a typed function with Kling-native field names.
 
 ### Setup
 
-Set these environment variables:
-
 ```bash
-# Required
-export R2_ACCOUNT_ID="your-cloudflare-account-id"
-export R2_BUCKET_NAME="your-bucket-name"
-export R2_ACCESS_KEY_ID="your-r2-access-key"
-export R2_SECRET_ACCESS_KEY="your-r2-secret-key"
-
-# Optional - custom public URL (only needed for mode: 'public')
-export R2_PUBLIC_URL="https://cdn.example.com"
-
-# Optional - use presigned URLs for private buckets (default: 'public')
-export R2_STORAGE_MODE="presigned"
-export R2_PRESIGN_EXPIRES_IN="3600"  # seconds, default: 3600, max: 604800 (7 days)
+export KLING_ACCESS_KEY="your-access-key"
+export KLING_SECRET_KEY="your-secret-key"
 ```
 
-#### How to get your R2 Public URL (public mode only)
-
-If using `mode: 'presigned'`, you can skip this — no public bucket access is needed.
-
-1. Log in to the [Cloudflare dashboard](https://dash.cloudflare.com)
-2. Go to **R2 Object Storage** in the left sidebar
-3. Click on your bucket
-4. Go to the **Settings** tab
-5. Under **Public access**, click **Allow Access**
-6. Cloudflare will provide a public URL like `https://<bucket>.<account-id>.r2.dev` — use this as your `R2_PUBLIC_URL`
-7. (Optional) You can also connect a **Custom Domain** under the same section for a cleaner URL like `https://cdn.yourdomain.com`
-
-Then call `configureStorage()` once at startup:
+Or configure programmatically:
 
 ```typescript
-import { configureStorage } from 'getaiapi'
+import { kling } from 'getaiapi'
 
-// Read from environment variables
-configureStorage()
-
-// Or pass config directly
-configureStorage({
-  accountId: 'your-account-id',
-  bucketName: 'your-bucket',
-  accessKeyId: 'your-key',
-  secretAccessKey: 'your-secret',
-  publicUrlBase: 'https://cdn.example.com', // optional
-  autoUpload: false,                         // optional
-  mode: 'public',                            // 'public' | 'presigned' (default: 'public')
-  presignExpiresIn: 3600,                    // presigned URL TTL in seconds (default: 3600)
-})
+kling.configure({ accessKey: '...', secretKey: '...' })
 ```
 
-### Automatic Uploads in `generate()`
+### Text to Video
 
-Once storage is configured, any `Buffer`, `Blob`, `File`, or `ArrayBuffer` values in provider params are automatically uploaded to R2 and replaced with public URLs before the request is sent to the provider. This works recursively -- nested objects and arrays are traversed, so params like Kling's `elements[].frontal_image_url` are handled automatically. No code changes needed -- it just works.
-
-```typescript
-import { generate, configureStorage } from 'getaiapi'
-import { readFileSync } from 'fs'
-
-configureStorage()
-
-const result = await generate({
-  model: 'gpt-image-1.5-edit',
-  image: readFileSync('./photo.jpg'),  // Buffer uploaded to R2 automatically
-  prompt: 'add a rainbow in the sky',
-})
-```
-
-To also re-upload URL strings through R2 (useful when providers can't access the original URL), pass `reupload: true` per-call:
+9 models: V1 Standard, V1.6 Pro/Standard, V2 Master, V2.1 Master, V2.5 Turbo Pro, V2.6 Pro, V3 Pro/Standard.
 
 ```typescript
-const result = await generate({
-  model: 'kling-video-pro',
-  image: 'https://private-server.com/img.jpg',
-  prompt: 'animate this image',
-  options: { reupload: true },
-})
-```
+import { kling } from 'getaiapi'
 
-Or enable it globally with `autoUpload: true` in the storage config.
-
-### Cleanup / Lifecycle
-
-Assets uploaded automatically via `generate()` use the `getaiapi-tmp/` key prefix. You can set a [Cloudflare R2 lifecycle rule](https://developers.cloudflare.com/r2/buckets/object-lifecycles/) to auto-expire objects under that prefix (e.g. delete after 24 hours) so ephemeral generation assets don't accumulate.
-
-### Standalone Upload / Delete
-
-You can also use R2 storage directly:
-
-```typescript
-import { uploadAsset, deleteAsset, configureStorage } from 'getaiapi'
-
-configureStorage()
-
-// Upload a buffer
-const { url, key, size_bytes, content_type } = await uploadAsset(
-  Buffer.from('hello world'),
-  { contentType: 'text/plain', prefix: 'uploads' }
-)
-console.log(url) // https://cdn.example.com/uploads/a1b2c3d4-...
-
-// Delete by key
-await deleteAsset(key)
-```
-
-### Presigned URLs (Private Buckets)
-
-If your R2 bucket doesn't have public read access, use presigned mode. Instead of returning a public URL, `uploadAsset` will return a time-limited presigned GET URL signed with S3 Signature V4.
-
-```typescript
-configureStorage({
-  accountId: 'your-account-id',
-  bucketName: 'private-bucket',
-  accessKeyId: 'your-key',
-  secretAccessKey: 'your-secret',
-  mode: 'presigned',          // uploadAsset returns presigned URLs
-  presignExpiresIn: 1800,     // URLs expire after 30 minutes
+const result = await kling.textToVideoV3Pro({
+  prompt: 'a golden retriever running on a beach at sunset',
+  duration: '5',
+  aspect_ratio: '16:9',
+  sound: 'on',
 })
 
-const { url } = await uploadAsset(Buffer.from('secret data'), {
-  contentType: 'application/octet-stream',
-})
-// url is a presigned GET URL, valid for 30 minutes
+console.log(result.videos[0].url)
 ```
 
-You can also generate presigned URLs for existing objects:
+| Function | Model | Mode |
+|----------|-------|------|
+| `textToVideoV1Standard` | kling-v1 | std |
+| `textToVideoV1_6Pro` | kling-v1-6 | pro |
+| `textToVideoV1_6Standard` | kling-v1-6 | std |
+| `textToVideoV2Master` | kling-v2-master | — |
+| `textToVideoV2_1Master` | kling-v2-1-master | — |
+| `textToVideoV2_5TurboPro` | kling-v2-5-turbo | pro |
+| `textToVideoV2_6Pro` | kling-v2-6 | pro |
+| `textToVideoV3Pro` | kling-v3 | pro |
+| `textToVideoV3Standard` | kling-v3 | std |
+
+**Input: `TextToVideoInput`**
 
 ```typescript
-import { presignAsset } from 'getaiapi'
-
-const url = presignAsset('uploads/my-file.png')
-// => https://<account>.r2.cloudflarestorage.com/<bucket>/uploads/my-file.png?X-Amz-Algorithm=...
-
-// Custom expiry per-call (overrides config default)
-const shortUrl = presignAsset('uploads/my-file.png', { expiresIn: 300 }) // 5 minutes
-```
-
-**UploadOptions**
-
-| Option | Type | Description |
-|---|---|---|
-| `key` | `string` | Custom object key (default: auto-generated UUID) |
-| `contentType` | `string` | MIME type (default: detected from input or `application/octet-stream`) |
-| `prefix` | `string` | Key prefix / folder (e.g. `"uploads"`) |
-| `maxBytes` | `number` | Max upload size in bytes (default: 500 MB) |
-
-### Storage Errors
-
-```typescript
-import { StorageError } from 'getaiapi'
-
-try {
-  await uploadAsset(buffer)
-} catch (err) {
-  if (err instanceof StorageError) {
-    console.error(err.operation)  // 'upload' | 'delete' | 'config'
-    console.error(err.statusCode) // HTTP status from R2, if applicable
-  }
+{
+  prompt: string              // required
+  negative_prompt?: string
+  duration?: string           // '5' or '10'
+  aspect_ratio?: string       // '16:9', '9:16', '1:1'
+  cfg_scale?: number
+  sound?: 'on' | 'off'       // generate audio
 }
+```
+
+### Image to Video
+
+13 models: V1 Standard, V1.5 Pro, V1.6 Pro/Standard, V2 Master, V2.1 Master/Pro/Standard, V2.5 Turbo Pro/Standard, V2.6 Pro, V3 Pro/Standard.
+
+```typescript
+const result = await kling.imageToVideoV3Pro({
+  image: 'https://example.com/photo.jpg',
+  prompt: 'animate this photo with gentle wind',
+  duration: '5',
+})
+```
+
+| Function | Model | Mode |
+|----------|-------|------|
+| `imageToVideoV1Standard` | kling-v1 | std |
+| `imageToVideoV1_5Pro` | kling-v1-5 | pro |
+| `imageToVideoV1_6Pro` | kling-v1-6 | pro |
+| `imageToVideoV1_6Standard` | kling-v1-6 | std |
+| `imageToVideoV2Master` | kling-v2-master | — |
+| `imageToVideoV2_1Master` | kling-v2-1-master | — |
+| `imageToVideoV2_1Pro` | kling-v2-1 | pro |
+| `imageToVideoV2_1Standard` | kling-v2-1 | std |
+| `imageToVideoV2_5TurboPro` | kling-v2-5-turbo | pro |
+| `imageToVideoV2_5TurboStandard` | kling-v2-5-turbo | std |
+| `imageToVideoV2_6Pro` | kling-v2-6 | pro |
+| `imageToVideoV3Pro` | kling-v3 | pro |
+| `imageToVideoV3Standard` | kling-v3 | std |
+
+**Input: `ImageToVideoInput`**
+
+```typescript
+{
+  image: string               // required — URL or base64
+  prompt?: string
+  negative_prompt?: string
+  duration?: string
+  aspect_ratio?: string
+  cfg_scale?: number
+  sound?: 'on' | 'off'
+  image_tail?: string         // end frame image URL
+  voice_list?: Array<{ voice_id: string }>   // mutually exclusive with element_list
+  element_list?: Array<{ element_id: number }> // mutually exclusive with voice_list
+}
+```
+
+### Omni Video
+
+17 models across O1 and O3 variants. Supports text-to-video, image-to-video, reference-to-video, video editing, and video reference — all through one endpoint.
+
+```typescript
+const result = await kling.omniVideoO3ProTextToVideo({
+  prompt: 'a cyberpunk city at night',
+  duration: '5',
+  aspect_ratio: '16:9',
+})
+```
+
+| Function | Model | Mode |
+|----------|-------|------|
+| `omniVideoO1ImageToVideo` | kling-video-o1 | — |
+| `omniVideoO1ReferenceToVideo` | kling-video-o1 | — |
+| `omniVideoO1StandardImageToVideo` | kling-video-o1 | std |
+| `omniVideoO1StandardReferenceToVideo` | kling-video-o1 | std |
+| `omniVideoO1StandardVideoEdit` | kling-video-o1 | std |
+| `omniVideoO1StandardVideoReference` | kling-video-o1 | std |
+| `omniVideoO1VideoEdit` | kling-video-o1 | — |
+| `omniVideoO1VideoReference` | kling-video-o1 | — |
+| `omniVideoO3ProImageToVideo` | kling-v3-omni | pro |
+| `omniVideoO3ProReferenceToVideo` | kling-v3-omni | pro |
+| `omniVideoO3ProTextToVideo` | kling-v3-omni | pro |
+| `omniVideoO3ProVideoEdit` | kling-v3-omni | pro |
+| `omniVideoO3ProVideoReference` | kling-v3-omni | pro |
+| `omniVideoO3StandardReferenceToVideo` | kling-v3-omni | std |
+| `omniVideoO3StandardTextToVideo` | kling-v3-omni | std |
+| `omniVideoO3StandardVideoEdit` | kling-v3-omni | std |
+| `omniVideoO3StandardVideoReference` | kling-v3-omni | std |
+
+**Input: `OmniVideoInput`**
+
+```typescript
+{
+  prompt: string              // required. Use <<<element_1>>>, <<<voice_1>>>, <<<image_1>>>, <<<video_1>>> to reference assets
+  image?: string
+  negative_prompt?: string
+  duration?: string
+  aspect_ratio?: string
+  cfg_scale?: number
+  sound?: 'on' | 'off'
+  voice_list?: Array<{ voice_id: string }>    // max 2; requires sound: 'on'
+  element_list?: Array<{ element_id: number }>
+}
+```
+
+### Image Generation
+
+2 models on `v1/images/generations` and 3 models on `v1/images/omni-image`.
+
+```typescript
+const result = await kling.imageO1({
+  prompt: 'a watercolor painting of a mountain lake',
+  n: 2,
+  aspect_ratio: '16:9',
+})
+
+console.log(result.images[0].url)
+```
+
+| Function | Endpoint | Model |
+|----------|----------|-------|
+| `imageV3TextToImage` | generations | kling-v3 |
+| `imageV3ImageToImage` | generations | kling-v3 |
+| `imageO1` | omni-image | kling-image-o1 |
+| `imageO3TextToImage` | omni-image | kling-v3-omni |
+| `imageO3ImageToImage` | omni-image | kling-v3-omni |
+
+**Input: `ImageGenerationInput` / `OmniImageInput`**
+
+```typescript
+{
+  prompt: string              // required
+  image?: string              // for image-to-image
+  n?: number                  // number of outputs
+  aspect_ratio?: string
+}
+```
+
+### Virtual Try-On
+
+```typescript
+const result = await kling.virtualTryOn({
+  human_image: 'https://example.com/person.jpg',
+  cloth_image: 'https://example.com/shirt.jpg',
+})
+```
+
+**Input: `VirtualTryOnInput`**
+
+```typescript
+{
+  human_image: string         // required
+  cloth_image: string         // required
+}
+```
+
+### AI Avatar
+
+4 models: V1 Pro/Standard, V2 Pro/Standard.
+
+```typescript
+const result = await kling.avatarV2Pro({
+  image: 'https://example.com/portrait.jpg',
+  sound_file: 'https://example.com/speech.mp3',
+  prompt: 'talking head presentation',
+})
+```
+
+| Function | Mode |
+|----------|------|
+| `avatarV1Pro` | pro |
+| `avatarV1Standard` | std |
+| `avatarV2Pro` | pro |
+| `avatarV2Standard` | std |
+
+**Input: `AvatarInput`**
+
+```typescript
+{
+  image: string               // required — portrait image
+  sound_file?: string         // audio for lip sync
+  prompt?: string
+}
+```
+
+### Lip Sync
+
+```typescript
+const result = await kling.lipSyncAudioToVideo({
+  sound_file: 'https://example.com/speech.mp3',
+})
+```
+
+| Function | Description |
+|----------|-------------|
+| `lipSyncAudioToVideo` | Audio-driven lip sync |
+| `lipSyncTextToVideo` | Text-driven lip sync |
+
+**Input: `LipSyncInput`**
+
+```typescript
+{
+  sound_file?: string         // audio URL
+}
+```
+
+### Video Effects
+
+4 models: V1 Standard, V1.5 Pro, V1.6 Pro/Standard.
+
+```typescript
+const result = await kling.effectsV1_6Pro({
+  image: 'https://example.com/photo.jpg',
+})
+```
+
+| Function |
+|----------|
+| `effectsV1Standard` |
+| `effectsV1_5Pro` |
+| `effectsV1_6Pro` |
+| `effectsV1_6Standard` |
+
+**Input: `EffectsInput`**
+
+```typescript
+{
+  image: string               // required
+}
+```
+
+### Motion Control
+
+4 models: V2.6 Pro/Standard, V3 Pro/Standard.
+
+```typescript
+const result = await kling.motionControlV3Pro({
+  image_url: 'https://example.com/scene.jpg',
+  prompt: 'camera pan left',
+})
+```
+
+| Function | Model | Mode |
+|----------|-------|------|
+| `motionControlV2_6Pro` | kling-v2-6 | pro |
+| `motionControlV2_6Standard` | kling-v2-6 | std |
+| `motionControlV3Pro` | kling-v3 | pro |
+| `motionControlV3Standard` | kling-v3 | std |
+
+**Input: `MotionControlInput`**
+
+```typescript
+{
+  image_url: string           // required
+  video_url?: string
+  prompt?: string
+  keep_original_sound?: boolean
+  character_orientation?: string
+  element_list?: Array<{ element_id: number }>
+}
+```
+
+### Text to Speech (Sync)
+
+Returns immediately — no polling.
+
+```typescript
+const result = await kling.tts({ text: 'Hello world' })
+console.log(result.audios[0].url)
+```
+
+**Input: `TtsInput`**
+
+```typescript
+{
+  text: string                // required
+}
+```
+
+### Video to Audio
+
+Generates audio for a video. Returns both the merged video and the generated audio tracks.
+
+```typescript
+const result = await kling.videoToAudio({
+  video_url: 'https://example.com/video.mp4',
+  sound_effect_prompt: 'ocean waves crashing',
+})
+
+console.log(result.videos[0].url)       // merged video with audio
+console.log(result.audios[0].url_mp3)   // audio track (mp3)
+console.log(result.audios[0].url_wav)   // audio track (wav)
+```
+
+**Input: `VideoToAudioInput`**
+
+```typescript
+{
+  video_url?: string          // mutually exclusive with video_id
+  video_id?: string           // mutually exclusive with video_url
+  sound_effect_prompt?: string
+  bgm_prompt?: string         // background music prompt
+  asmr_mode?: boolean         // enhanced detailed sound effects
+}
+```
+
+### Text to Audio
+
+```typescript
+const result = await kling.textToAudio({
+  prompt: 'thunderstorm with heavy rain',
+  duration: 5.0,
+})
+
+console.log(result.audios[0].url)       // normalized from url_mp3
+console.log(result.audios[0].url_mp3)   // mp3 URL
+console.log(result.audios[0].url_wav)   // wav URL
+```
+
+**Input: `TextToAudioInput`**
+
+```typescript
+{
+  prompt: string              // required
+  duration: number            // required — 3.0 to 10.0
+}
+```
+
+### Voice Clone
+
+```typescript
+const result = await kling.createVoice({
+  voice_name: 'my-voice',
+  voice_url: 'https://example.com/sample.mp3',
+})
+
+console.log(result.voices[0].voice_id)
+console.log(result.voices[0].trial_url)
+```
+
+**Input: `CreateVoiceInput`**
+
+```typescript
+{
+  voice_name: string          // required
+  voice_url?: string          // audio sample URL
+  video_id?: string           // or extract from video
+}
+```
+
+### Multi-Shot
+
+Generate multi-angle reference images from a frontal image. Each image returns 3 angle variants.
+
+```typescript
+const result = await kling.multiShot({
+  element_frontal_image: 'https://example.com/face.jpg',
+})
+
+console.log(result.images[0].url_1)  // angle 1
+console.log(result.images[0].url_2)  // angle 2
+console.log(result.images[0].url_3)  // angle 3
+```
+
+**Input: `MultiShotInput`**
+
+```typescript
+{
+  element_frontal_image: string  // required
+}
+```
+
+### Reference to Image
+
+```typescript
+const result = await kling.referenceToImage({
+  prompt: 'portrait in watercolor style',
+  n: 2,
+})
+```
+
+**Input: `ReferenceToImageInput`**
+
+```typescript
+{
+  prompt: string              // required
+  n?: number
+  aspect_ratio?: string
+}
+```
+
+### Expand Image
+
+Outpainting — expand an image beyond its borders.
+
+```typescript
+const result = await kling.expandImage({
+  image: 'https://example.com/photo.jpg',
+  prompt: 'extend the landscape',
+})
+```
+
+**Input: `ExpandImageInput`**
+
+```typescript
+{
+  image: string               // required
+  prompt?: string
+  n?: number
+}
+```
+
+### Extend Video
+
+Continue a video beyond its last frame.
+
+```typescript
+const result = await kling.extendVideo({
+  prompt: 'the camera continues to pan right',
+})
+```
+
+**Input: `ExtendVideoInput`**
+
+```typescript
+{
+  prompt?: string
+  negative_prompt?: string
+}
+```
+
+### Identify Face (Sync)
+
+Detect faces in a video for lip-sync targeting. Returns immediately — no polling.
+
+```typescript
+const result = await kling.identifyFace({
+  video_url: 'https://example.com/video.mp4',
+})
+
+console.log(result.session_id)
+result.face_data.forEach(face => {
+  console.log(face.face_id, face.face_image, face.start_time, face.end_time)
+})
+```
+
+**Input: `IdentifyFaceInput`**
+
+```typescript
+{
+  video_url?: string          // mutually exclusive with video_id
+  video_id?: string           // mutually exclusive with video_url
+}
+```
+
+### Image Recognize (Sync)
+
+Returns immediately — no polling.
+
+```typescript
+const result = await kling.imageRecognize({
+  image: 'https://example.com/photo.jpg',
+})
+```
+
+**Input: `ImageRecognizeInput`**
+
+```typescript
+{
+  image: string               // required
+}
+```
+
+### Account Costs
+
+Query resource package balances under your account. Free to call; QPS ≤ 1. Note: `remaining_quantity` has a 12-hour reporting delay.
+
+```typescript
+const result = await kling.accountCosts({
+  start_time: Date.now() - 86_400_000, // last 24h
+  end_time: Date.now(),
+})
+
+for (const pack of result.resource_pack_subscribe_infos) {
+  console.log(pack.resource_pack_name, pack.remaining_quantity, pack.status)
+}
+```
+
+**Input: `AccountCostsInput`**
+
+```typescript
+{
+  start_time: number             // required — Unix ms
+  end_time: number               // required — Unix ms
+  resource_pack_name?: string    // optional — filter by exact package name
+}
+```
+
+**Output: `AccountCostsResult`**
+
+```typescript
+{
+  resource_pack_subscribe_infos: Array<{
+    resource_pack_name: string
+    resource_pack_id: string
+    resource_pack_type: 'decreasing_total' | 'constant_period'
+    total_quantity: number
+    remaining_quantity: number   // 12h delay
+    purchase_time: number
+    effective_time: number
+    invalid_time: number
+    status: 'toBeOnline' | 'online' | 'expired' | 'runOut'
+  }>
+}
+```
+
+### Element Library
+
+Create reusable characters/objects (elements) from images or video, then reference them in generation tasks via `element_list`.
+
+```typescript
+// Create a custom element (async — polls until ready)
+const el = await kling.createElement({
+  element_name: 'My Character',
+  element_description: 'A hero in a red cape',
+  reference_type: 'image_refer',
+  element_image_list: {
+    frontal_image: 'https://example.com/frontal.jpg',
+    refer_images: [{ image_url: 'https://example.com/side.jpg' }],
+  },
+})
+
+// Use element_id in video generation
+await kling.imageToVideoV3Pro({
+  image: 'https://example.com/scene.jpg',
+  prompt: 'Character walks forward',
+  element_list: [{ element_id: Number(el.element_id) }],
+})
+
+// List all custom elements (paginated)
+const { elements } = await kling.listElements({ pageNum: 1, pageSize: 30 })
+
+// List official preset elements
+const { elements: presets } = await kling.listPresetElements()
+
+// Delete a custom element
+await kling.deleteElement({ element_id: el.element_id })
+```
+
+**`createElement` input: `CreateElementInput`**
+
+```typescript
+{
+  element_name: string                          // required — max 20 chars
+  element_description: string                   // required — max 100 chars
+  reference_type: 'image_refer' | 'video_refer' // required
+  element_image_list?: {                        // required when image_refer
+    frontal_image: string                       // front-facing image URL or base64
+    refer_images?: Array<{ image_url: string }> // 1–3 additional angles
+  }
+  element_video_list?: {                        // required when video_refer
+    refer_videos: Array<{ video_url: string }>  // 1 video, .mp4/.mov, 3–8s
+  }
+  element_voice_id?: string
+  tag_list?: Array<{ tag_id: string }>          // o_101–o_108
+  callback_url?: string
+  external_task_id?: string
+  timeout?: number                              // poll timeout ms
+}
+```
+
+**`createElement` output: `ElementResult`**
+
+```typescript
+{
+  element_id: string
+  element_name: string
+  element_description: string
+  reference_type: 'image_refer' | 'video_refer'
+  status: string
+  owned_by?: string
+  element_voice_id?: string
+  tag_list?: Array<{ tag_id: string; tag_name?: string }>
+  element_image_list?: { frontal_image: string; refer_images?: Array<{ image_url: string }> }
+  element_video_list?: { refer_videos: Array<{ video_url: string }> }
+}
+```
+
+### Voice Management
+
+```typescript
+import { kling } from 'getaiapi'
+
+// List custom voices (paginated)
+const { voices } = await kling.listVoices({ pageNum: 1, pageSize: 30 })
+
+// List preset voices from Kling's library
+const { voices: presets } = await kling.listPresetVoices()
+
+// Query a single voice creation task
+const result = await kling.queryVoice('task-id')
+
+// Delete a custom voice
+await kling.deleteVoice('voice-id')
+```
+
+### Character Speaking with Custom Voice
+
+**Use case A — Element + voice talking head (omni-video)**
+
+Pass both `element_list` and `voice_list` together on `omniVideo*` functions. Reference them in the prompt with `<<<element_1>>>` and `<<<voice_1>>>`. Requires `sound: 'on'`.
+
+```typescript
+import { kling } from 'getaiapi'
+
+const video = await kling.omniVideoO3ProTextToVideo({
+  prompt: '<<<element_1>>> <<<voice_1>>> said, "Think of it like a massive group chat."',
+  sound: 'on',
+  element_list: [{ element_id: 307723399526301 }],
+  voice_list: [{ voice_id: '870470675470499933' }],
+  aspect_ratio: '9:16',
+  duration: '5',
+})
+
+console.log(video.videos[0].url)
+```
+
+**Use case B — Avatar with TTS audio (lip-synced)**
+
+When you need precise lip sync from a custom voice, generate TTS audio first then pass it to Avatar:
+
+```typescript
+// Step 1: Generate speech audio
+const audio = await kling.tts({
+  text: 'Hello, welcome to my world.',
+  voice_id: 'your-custom-voice-id',
+  voice_language: 'en',
+})
+
+// Step 2: Animate the character's frontal image with that audio
+const video = await kling.avatarV2Pro({
+  image: element.element_image_list.frontal_image,
+  audio_id: audio.audios[0].id,
+  prompt: 'looking at the camera, friendly expression',
+})
+```
+
+**Use case C — Element only (no custom voice)**
+
+```typescript
+const video = await kling.imageToVideoV3Pro({
+  image: 'https://example.com/scene.jpg',
+  prompt: 'Character walks through a forest',
+  element_list: [{ element_id: Number(el.element_id) }],
+})
+```
+
+**Use case D — Voice only (no element)**
+
+```typescript
+const video = await kling.omniVideoO3ProTextToVideo({
+  prompt: '<<<voice_1>>> said, "Hello, welcome."',
+  sound: 'on',
+  voice_list: [{ voice_id: 'your-custom-voice-id' }],
+  aspect_ratio: '16:9',
+})
+```
+
+> **Note:** On `imageToVideo*` functions, `element_list` and `voice_list` are mutually exclusive. On `omniVideo*` functions, both can be passed together.
+
+### Multi-Elements Video Workflow
+
+```typescript
+import { kling } from 'getaiapi'
+
+// Step 1: Initialize video
+const { session_id } = await kling.initMultiElementsSelection({ video_url: 'https://...' })
+
+// Step 2: Click points to select an area
+await kling.addSelectionArea({ session_id, frame_index: 10, points: [{ x: 0.5, y: 0.5 }] })
+
+// Step 5: Preview selection
+const preview = await kling.previewSelection({ session_id })
+
+// Step 6: Generate edited video (polls until complete)
+const video = await kling.generateMultiElementsVideo({
+  session_id,
+  edit_mode: 'swap',
+  image_list: [{ image: 'https://...' }],
+  prompt: 'swap <<<image_1>>> for element from <<<video_1>>>',
+})
+```
+
+### List & Query Historical Tasks
+
+Every generation endpoint has a list function (paginated) and a single-task query function:
+
+```typescript
+// List recent tasks (all generation types)
+const { tasks } = await kling.listImageToVideoTasks({ pageNum: 1, pageSize: 20 })
+const { tasks: videoTasks } = await kling.listTextToAudioTasks()
+
+// Query a single task result by ID (returns same typed result as the generation function)
+const video = await kling.getImageToVideoTask('task-id')     // KlingVideoResult
+const audio = await kling.getTextToAudioTask('task-id')      // KlingAudioResult
+const image = await kling.getImageGenerationTask('task-id')  // KlingImageResult
+```
+
+Available list functions: `listLipSyncTasks`, `listTextToAudioTasks`, `listVideoEffectsTasks`, `listImageGenerationTasks`, `listOmniVideoTasks`, `listMultiShotTasks`, `listImageToVideoTasks`, `listOmniImageTasks`, `listReferenceToImageTasks`, `listVirtualTryOnTasks`, `listMotionControlTasks`, `listExtendVideoTasks`, `listAvatarTasks`.
+
+Available query functions: `getLipSyncTask`, `getTextToAudioTask`, `getVideoEffectsTask`, `getImageGenerationTask`, `getOmniVideoTask`, `getMultiShotTask`, `getImageToVideoTask`, `getOmniImageTask`, `getReferenceToImageTask`, `getVirtualTryOnTask`, `getMotionControlTask`, `getExtendVideoTask`, `getAvatarTask`.
+
+## Output Types
+
+All functions return typed results based on output modality:
+
+```typescript
+// Video endpoints (textToVideo, imageToVideo, omniVideo, avatar, lipSync, effects, motionControl, extendVideo)
+interface KlingVideoResult {
+  task_id: string
+  videos: Array<{ id: string; url: string; duration: string }>
+}
+
+// Image endpoints (imageGeneration, omniImage, virtualTryOn, referenceToImage, expandImage)
+interface KlingImageResult {
+  task_id: string
+  images: Array<{ index: number; url: string }>
+}
+
+// Audio endpoints (tts, textToAudio)
+interface KlingAudioResult {
+  task_id: string
+  audios: Array<{ id: string; url: string; url_mp3?: string; url_wav?: string; duration?: string; duration_mp3?: string; duration_wav?: string }>
+}
+
+// Multi-shot endpoint — 3 angle URLs per image
+interface KlingMultiShotResult {
+  task_id: string
+  images: Array<{ index: number; url_1: string; url_2: string; url_3: string }>
+}
+
+// Voice clone endpoint
+interface KlingVoiceResult {
+  task_id: string
+  voices: Array<{ voice_id: string; voice_name: string; trial_url: string; owned_by: string }>
+}
+
+// Video-to-audio endpoint — merged video + generated audio
+interface KlingVideoAudioResult {
+  task_id: string
+  videos: Array<{ id: string; url: string; duration: string }>
+  audios: Array<{ id: string; url_mp3?: string; url_wav?: string; duration_mp3?: string; duration_wav?: string }>
+}
+
+// Face detection (identifyFace) — sync, no task_id
+interface KlingFaceResult {
+  session_id: string
+  face_data: Array<{ face_id: string; face_image: string; start_time: number; end_time: number }>
+}
+
+// Generic JSON (imageRecognize)
+interface KlingJsonResult {
+  task_id: string
+  data: unknown
+}
+```
+
+## Polling Control
+
+All functions accept optional polling parameters:
+
+```typescript
+await kling.textToVideoV3Pro({
+  prompt: 'a sunset',
+  timeout: 600_000,     // max wait time in ms (default: 300_000 = 5 min)
+  pollInterval: 5_000,  // poll frequency in ms (default: 3_000)
+})
+```
+
+Sync endpoints (`tts`, `imageRecognize`, `identifyFace`) return immediately regardless of these settings.
+
+## Extra Parameters
+
+All input types accept additional Kling-native fields via index signature. Pass any parameter the Kling API supports:
+
+```typescript
+await kling.textToVideoV3Pro({
+  prompt: 'a sunset',
+  camera_control: { type: 'simple', config: { horizontal: 5 } },
+  callback_url: 'https://example.com/webhook',
+})
 ```
 
 ## Error Handling
 
-All errors extend `GetAIApiError` and can be caught uniformly or by type:
-
-| Error | When |
-|---|---|
-| `AuthError` | Missing or invalid API key for a provider |
-| `ModelNotFoundError` | Model name could not be resolved |
-| `ValidationError` | Invalid input parameters |
-| `ProviderError` | Provider returned an error response |
-| `TimeoutError` | Generation exceeded the timeout |
-| `RateLimitError` | Provider returned HTTP 429 |
-| `StorageError` | R2 upload, delete, or config failure |
-
 ```typescript
-import { generate, AuthError, ModelNotFoundError } from 'getaiapi'
+import { kling, KlingAuthError, KlingTimeoutError, KlingTaskFailedError } from 'getaiapi'
 
 try {
-  const result = await generate({ model: 'flux-schnell', prompt: 'a cat' })
+  await kling.textToVideoV3Pro({ prompt: 'test' })
 } catch (err) {
-  if (err instanceof AuthError) {
-    console.error(`Set ${err.envVar} to use ${err.provider}`)
+  if (err instanceof KlingAuthError) {
+    // Missing or invalid credentials
   }
-  if (err instanceof ModelNotFoundError) {
-    console.error(err.message) // includes "did you mean" suggestions
+  if (err instanceof KlingTimeoutError) {
+    // Task took too long (increase timeout)
+  }
+  if (err instanceof KlingTaskFailedError) {
+    // Kling rejected the task (content violation, bad params, etc.)
+    console.error(err.taskId, err.message)
   }
 }
 ```
 
-## Migrating from v0.x
+| Error | Code | When |
+|-------|------|------|
+| `KlingAuthError` | `AUTH_ERROR` | Missing credentials or 401 response |
+| `KlingRateLimitError` | `RATE_LIMIT` | HTTP 429 or body codes 1100-1102 |
+| `KlingApiError` | `API_ERROR` | Provider returned an error |
+| `KlingTimeoutError` | `TIMEOUT` | Polling exceeded timeout |
+| `KlingTaskFailedError` | `TASK_FAILED` | Task status is 'failed' |
 
-v1.0.0 replaces the category-based architecture with a modality-first design. Key changes:
+All errors extend `KlingError` which extends `Error`.
 
-- `getModel()` is now `resolveModel()`
-- `listModels({ category: '...' })` is now `listModels({ input: '...', output: '...' })`
-- No more `readFileSync` -- works in edge runtimes without any bundler config
+## Deprecated: v1 Unified Gateway
 
-See the full [Migration Guide](docs/MIGRATION.md) for details.
+The previous `generate()`, `submit()`, `poll()` APIs and the multi-provider registry are deprecated but still exported for backward compatibility. They will be removed in the next major version.
 
-## Documentation
+```typescript
+// Deprecated — still works but will be removed
+import { generate } from 'getaiapi'
+await generate({ model: 'flux-schnell', prompt: '...' })
 
-Full documentation available at [interactive10.com/getaiapi.html](https://www.interactive10.com/getaiapi.html)
+// New — use provider-specific typed functions
+import { kling } from 'getaiapi'
+await kling.textToVideoV3Pro({ prompt: '...' })
+```
 
 ## License
 

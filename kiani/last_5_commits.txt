@@ -1,92 +1,105 @@
 === Last 5 Commits ===
 
---- Commit: 0bd39f8 ---
-Date: 2026-03-18 00:45:12 +0400
+--- Commit: 0aec921 ---
+Date: 2026-04-10 01:00:45 +0400
 Author: arash
-Message: fix: revert broad resolveAssetUrl change, target uploadedImageKey in JobProcessor
+Message: fix: correct element_list field name and type to match Kling API spec
 
-The previous resolveAssetUrl change re-signed all R2 URLs globally,
-which caused character images to resolve incorrectly across characters.
-Now extractR2Key is only used in processCharacterVisual to normalize
-the uploadedImageKey before resolution.
+element_list item shape was { id: string; image: string } but Kling API
+expects { element_id: number }. Updated ImageToVideoInput, OmniVideoInput,
+and MotionControlInput types plus all README examples. Added README section
+documenting element/voice mutual exclusivity and the two-step avatar+TTS
+workaround. Bump to 2.1.1.
 
 
---- Commit: 4e3b634 ---
-Date: 2026-03-18 00:35:40 +0400
+--- Commit: 3104221 ---
+Date: 2026-04-10 00:49:39 +0400
 Author: arash
-Message: fix: extract storage key from presigned R2 URLs in resolveAssetUrl
+Message: fix: correct element_list field name and type to match Kling API spec
 
-Presigned R2 URLs stored in the DB (from before the page fix) were
-passed through as-is, causing 422 errors when they expired. Now
-resolveAssetUrl detects R2 presigned URLs and re-signs them fresh.
+element_list items use element_id (long) not id (string), and have no
+image field. Fix across ImageToVideoInput, OmniVideoInput, and
+MotionControlInput. Also fix TS2352 cast error in kling.test.ts.
 
 
---- Commit: 692f23a ---
-Date: 2026-03-18 00:27:27 +0400
+--- Commit: 44f52f7 ---
+Date: 2026-04-09 14:43:14 +0400
 Author: arash
-Message: fix: add missing gender and clothing fields to character PATCH schema
+Message: feat: add 39 Kling management, list, and query APIs (v2.1.0)
 
-These fields were accepted by the UI but stripped by Zod validation
-in the PATCH endpoint, causing values to silently disappear on save.
+Add voice management (listVoices, listPresetVoices, queryVoice, deleteVoice),
+element single-task query (getElement), full 8-step multi-elements video workflow
+(init/add/delete/clear/preview/generate + query/list), 13 paginated list endpoints,
+and 13 single-task query endpoints covering every generation type.
+
+Two shared client helpers (taskList, taskGet) keep the implementation concise.
+All 39 functions exported from index.ts with full TypeScript types. 20,752 tests passing.
 
 
---- Commit: 224bad5 ---
-Date: 2026-03-18 00:05:10 +0400
+--- Commit: df85fd0 ---
+Date: 2026-04-09 12:50:27 +0400
 Author: arash
-Message: fix: preserve storage key for character uploadedImageUrl to prevent expired presigned URL
-
-The character page was resolving uploadedImageUrl to a presigned URL (4h TTL),
-which the component then sent back to generate-visual on regenerate. By job
-processing time the URL had expired, causing fal-ai 422 errors.
+Message: docs: bump to 2.0.1 and document accountCosts in README and CHANGELOG
 
 
---- Commit: 8f9e9d5 ---
-Date: 2026-03-17 22:43:34 +0400
+
+--- Commit: 307af20 ---
+Date: 2026-04-09 12:48:06 +0400
 Author: arash
-Message: feat: Shorts Analyzer V2 — multi-video cart, 3 story options, direction input
+Message: feat: add account costs endpoint and rate limit/account skills to kling provider
 
-- Cart UI: add/remove YouTube URLs with thumbnail previews, duplicate/invalid detection (max 10)
-- API accepts { urls: string[] } with parallel fetch, backwards-compat with { url: string }
-- New multi-video prompt returns 3 story options with recommended pick + cross-video patterns
-- Direction textarea lets user guide the analysis (e.g. "focus on tech, not the company")
-- Extract extractVideoId to youtubeUtils.ts for client-side use (no server deps)
-- Mock mode returns 3 mock options; max_tokens bumped to 4000
+Add GET /account/costs to KlingClient with typed input/result types,
+httpGet() helper, and proper extraction of resource_pack_subscribe_infos.
+Expand KlingRateLimitError with bodyCode and detail fields.
+Add kling-account and kling-rate-limits SKILL.md docs.
 
 
 === Diffs ===
 
---- 0bd39f8: fix: revert broad resolveAssetUrl change, target uploadedImageKey in JobProcessor ---
- src/libs/JobProcessor.ts | 12 +++++++-----
- src/libs/Storage.ts      | 14 +-------------
- 2 files changed, 8 insertions(+), 18 deletions(-)
+--- 0aec921: fix: correct element_list field name and type to match Kling API spec ---
+ CHANGELOG.md      | 10 +++++++++
+ README.md         | 63 +++++++++++++++++++++++++++++++++++++++++++++++++------
+ package-lock.json |  2 +-
+ package.json      |  2 +-
+ 4 files changed, 69 insertions(+), 8 deletions(-)
 
---- 4e3b634: fix: extract storage key from presigned R2 URLs in resolveAssetUrl ---
- src/libs/Storage.ts | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+--- 3104221: fix: correct element_list field name and type to match Kling API spec ---
+ src/providers/kling/kling.test.ts | 2 +-
+ src/providers/kling/types.ts      | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- 692f23a: fix: add missing gender and clothing fields to character PATCH schema ---
- src/app/[locale]/api/characters/[id]/route.ts | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+--- 44f52f7: feat: add 39 Kling management, list, and query APIs (v2.1.0) ---
+ CHANGELOG.md                                       |  16 +
+ README.md                                          | 134 ++++++-
+ kiani/last_5_commits.txt                           |  88 ++---
+ kiani/primer.md                                    |  61 ++--
+ .../kling/kling-multi-elements-video/SKILL.md      |  54 ++-
+ .../done/166-kling-missing-management-apis.md      | 210 +++++++++++
+ kiani/tickets/scoreboard.md                        |   5 +-
+ package-lock.json                                  |   8 +-
+ package.json                                       |   2 +-
+ src/providers/kling/client.ts                      | 126 ++++++-
+ src/providers/kling/extract.ts                     |  21 ++
+ src/providers/kling/index.ts                       |   7 +
+ src/providers/kling/kling.test.ts                  | 384 ++++++++++++++++++++-
+ src/providers/kling/models.ts                      | 186 +++++++++-
+ src/providers/kling/types.ts                       | 153 ++++++++
+ 15 files changed, 1359 insertions(+), 96 deletions(-)
 
---- 224bad5: fix: preserve storage key for character uploadedImageUrl to prevent expired presigned URL ---
- src/app/[locale]/(auth)/(app)/characters/[id]/page.tsx | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--- df85fd0: docs: bump to 2.0.1 and document accountCosts in README and CHANGELOG ---
+ CHANGELOG.md      |  8 ++++++++
+ README.md         | 43 +++++++++++++++++++++++++++++++++++++++++++
+ package-lock.json |  2 +-
+ package.json      |  2 +-
+ 4 files changed, 53 insertions(+), 2 deletions(-)
 
---- 8f9e9d5: feat: Shorts Analyzer V2 — multi-video cart, 3 story options, direction input ---
- .env.example                                       |   4 +
- infra/Pulumi.production.yaml                       |   2 +
- infra/index.ts                                     |   1 +
- package-lock.json                                  |  15 +
- package.json                                       |   1 +
- .../(auth)/(app)/admin/shorts-analyzer/page.tsx    |  18 +
- .../[locale]/api/admin/shorts-analyzer/route.ts    | 165 ++++++++
- src/components/AdminDashboardClient.tsx            |  10 +-
- src/components/ShortsAnalyzerClient.tsx            | 418 +++++++++++++++++++++
- src/libs/Env.ts                                    |   2 +
- src/libs/prompts/shortsAnalyzerPrompt.ts           | 188 +++++++++
- src/libs/youtube.ts                                | 114 ++++++
- src/libs/youtubeUtils.ts                           |  25 ++
- tasks/TASKS.md                                     |  14 +-
- tasks/task-86.md                                   |  26 ++
- tasks/task-87.md                                   | 123 ++++++
- 16 files changed, 1116 insertions(+), 10 deletions(-)
+--- 307af20: feat: add account costs endpoint and rate limit/account skills to kling provider ---
+ kiani/last_5_commits.txt                           | 231 +++++++++++++--------
+ .../skills/providers/kling/kling-account/SKILL.md  |  88 ++++++++
+ .../providers/kling/kling-rate-limits/SKILL.md     |  64 ++++++
+ src/providers/kling/client.ts                      |  52 ++++-
+ src/providers/kling/errors.ts                      |  11 +-
+ src/providers/kling/index.ts                       |   2 +-
+ src/providers/kling/models.ts                      |   8 +-
+ src/providers/kling/types.ts                       |  29 +++
+ 8 files changed, 391 insertions(+), 94 deletions(-)

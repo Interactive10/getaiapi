@@ -1,18 +1,18 @@
-everything lives in `.kiani` folder
+everything lives in `kiani` folder
 PDD is the single source of truth and we keep it updated. with date
 
-.kiani
-  - Setup
-    - TaskFormat
-    - SubTaskFormat
-    - TeamFormat
-  - Plan
-  - Tasks
-    - Current
-    - Pending
-    - Done
-    - On Hold
+kiani
 
+- Setup
+  - TaskFormat
+  - SubTaskFormat
+  - TeamFormat
+- Plan
+- Tasks
+  - Current
+  - Pending
+  - Done
+  - On Hold
 
 we have asset table: character id
 

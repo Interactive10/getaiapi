@@ -6,6 +6,145 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.1.2] - 2026-04-10
+
+### Added
+
+- **`OmniVideoInput.voice_list`**: Added `voice_list?: Array<{ voice_id: string }>` to `OmniVideoInput` — omni-video functions now accept both `element_list` and `voice_list` simultaneously, enabling element + custom voice talking head generation in a single call.
+- **`getaiapi-kling` skill**: New internal skill document covering every exported function, input/output types, usage examples, and multi-step workflows (lip sync, multi-elements, talking head).
+
+### Changed
+
+- **README**: Updated `OmniVideoInput` type block to include `voice_list` and prompt reference syntax (`<<<element_1>>>`, `<<<voice_1>>>`). Rewrote "Character Speaking with Custom Voice" section with four use cases: (A) element + voice in omni-video, (B) avatar + TTS lip sync, (C) element only, (D) voice only. Corrected prior claim that `element_list` and `voice_list` are mutually exclusive on all endpoints — they are only mutually exclusive on `imageToVideo*` functions.
+- **Kling omni-video SKILL.md**: Added `voice_list` / `voice_list[].voice_id` rows to request table; updated prompt description with `<<<voice_N>>>` syntax, `sound: on` requirement, billing note, and simple-grammar guidance.
+
+## [2.1.1] - 2026-04-10
+
+### Fixed
+
+- **`element_list` type**: Changed item shape from `{ id: string; image: string }` to `{ element_id: number }` across `ImageToVideoInput`, `OmniVideoInput`, and `MotionControlInput` to match the Kling API spec (`element_id` is a `long`, no `image` field).
+
+### Changed
+
+- **README**: Updated all `element_list` type signatures and usage examples to match corrected shape. Added "Character Speaking with Custom Voice" section documenting three use cases: avatar with TTS audio (A), element-only video (B), and voice-only video (C). Clarified that `element_list` and `voice_list` are mutually exclusive.
+
+## [2.1.0] - 2026-04-09
+
+### Added
+
+- **Kling voice management**: `listVoices()`, `listPresetVoices()`, `queryVoice(taskId)`, `deleteVoice(voiceId)` — covers `GET /v1/general/custom-voices`, `GET /v1/general/presets-voices`, `GET /v1/general/custom-voices/{task_id}`, and `POST /v1/general/delete-voices`. New types: `KlingListParams`, `KlingVoiceListResult`, `VoiceInfo`.
+- **Kling element single-task query**: `getElement(taskId)` — `GET /v1/general/advanced-custom-elements/{task_id}` returning `ElementResult`.
+- **Kling multi-elements video workflow**: Six step functions — `initMultiElementsSelection()`, `addSelectionArea()`, `deleteSelectionArea()`, `clearSelectionArea()`, `previewSelection()`, `generateMultiElementsVideo()` — plus `queryMultiElementsTask()` and `listMultiElementsTasks()`. New types: `MultiElementsInitInput/Result`, `MultiElementsAddSelectionInput`, `MultiElementsSelectionResult`, `MultiElementsDeleteSelectionInput`, `MultiElementsClearSelectionInput`, `MultiElementsPreviewInput/Result`, `MultiElementsGenerateInput`.
+- **13 list query functions**: `listLipSyncTasks`, `listTextToAudioTasks`, `listVideoEffectsTasks`, `listImageGenerationTasks`, `listOmniVideoTasks`, `listMultiShotTasks`, `listImageToVideoTasks`, `listOmniImageTasks`, `listReferenceToImageTasks`, `listVirtualTryOnTasks`, `listMotionControlTasks`, `listExtendVideoTasks`, `listAvatarTasks` — paginated task history for every generation endpoint. New type: `KlingTaskListResult`.
+- **13 single-task query functions**: `getLipSyncTask`, `getTextToAudioTask`, `getVideoEffectsTask`, `getImageGenerationTask`, `getOmniVideoTask`, `getMultiShotTask`, `getImageToVideoTask`, `getOmniImageTask`, `getReferenceToImageTask`, `getVirtualTryOnTask`, `getMotionControlTask`, `getExtendVideoTask`, `getAvatarTask` — fetch a task result by ID using the same typed extractors as generation.
+
+## [2.0.2] - 2026-04-09
+
+### Added
+
+- **Kling element library**: Four new functions — `createElement()`, `listElements()`, `listPresetElements()`, `deleteElement()`. Covers `POST /v1/general/advanced-custom-elements` (async, polls until ready), `GET` list/single, and `POST /v1/general/delete-elements`. Typed inputs `CreateElementInput`, `ElementListInput`, `DeleteElementInput` and outputs `ElementResult`, `ElementListResult`, `ElementTag`.
+
+## [2.0.1] - 2026-04-09
+
+### Added
+
+- **Kling account costs endpoint**: `kling.accountCosts()` — `GET /account/costs` with typed `AccountCostsInput`, `AccountCostsResult`, and `ResourcePackInfo`. Returns resource package list with remaining balances, status, and expiry times.
+- **`KlingRateLimitError` fields**: Added `bodyCode` and `detail` properties for richer rate-limit diagnostics.
+- **Kling skills**: `kling-account` and `kling-rate-limits` SKILL.md docs covering the account API and concurrency rules.
+
+## [2.0.0] - 2026-04-05
+
+### Added
+
+- **v2 Kling provider**: Self-contained Kling module at `src/providers/kling/` with 69 typed functions — one per model variant. No registry, no mapping layer, no generic `generate()`. Each function uses Kling-native field names and bakes in its endpoint + defaults.
+- **20 typed input interfaces**: `TextToVideoInput`, `ImageToVideoInput`, `OmniVideoInput`, `ImageGenerationInput`, `OmniImageInput`, `VirtualTryOnInput`, `AvatarInput`, `LipSyncInput`, `EffectsInput`, `MotionControlInput`, `TtsInput`, `VideoToAudioInput`, `TextToAudioInput`, `CreateVoiceInput`, `MultiShotInput`, `ReferenceToImageInput`, `ExpandImageInput`, `ExtendVideoInput`, `IdentifyFaceInput`, `ImageRecognizeInput`.
+- **8 typed output interfaces**: `KlingVideoResult`, `KlingImageResult`, `KlingAudioResult`, `KlingJsonResult`, `KlingFaceResult`, `KlingMultiShotResult`, `KlingVoiceResult`, `KlingVideoAudioResult`.
+- **Kling-specific error hierarchy**: `KlingError` base with `KlingAuthError`, `KlingRateLimitError`, `KlingApiError`, `KlingTimeoutError`, `KlingTaskFailedError`.
+- **Built-in submit + poll**: Each function handles the full async lifecycle internally with configurable `timeout` and `pollInterval`. Sync endpoints (`tts`, `imageRecognize`, `identifyFace`) return immediately.
+- **JWT auth**: HS256 JWT generation, configurable via `kling.configure()` or `KLING_ACCESS_KEY` + `KLING_SECRET_KEY` env vars.
+- **Base64 data URI cleaning**: Automatically strips `data:` prefixes from base64 strings (Kling requires raw base64).
+- **Dedicated extractors**: `extractFace` (sync face detection), `extractMultiShot` (url_1/url_2/url_3), `extractVoices` (voice clone), `extractVideoAudio` (merged video + audio). `extractAudios` normalizes `url_mp3`/`url_wav` → `url` for endpoints that use variant field names.
+- **27 unit tests**: Covers all endpoint types, auth, error handling, polling, sync endpoints, and output extraction.
+
+### Deprecated
+
+- **v1 unified gateway**: `generate()`, `submit()`, `poll()`, `submitAndPoll()`, `listModels()`, `resolveModel()`, `configure()`, `configureAuth()`, and all multi-provider registry abstractions are deprecated. They remain exported for backward compatibility but will be removed in v3.
+
+### Changed
+
+- **README rewritten**: Documents the new provider-first architecture with all 69 Kling functions, typed inputs/outputs, and usage examples.
+- **vitest config**: Now includes `src/**/*.test.ts` alongside `deprecated/tests/**/*.test.ts`.
+
+## [1.3.1] - 2026-04-04
+
+### Fixed
+
+- **Kling param_map alignment**: 165 missing `param_map` entries added across 62 dual-provider kling models. Canonical param names now correctly translate to Kling-native field names (`end_image_url` → `image_tail`, `generate_audio` → `sound`, `voice_ids` → `voice_list`, `elements` → `element_list`, `keep_audio` → `keep_original_sound`, `prompt` → `sound_effect_prompt` for video-to-audio).
+- **Options passthrough now applies param_map**: `mapInput()` previously merged `options` as-is without renaming keys. Now checks `param_map` for option keys and applies renames + value transforms. Backward compatible — fal-ai bindings that map keys to the same name are unaffected.
+
+### Added
+
+- **Value transforms for kling provider**: `generate_audio: true` → `sound: "on"`, `voice_ids: ["id"]` → `voice_list: [{voice_id: "id"}]` — applied automatically in `applyTransform()`.
+- **Provider-scoped type safety**: `GenerateRequest<'kling'>` narrows `options` to `KlingOptions` at compile time. Generic defaults to `ProviderName` so existing code is unaffected. New `ProviderOptionsFor<P>` utility type exported.
+- **Param alignment tests**: 14 tests verifying param renaming, value transforms, and provider portability (same input works on both fal-ai and kling). 6 type-level tests for provider-scoped generics.
+
+## [1.3.0] - 2026-04-04
+
+### Added
+
+- **Native Kling provider bindings**: 62 existing kling models now have a direct `provider: "kling"` entry alongside their fal-ai/replicate bindings. Users with `KLING_ACCESS_KEY` can bypass third-party providers and call the Kling API directly.
+- **7 new kling-only models**: `kling-reference-to-image` (multi-subject image gen), `kling-extend-image` (outpainting), `kling-video-extend` (video continuation), `kling-identify-face` (face detection for lip-sync), `kling-text-to-audio` (sound effect generation), `kling-image-recognize` (segmentation masks), `kling-ai-multi-shot` (multi-angle reference images).
+- **`defaults` field on provider bindings**: New registry mechanism for hardcoding provider-specific values (e.g., `model_name`, `mode`) per model variant without polluting `param_map`. Applied via `mapInput()` as fallback values that users can override via `options`.
+- **Unit tests for native kling param mapping**: Validates defaults injection, phantom param exclusion, and `task_result.*[].url` output extraction paths.
+
+## [1.2.0] - 2026-04-03
+
+### Added
+
+- **Shared fetch helper with timeout**: All provider fetch calls now go through `fetchWithTimeout()` with a configurable `AbortSignal.timeout` (default 30s). Prevents hanging requests when a provider server stops responding.
+- **Request/response logging**: Optional debug logging for all provider HTTP calls. Logs method, URL, body size, status, timing, and errors. Auth headers are automatically redacted.
+- **`configureFetch()` function**: Configure fetch timeout and logging globally or via `configure({ fetch: { ... } })`.
+- **`FetchLogEntry`, `LogFn`, `FetchOptions` types**: Public types for the logging and fetch configuration API.
+- **Custom logger support**: Pass `logger: (entry) => ...` to `configureFetch()` to route fetch logs to your own logging system instead of `console.debug`.
+
+### Fixed
+
+- **Kling adapter hanging on submit**: The `POST /v1/videos/image2video` (and all other Kling endpoints) could block indefinitely when the server didn't respond. Now aborts after 30s (configurable) and throws a retryable error.
+
+## [1.1.0] - 2026-04-02
+
+### Added
+
+- **Kling AI as 5th direct provider**: Native JWT (HS256) authentication using `KLING_ACCESS_KEY` + `KLING_SECRET_KEY` key pair, async submit/poll adapter at `src/adapters/kling.ts`, and 78 model bindings across 15 Kling API endpoints.
+- **Kling video endpoints**: text-to-video (`v1/videos/text2video`), image-to-video (`v1/videos/image2video`), video extend (`v1/videos/video-extend`), lip sync (`v1/videos/lip-sync`), avatar (`v1/videos/avatar`), video effects (`v1/videos/effects`).
+- **Kling image endpoints**: image generation (`v1/images/generations`), image expansion/outpaint (`v1/images/image-expansion`), virtual try-on (`v1/images/kolors-virtual-try-on`), multi-shot (`v1/images/ai-multi-shot`), image recognition (`v1/images/image-recognize`).
+- **Kling audio endpoints**: text-to-audio (`v1/audios/generation`), video-to-audio (`v1/audios/video2audio`), TTS (`v1/audios/tts`), voice clone (`v1/audios/voice-clone`).
+- **5 new Kling-only models**: `kling-v1-text-to-audio`, `kling-v1-extend-video`, `kling-v1-extend-image`, `kling-v1-ai-multi-shot`, `kling-v1-image-recognize` — endpoints not available via fal-ai/replicate proxies.
+- **`KlingOptions` type**: Typed options interface for all Kling-specific parameters — `model_name`, `mode`, `sound`, `camera_control`, `aspect_ratio`, `resolution`, `voice_id`, `cloth_image`, `effect_scene`, `expansion_ratio`, lip sync timing, and more.
+- **`KlingVideoModel` and `KlingImageModel` types**: Union types for all supported Kling model versions (v1 through v3, omni, o1).
+- **`KlingCameraControl` type**: Typed camera movement config for video generation.
+- **`defaults` field on `ProviderBinding`**: Allows hardcoding provider-specific defaults (e.g., `model_name`, `mode`) per registry entry. Applied before `options` passthrough so users can still override. Enables one Kling endpoint to serve many model variants.
+- **`duration` field on `GenerateRequest`**: Universal parameter for specifying output duration, mapped to Kling's `duration` param for video/audio generation.
+- **27 Kling skill documentation files**: Complete API reference for every Kling endpoint in `kiani/skills/kling/`.
+- **Kling provider implementation guides**: `SETUP.md`, `ADAPTER.md`, `MODELS.md`, `REGISTRY.md` in `kiani/skills/kling/kling-provider/`.
+- **Kling documentation scraper tools**: `kiani/tools/kling-fetch-pages.ts` (Playwright doc fetcher) and `kiani/tools/kling-skill-scraper.ts` (SKILL.md generator).
+
+### Changed
+
+- **`ProviderName` type**: Extended union with `'kling'`.
+- **`ProviderBinding` type**: Added optional `defaults` field (`Record<string, unknown>`).
+- **`auth.ts`**: Kling uses compound key (`accessKey:secretKey`) — `AuthManager` reads both `KLING_ACCESS_KEY` and `KLING_SECRET_KEY` from env.
+- **`gateway.ts`**: Registered `klingAdapter` in adapters map.
+- **`mapper.ts`**: `mapInput` now applies `binding.defaults` before options passthrough.
+- **`errors.ts`**: `NoProviderError` env hints include `KLING_ACCESS_KEY + KLING_SECRET_KEY`.
+- **`index.ts`**: Exports `klingAdapter`, `KlingOptions`, `KlingVideoModel`, `KlingImageModel`, `KlingCameraControl`.
+- **Registry**: 73 existing Kling models (via fal-ai/replicate) now have native Kling provider as first binding — Kling is preferred when keys are available, proxies remain as fallback.
+
+### Fixed
+
+- **kling-video-create-voice**: Updated modality outputs to `["text", "audio"]` — native Kling voice-clone returns audio URLs while fal-ai proxy returns voice_id.
+- **Kling param_maps**: Corrected provider parameter names — lip sync `audio` → `sound_file`, voice clone `audio` → `voice_url`, image-recognize removed invalid `prompt` param.
+
 ## [1.0.5] - 2026-03-31
 
 ### Fixed
